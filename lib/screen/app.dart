@@ -6,11 +6,11 @@ import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-abstract class MWApp extends StatelessWidget {
+abstract class WMApp extends StatelessWidget {
   late final Navigation nav;
   final WMModel model;
 
-  MWApp({super.key, required this.model}) {
+  WMApp({super.key, required this.model}) {
     nav = Navigation(model);
   }
 
@@ -19,12 +19,7 @@ abstract class MWApp extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Styling.appBarBackgroundColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: leadingButton(context),
       ),
       body: SafeArea(
         minimum: const EdgeInsets.fromLTRB(5, 10, 5, 2),
@@ -51,6 +46,15 @@ abstract class MWApp extends StatelessWidget {
     );
   }
 
+  Widget? leadingButton(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
   Widget body();
 
   Widget loading(String text) {
@@ -72,18 +76,24 @@ abstract class MWApp extends StatelessWidget {
     return Container(
         color: Colors.black26,
         child: Center(
-          child: Container(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Container(
+
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             color: Colors.white,
-            child: Column(
+            child:  Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error),
+              const Icon(Icons.error, color: Colors.red,),
               Styling.columnSpacingWidget(),
-              Styling.textCenter(text),
+          Container(constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(prefs.context()).height * 0.7), child: SingleChildScrollView(child:Styling.textCenter(text))),
               Styling.columnSpacingWidget(),
               Styling.textButton(model.closeDialog, model.tr('Close'))
             ],
           ),
-        )));
+        )])));
   }
 }

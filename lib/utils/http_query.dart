@@ -17,7 +17,7 @@ class HttpQuery {
     Map<String, Object?> outData = {};
     String strBody = jsonEncode(inData);
     if (kDebugMode) {
-      print('request: $strBody');
+      print('request $route: $strBody');
     }
     try {
       var response = await http

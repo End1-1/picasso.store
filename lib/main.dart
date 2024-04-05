@@ -1,7 +1,7 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/screen/config.dart';
-import 'package:cafe5_mworker/utils/http_query.dart';
+import 'package:cafe5_mworker/screen/login.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
+import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,19 +12,19 @@ import 'model/navigation.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
-  runApp(
-      MultiBlocProvider(
-          providers: [BlocProvider<AppBloc>(create: (context) => AppBloc())],
-          child:
-      App()));
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider<AppBloc>(create: (context) => AppBloc()),
+    BlocProvider<InitAppBloc>(create: (context) => InitAppBloc()..add(InitAppEvent()))
+  ], child: App()));
 }
 
 class App extends StatefulWidget {
   final model = WMModel();
+
   App({super.key});
 
   @override
-  State<StatefulWidget> createState()=> _App();
+  State<StatefulWidget> createState() => _App();
 }
 
 class _App extends State<App> {
@@ -39,44 +39,73 @@ class _App extends State<App> {
         navigatorKey: Prefs.navigatorKey,
         home: Scaffold(
             body: SafeArea(
-                child: FutureBuilder<String>(
-                  future: init(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: Container(
-                          color: Colors.white,
-                          height: 30,
-                          width: 30,
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [Text(snapshot.error.toString()),
-                                IconButton(onPressed: (){Navigation(widget.model).config();}, icon: Icon(Icons.arrow_forward))]));
-                    }
-                    return Container(
-                        color: Colors.white,
-                        height: 30,
-                        width: 30,
-                        child: CircularProgressIndicator());
-                  },
-                ))));
+                child: BlocListener<InitAppBloc, InitAppState>(
+                    listener: (context, state) {
+                      if (state.runtimeType == InitAppState) {
+                        BlocProvider.of<InitAppBloc>(context)
+                            .add(InitAppEvent());
+                      }
+                      if (state.runtimeType == InitAppStateFinished) {
+                        if (prefs.getBool('stayloggedin') ?? false && prefs.string('sessionkey').isNotEmpty) {
+                          widget.model.loginPasswordHash();
+                        }
+                      }
+                    },
+                    child: BlocBuilder<InitAppBloc, InitAppState>(
+                      builder: (context, state) {
+                        if (prefs.string('serveraddress').isEmpty) {
+                          return Center(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                const Text('Please, configure server address'),
+                                IconButton(
+                                    onPressed: () {
+                                      Navigation(widget.model).config();
+                                    },
+                                    icon: const Icon(Icons.arrow_forward))
+                              ]));
+                        }
+                        if (state is InitAppStateLoading) {
+                          return Center(
+                            child: Container(
+                              color: Colors.white,
+                              height: 30,
+                              width: 30,
+                              child: const CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        if (state is InitAppStateFinished) {
+                          if (state.error) {
+                            return Center(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                  Row(children: [
+                                    Expanded(
+                                        child:
+                                            Styling.textError(state.errorText))
+                                  ]),
+                                  Styling.columnSpacingWidget(),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Styling.textButton(() {
+                                          setState(() {});
+                                        }, widget.model.tr('Retry'))
+                                      ])
+                                ]));
+                          }
+                          return Center(
+                              child: WMLogin(
+                                  widget.model, WMLogin.username_password));
+                        }
+                        return Container();
+                      },
+                    )))));
   }
-
-  Future<String> init() async {
-    if (prefs.string('serveraddress').isEmpty) {
-      return Future.error('Please, configure server addresss');
-    }
-    final response = await HttpQuery('/engine/clientconfig.php').request({});
-    print(response);
-    return "OK";
-  }
-  
 }

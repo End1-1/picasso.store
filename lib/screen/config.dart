@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 
-class WMConfig extends MWApp {
+class WMConfig extends WMApp {
   WMConfig({super.key, required super.model});
 
   @override
