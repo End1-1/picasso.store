@@ -30,7 +30,7 @@ class WMModel {
         prefs.setString('apikey', d['apikey']);
         serverPasswordTextController.clear();
         serverUserTextController.clear();
-        Navigator.pop(prefs.context());
+        Navigator.pop(prefs.context(), true);
       }
     }));
   }

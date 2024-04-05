@@ -53,7 +53,7 @@ class _App extends State<App> {
                     },
                     child: BlocBuilder<InitAppBloc, InitAppState>(
                       builder: (context, state) {
-                        if (prefs.string('serveraddress').isEmpty) {
+                        if (prefs.string('serveraddress').isEmpty || prefs.string('apikey').isEmpty) {
                           return Center(
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +63,9 @@ class _App extends State<App> {
                                 const Text('Please, configure server address'),
                                 IconButton(
                                     onPressed: () {
-                                      Navigation(widget.model).config();
+                                      Navigation(widget.model).config().then((value) {
+                                        BlocProvider.of<InitAppBloc>(context).add(InitAppEvent());
+                                      });
                                     },
                                     icon: const Icon(Icons.arrow_forward))
                               ]));

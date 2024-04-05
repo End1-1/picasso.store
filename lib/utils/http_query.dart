@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:cafe5_mworker/main.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -11,6 +13,7 @@ class HttpQuery {
 
   Future<Map<String, dynamic>> request(Map<String, dynamic> inData) async {
     inData['apikey'] = prefs.apiKey();
+    inData['sessionkey'] = prefs.string('sessionkey');
     inData['config'] = prefs.string('config');
     inData['language'] = 'am';
 
@@ -49,7 +52,13 @@ class HttpQuery {
         }
       } else {
         outData['status'] = 0;
+        outData['error'] = response.statusCode;
         outData['data'] = strResponse;
+        if (response.statusCode == 401) {
+          prefs.setString('sessionkey', '');
+          Prefs.navigatorKey = GlobalKey<NavigatorState>();
+          Navigator.pushAndRemoveUntil(prefs.context(), MaterialPageRoute(builder: (builder)=> App()), (route) => false);
+        }
       }
     } catch (e) {
       outData['status'] = 0;

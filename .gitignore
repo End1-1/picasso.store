@@ -23,6 +23,7 @@ bin/
 /.nb-gradle/
 /build/
 /.dart_tool/
+/.idea/
 
 ### VS Code ###
 .vscode/

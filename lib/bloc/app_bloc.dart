@@ -1,4 +1,5 @@
 import 'package:cafe5_mworker/utils/http_query.dart';
+import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,8 +31,17 @@ class InitAppBloc extends Bloc<InitAppEvent, InitAppState> {
   }
 
   void configureClient(InitAppEvent event) async {
+    if (prefs.string('serveraddress').isEmpty || prefs.string('apikey').isEmpty) {
+      emit(InitAppState());
+      return;
+    }
     emit(InitAppStateLoading());
     final result = await HttpQuery('engine/clientconfig.php').request({});
+    if (result['status'] == 0) {
+      if (result['data'].container('ugly cow')) {
+        prefs.setString('apikey', '');
+      }
+    }
     emit(InitAppStateFinished(result['status'] == 0,
         result['status'] == 0 ? result['data'] : '', result['data']));
   }
