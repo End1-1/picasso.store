@@ -19,8 +19,7 @@ class WMLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
       if (mode == username_password) {
-        return Container(
-            padding: const EdgeInsets.all(10),
+        return Container(padding: const EdgeInsets.all(5), child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -59,7 +58,7 @@ class WMLogin extends StatelessWidget {
                   Styling.textError(state.text)
                 ]
               ],
-            ));
+            )));
       } else {
         return Container(child: Text('Not implemented'));
       }

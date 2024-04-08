@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 class HttpQuery {
 
   final String route;
-  HttpQuery(this.route);
+  final int timeout;
+  HttpQuery(this.route, {this.timeout = 10});
 
   Future<Map<String, dynamic>> request(Map<String, dynamic> inData) async {
     inData['apikey'] = prefs.apiKey();
@@ -30,7 +31,7 @@ class HttpQuery {
                 'Content-Type': 'application/json',
               },
               body: utf8.encode(strBody))
-          .timeout(const Duration(seconds: 120), onTimeout: () {
+          .timeout(Duration(seconds: timeout), onTimeout: () {
         return http.Response('Timeout', 408);
       });
       String strResponse = utf8.decode(response.bodyBytes);

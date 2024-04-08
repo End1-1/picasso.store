@@ -17,7 +17,10 @@ class AppStateError extends AppState {
   AppStateError(this.text);
 }
 
-class AppStateFinished extends AppState {}
+class AppStateFinished extends AppState {
+  final dynamic data;
+  AppStateFinished(this.data);
+}
 
 class InitAppState extends Equatable {
   @override
@@ -32,3 +35,10 @@ class InitAppStateFinished extends InitAppState {
   final dynamic data;
   InitAppStateFinished(this.error, this.errorText, this.data);
 }
+
+class AppAnimateStateIdle extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class AppAnimateStateRaise extends AppAnimateStateIdle{}

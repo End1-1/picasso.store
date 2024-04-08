@@ -1,4 +1,5 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/date_bloc.dart';
 import 'package:cafe5_mworker/screen/login.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
@@ -14,7 +15,9 @@ void main() async {
   prefs = await SharedPreferences.getInstance();
   runApp(MultiBlocProvider(providers: [
     BlocProvider<AppBloc>(create: (context) => AppBloc()),
-    BlocProvider<InitAppBloc>(create: (context) => InitAppBloc()..add(InitAppEvent()))
+    BlocProvider<InitAppBloc>(create: (context) => InitAppBloc()..add(InitAppEvent())),
+    BlocProvider<AppAnimateBloc>(create: (context) => AppAnimateBloc()),
+    BlocProvider<DateBloc>(create: (context) => DateBloc())
   ], child: App()));
 }
 

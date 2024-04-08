@@ -8,7 +8,8 @@ class WMConfig extends WMApp {
 
   @override
   Widget body() {
-    return Column(children: [
+    return SingleChildScrollView(child:  Column(children: [
+      Styling.columnSpacingWidget(),
       Row(
         children: [
           Expanded(
@@ -35,6 +36,6 @@ class WMConfig extends WMApp {
           children: [
         Styling.textButton(model.registerOnServer, model.tr('Register on server'))
       ])
-    ]);
+    ]));
   }
 }

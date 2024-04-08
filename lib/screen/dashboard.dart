@@ -1,5 +1,6 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
+import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,15 @@ class WMDashboard extends WMApp {
 
   @override
   Widget? leadingButton(BuildContext context) {
-    return IconButton(onPressed: () {}, icon: Icon(Icons.menu_sharp));
+    return null;
+  }
+
+  @override
+  List<Widget> menuWidgets() {
+    return [
+      Styling.menuButton(model.navigation.checkQuantity, 'available',
+          model.tr('Check availability'))
+    ];
   }
 
   @override
