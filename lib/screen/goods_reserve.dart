@@ -27,7 +27,7 @@ class WMGoodsReserve extends WMApp {
   List<Widget> actions() {
     return [
       IconButton(
-          onPressed: model.createReservation, icon: Icon(Icons.save_outlined))
+          onPressed: model.createReservation, icon: const Icon(Icons.save_outlined))
     ];
   }
 

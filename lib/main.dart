@@ -13,6 +13,7 @@ import 'model/navigation.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
+  prefs.init();
   runApp(MultiBlocProvider(providers: [
     BlocProvider<AppBloc>(create: (context) => AppBloc()),
     BlocProvider<InitAppBloc>(create: (context) => InitAppBloc()..add(InitAppEvent())),

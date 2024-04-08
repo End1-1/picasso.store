@@ -73,8 +73,9 @@ class Styling {
                       const ColorFilter.mode(Colors.white, BlendMode.color),
                   height: 25),
               Styling.rowSpacingWidget(),
-              Text(text,
-                  style: const TextStyle(color: Colors.white, fontSize: 16))
+              Expanded(child: Text(text,
+                  maxLines: 2,
+                  style: const TextStyle(color: Colors.white, fontSize: 16)))
             ]));
   }
 

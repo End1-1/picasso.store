@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 extension Prefs on SharedPreferences {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static final regex = RegExp(r"([.]*0+)(?!.*\d)");
+  static Map<String, dynamic> config = {};
 
   String apiKey() {
     return string('apikey');
@@ -19,7 +22,7 @@ extension Prefs on SharedPreferences {
     return getString(key) ?? '';
   }
 
-  String df(String v){
+  String df(String v) {
     return v.replaceAll(Prefs.regex, '');
   }
 
@@ -34,6 +37,16 @@ extension Prefs on SharedPreferences {
 
   String dateMySqlText(DateTime dt) {
     return DateFormat('yyyy-MM-dd').format(dt);
+  }
+
+  void init() {
+    config.clear();
+
+    var configString = string('config');
+    if (configString.isEmpty) {
+      configString = '{}';
+    }
+    config = jsonDecode(configString);
   }
 }
 

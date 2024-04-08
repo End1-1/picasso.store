@@ -51,10 +51,12 @@ class InitAppBloc extends Bloc<InitAppEvent, InitAppState> {
     if (result['status'] == 1) {
       dynamic d = result['data'];
       if (d['res_version'] != (prefs.getInt('res_version') ?? 0)) {
-        prefs.setInt('res_version', d['res_version']);
+        prefs.setString('translator_hy', d['translator_hy']);
         prefs.setString('res', jsonEncode(d['res']));
+        prefs.setInt('res_version', d['res_version']);
       }
       Res.initFrom(prefs.string('res'));
+      Res.initTr(prefs.string('translator_hy'));
     }
     emit(InitAppStateFinished(result['status'] == 0,
         result['status'] == 0 ? result['data'] : '', result['data']));

@@ -19,10 +19,18 @@ class WMDashboard extends WMApp {
   }
 
   @override
+  String titleText() {
+    return Prefs.config['first_page_title'] ?? 'Picasso';
+  }
+
+  @override
   List<Widget> menuWidgets() {
     return [
       Styling.menuButton(model.navigation.checkQuantity, 'available',
-          model.tr('Check availability'))
+          model.tr('Check availability')),
+      Styling.menuButton(model.navigation.checkStoreInput, 'checkstoreinput', model.tr('Check store input')),
+      Styling.menuButton(model.navigation.logout, 'logout', model.tr('Logout')),
+
     ];
   }
 

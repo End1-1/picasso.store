@@ -152,7 +152,11 @@ class WMCheckQty extends WMApp {
                 for (final e in state.data['result']) ...[
                   InkWell(
                       onTap: () {
-                        model.navigation.goodsReservation(state.data, e);
+                        model.navigation.goodsReservation(state.data, e).then((value) {
+                          if (value ?? false) {
+                            model.searchBarcode(model.scancodeTextController.text);
+                          }
+                        });
                       },
                       child: Row(children: [
                         Container(
