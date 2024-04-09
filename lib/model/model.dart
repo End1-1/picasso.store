@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/bloc/date_bloc.dart';
+import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/dashboard.dart';
 import 'package:cafe5_mworker/screen/login.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
@@ -11,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'navigation.dart';
+
+part 'check_store_input_model.dart';
 
 class WMModel {
   final serverTextController = TextEditingController();
@@ -65,6 +65,8 @@ class WMModel {
     }, (e, d) {
       if (!e) {
         prefs.setString('sessionkey', d['sessionkey']);
+        prefs.setString('config', d['config']['f_config']);
+        prefs.init();
         Navigator.pushAndRemoveUntil(
             prefs.context(),
             MaterialPageRoute(builder: (builder) => WMDashboard(model: this)),
@@ -100,6 +102,11 @@ class WMModel {
         .add(AppEvent());
   }
 
+  void closeQuestionDialog() {
+    BlocProvider.of<QuestionBloc>(Prefs.navigatorKey.currentContext!)
+        .add(QuestionEvent());
+  }
+
   void searchBarcode(String b) {
     if (b.isEmpty) {
       return;
@@ -109,6 +116,19 @@ class WMModel {
         'engine/reports/availability.php',
         {'barcode': b},
         (e, d) {}));
+  }
+  
+  void searchBarcodeStoreInput(String b) {
+    if (b.isEmpty) {
+      return;
+    }
+    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('Querying', 'engine/worker/store-input-check-barcode.php', {
+      'barcode':b,
+      'store': Prefs.config['store'] ?? 0,
+      'mode': 1
+    }, (e, d) {
+
+    }));
   }
 
   void setReservationExpiration() {
@@ -178,6 +198,15 @@ class WMModel {
       if (value != null) {
         scancodeTextController.text = value;
         searchBarcode(scancodeTextController.text);
+      }
+    });
+  }
+
+  void checkBarcodeStoreInput() {
+    navigation.readBarcode().then((value) {
+      if (value != null) {
+        scancodeTextController.text = value;
+        searchBarcodeStoreInput(scancodeTextController.text);
       }
     });
   }

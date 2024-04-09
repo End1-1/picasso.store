@@ -1,5 +1,6 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/bloc/date_bloc.dart';
+import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/login.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
@@ -18,14 +19,17 @@ void main() async {
     BlocProvider<AppBloc>(create: (context) => AppBloc()),
     BlocProvider<InitAppBloc>(create: (context) => InitAppBloc()..add(InitAppEvent())),
     BlocProvider<AppAnimateBloc>(create: (context) => AppAnimateBloc()),
-    BlocProvider<DateBloc>(create: (context) => DateBloc())
+    BlocProvider<DateBloc>(create: (context) => DateBloc()),
+    BlocProvider<QuestionBloc>(create: (context) => QuestionBloc())
   ], child: App()));
 }
 
 class App extends StatefulWidget {
   final model = WMModel();
 
-  App({super.key});
+  App({super.key}) {
+    Prefs.navigatorKey = GlobalKey<NavigatorState>();
+  }
 
   @override
   State<StatefulWidget> createState() => _App();

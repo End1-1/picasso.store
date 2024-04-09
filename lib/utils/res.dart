@@ -23,5 +23,6 @@ class Res {
         tr[k[0]] = k[1];
       }
     }
+    print(tr);
   }
 }

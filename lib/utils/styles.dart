@@ -70,7 +70,7 @@ class Styling {
               Styling.rowSpacingWidget(),
               SvgPicture.memory(Res.images[image]!,
                   colorFilter:
-                      const ColorFilter.mode(Colors.white, BlendMode.color),
+                      const ColorFilter.mode(Colors.transparent, BlendMode.softLight),
                   height: 25),
               Styling.rowSpacingWidget(),
               Expanded(child: Text(text,
@@ -79,8 +79,8 @@ class Styling {
             ]));
   }
 
-  static text(String s) {
-    return Text(s, style: const TextStyle(color: Colors.black));
+  static text(String s, {TextAlign ta = TextAlign.left}) {
+    return Text(s, textAlign: ta, style: const TextStyle(color: Colors.black));
   }
 
   static textError(String s) {

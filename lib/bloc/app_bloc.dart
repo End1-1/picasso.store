@@ -40,7 +40,7 @@ class InitAppBloc extends Bloc<InitAppEvent, InitAppState> {
       return;
     }
     emit(InitAppStateLoading());
-    final result = await HttpQuery('engine/clientconfig.php').request({
+    final result = await HttpQuery('engine/client-config.php').request({
       'res_version': prefs.getInt('res_version') ?? 0
     });
     if (result['status'] == 0) {

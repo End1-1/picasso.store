@@ -1,4 +1,6 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/question_bloc.dart';
+import 'package:cafe5_mworker/main.dart';
 import 'package:cafe5_mworker/model/model.dart';
 import 'package:cafe5_mworker/screen/check_qty.dart';
 import 'package:cafe5_mworker/screen/check_store_input.dart';
@@ -30,18 +32,24 @@ class Navigation {
 
   Future<void> checkStoreInput() {
     hideMenu();
+    model.scancodeTextController.clear();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckStoreInput(model: model)));
   }
 
   void logout() {
     hideMenu();
-    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Logout'), 'engine/logout.php', {}, (e, d) {
-      if (!e) {
-        prefs.setBool('stayloggedin', false);
-        prefs.setString('sessionkey', '');
-        Navigator.pushAndRemoveUntil(prefs.context(), MaterialPageRoute(builder: (builder) => WMLogin(model, WMLogin.password_hash)), (route) => false);
-      }
-    }));
+    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Logout?'), (){
+      BlocProvider.of<QuestionBloc>(Prefs.navigatorKey.currentContext!)
+          .add(QuestionEvent());
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Logout'), 'engine/logout.php', {}, (e, d) {
+        if (!e) {
+          prefs.setBool('stayloggedin', false);
+          prefs.setString('sessionkey', '');
+          Navigator.pushAndRemoveUntil(prefs.context(), MaterialPageRoute(builder: (builder) =>  App()), (route) => false);
+        }
+      }));
+    }, null));
+
   }
 
   void hideMenu() {

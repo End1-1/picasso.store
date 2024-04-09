@@ -1,4 +1,5 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/model/model.dart';
 import 'package:cafe5_mworker/model/navigation.dart';
 import 'package:cafe5_mworker/screen/menu.dart';
@@ -42,7 +43,14 @@ abstract class WMApp extends StatelessWidget {
             }
             return Container();
           }),
-          WMAppMenu(model, menuWidgets())
+          WMAppMenu(model, menuWidgets()),
+          BlocBuilder<QuestionBloc, QuestionState>(builder: (builder, state){
+            if (state is QuestionStateRaise) {
+              return questionDialog(state.question, state.ifYes, state.ifNo);
+            }
+            return Container();
+          }
+          )
         ]),
       ),
     );
@@ -63,10 +71,10 @@ abstract class WMApp extends StatelessWidget {
 
   Widget _title() {
     return Text(titleText(),
-        maxLines: 10,
+        maxLines: 2,
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color: Color(0xff89ff00)));
+        style: const TextStyle(color: Color(0xff89ff00), fontSize: 14));
   }
 
   List<Widget> actions() {
@@ -133,6 +141,46 @@ abstract class WMApp extends StatelessWidget {
                             child: Styling.textCenter(text))),
                     Styling.columnSpacingWidget(),
                     Styling.textButton(model.closeDialog, model.tr('Close'))
+                  ],
+                ),
+              )
+            ])));
+  }
+
+  Widget questionDialog(String text, VoidCallback ifYes, VoidCallback? ifNo) {
+    return Container(
+        color: Colors.black26,
+        child: Center(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.question_answer_outlined,
+                      color: Colors.green,
+                    ),
+                    Styling.columnSpacingWidget(),
+                    Container(
+                        constraints: BoxConstraints(
+                            maxHeight:
+                                MediaQuery.sizeOf(prefs.context()).height *
+                                    0.7),
+                        child: SingleChildScrollView(
+                            child: Styling.textCenter(text))),
+                    Styling.columnSpacingWidget(),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                        children: [
+                      Styling.textButton(ifYes, model.tr('Yes')),
+                      Styling.textButton(ifNo ?? model.closeQuestionDialog, model.tr('Cancel'))
+                    ])
                   ],
                 ),
               )
