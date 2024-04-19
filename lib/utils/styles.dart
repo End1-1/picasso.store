@@ -11,11 +11,13 @@ class Styling {
       {Function(String)? onSubmit,
       int maxLines = 1,
       bool autofocus = false,
+      bool readOnly = false,
       FocusNode? focusNode}) {
     return TextFormField(
       onFieldSubmitted: onSubmit,
       controller: controller,
       maxLines: maxLines,
+      readOnly: readOnly,
       autofocus: autofocus,
       focusNode: focusNode,
       style: const TextStyle(color: Colors.black),
@@ -41,6 +43,11 @@ class Styling {
     );
   }
 
+  static Widget progress() {
+    return const SizedBox(
+        height: 30, width: 30, child: CircularProgressIndicator());
+  }
+
   static SizedBox columnSpacingWidget() {
     return const SizedBox(height: 10);
   }
@@ -60,6 +67,9 @@ class Styling {
             style: const TextStyle(color: Colors.white, fontSize: 16)));
   }
 
+  ///{@template menuButton}
+  ///1st: function , 2nd imagename, 3rd - text
+  ///{@endtemplate}
   static Widget menuButton(VoidCallback callback, String image, String text) {
     return InkWell(
         onTap: callback,
@@ -69,18 +79,30 @@ class Styling {
             children: [
               Styling.rowSpacingWidget(),
               SvgPicture.memory(Res.images[image]!,
-                  colorFilter:
-                      const ColorFilter.mode(Colors.transparent, BlendMode.softLight),
+                  colorFilter: const ColorFilter.mode(
+                      Colors.transparent, BlendMode.softLight),
                   height: 25),
               Styling.rowSpacingWidget(),
-              Expanded(child: Text(text,
-                  maxLines: 2,
-                  style: const TextStyle(color: Colors.white, fontSize: 16)))
+              Expanded(
+                  child: Text(text,
+                      maxLines: 2,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 16)))
             ]));
   }
 
   static text(String s, {TextAlign ta = TextAlign.left}) {
     return Text(s, textAlign: ta, style: const TextStyle(color: Colors.black));
+  }
+
+  static textWithWidth(String s, double w,
+      {TextAlign ta = TextAlign.left,
+      FontWeight fontWeight = FontWeight.normal}) {
+    return SizedBox(
+        width: w,
+        child: Text(s,
+            textAlign: ta,
+            style: TextStyle(color: Colors.black, fontWeight: fontWeight)));
   }
 
   static textError(String s) {

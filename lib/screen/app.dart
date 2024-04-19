@@ -99,9 +99,13 @@ abstract class WMApp extends StatelessWidget {
 
   Widget loading(String text) {
     return Container(
+      height: MediaQuery.sizeOf(prefs.context()).height,
+        width: MediaQuery.sizeOf(prefs.context()).width,
         color: Colors.black26,
-        child: Center(
-          child: Column(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
               const SizedBox(
                   height: 30, width: 30, child: CircularProgressIndicator()),
@@ -109,7 +113,7 @@ abstract class WMApp extends StatelessWidget {
               Styling.text(text)
             ],
           ),
-        ));
+        );
   }
 
   Widget errorDialog(String text) {

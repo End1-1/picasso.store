@@ -21,7 +21,7 @@ class HttpQuery {
     Map<String, Object?> outData = {};
     String strBody = jsonEncode(inData);
     if (kDebugMode) {
-      print('request $route: $strBody');
+      print('request ${prefs.string("serveraddress")}/$route: $strBody');
     }
     try {
       var response = await http

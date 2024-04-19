@@ -11,7 +11,12 @@ class AppEventLoading extends AppEvent {
   final Map<String, dynamic> data;
   final Function(bool, dynamic)? callback;
 
-  AppEventLoading(this.text, this.route, this.data, this.callback);
+  ///{@template AppEventLoading}
+  ///text of query, route and date
+  ///callback 1st - bool, is error
+  ///2nd - data
+  ///{@endtemplate}
+  AppEventLoading(this.text, this.route, this.data, this.callback) ;
 }
 
 class AppEventError extends AppEvent {

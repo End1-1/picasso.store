@@ -3,6 +3,7 @@ import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/main.dart';
 import 'package:cafe5_mworker/model/model.dart';
 import 'package:cafe5_mworker/screen/check_qty.dart';
+import 'package:cafe5_mworker/screen/check_room_availability.dart';
 import 'package:cafe5_mworker/screen/check_store_input.dart';
 import 'package:cafe5_mworker/screen/config.dart';
 import 'package:cafe5_mworker/screen/goods_info.dart';
@@ -23,6 +24,11 @@ class Navigation {
         MaterialPageRoute(builder: (builder) => WMConfig(model: model)));
   }
 
+  Future<void> checkRoomAvailability() {
+    hideMenu();
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckRoomAvaiability(model: model)));
+  }
+
   Future<void> checkQuantity() {
     hideMenu();
     model.scancodeTextController.clear();
@@ -34,6 +40,12 @@ class Navigation {
     hideMenu();
     model.scancodeTextController.clear();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckStoreInput(model: model)));
+  }
+
+  Future<void> settings() {
+    hideMenu();
+    model.serverTextController.text = prefs.string('serveraddress');
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMConfig(model: model)));
   }
 
   void logout() {

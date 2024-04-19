@@ -105,7 +105,7 @@ class _App extends State<App> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Styling.textButton(() {
-                                          setState(() {});
+                                          BlocProvider.of<InitAppBloc>(context).add(InitAppEvent());
                                         }, widget.model.tr('Retry'))
                                       ])
                                 ]));

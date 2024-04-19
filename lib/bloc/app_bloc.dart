@@ -11,8 +11,8 @@ part 'state_bloc.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(AppState()) {
-    on<AppEventLoading>((event, emit) => loadingData(event));
     on<AppEvent>((event, emit) => emit(AppState()));
+    on<AppEventLoading>((event, emit) => loadingData(event));
     on<AppEventError>((event, emit) => emit(AppStateError(event.text)));
   }
 
@@ -44,7 +44,7 @@ class InitAppBloc extends Bloc<InitAppEvent, InitAppState> {
       'res_version': prefs.getInt('res_version') ?? 0
     });
     if (result['status'] == 0) {
-      if (result['data'].container('ugly cow')) {
+      if (result['data'].contains('ugly cow')) {
         prefs.setString('apikey', '');
       }
     }
