@@ -3,9 +3,11 @@ part of 'room_reserve.dart';
 class RoomReserveModel {
   final priceTextController = TextEditingController();
   final totalTextController = TextEditingController();
+  final remarksTextController = TextEditingController();
   final guestFirstNameTextController = TextEditingController();
   final guestLastNameTextController = TextEditingController();
   final guests = <dynamic>[];
+  final reservation = <String, dynamic>{};
   dynamic room;
   var createdDate = DateTime.now();
   var entryDate = DateTime.now();
@@ -27,6 +29,7 @@ extension WMERoomReserve on WMRoomReserve {
       }
       if (d['reservation'].isNotEmpty) {
         final r = d['reservation'][0];
+        _model.reservation.addAll(d['reservation'][0]);
         _model.createdDate = prefs.strDate(r['f_created']);
         _model.entryDate = prefs.strDate(r['f_startDate']);
         _model.departureDate = prefs.strDate(r['f_endDate']);
@@ -42,10 +45,10 @@ extension WMERoomReserve on WMRoomReserve {
 
   void editEntry() {
     showDatePicker(
-            context: prefs.context(),
-            initialEntryMode: DatePickerEntryMode.calendarOnly,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(const Duration(days: 30)))
+        context: prefs.context(),
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(const Duration(days: 30)))
         .then((value) {
       if (value != null) {
         _model.entryDate = value;
@@ -58,10 +61,10 @@ extension WMERoomReserve on WMRoomReserve {
 
   void editDeparture() {
     showDatePicker(
-            context: prefs.context(),
-            initialEntryMode: DatePickerEntryMode.calendarOnly,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(const Duration(days: 30)))
+        context: prefs.context(),
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(const Duration(days: 30)))
         .then((value) {
       if (value != null) {
         _model.departureDate = value;
@@ -125,11 +128,28 @@ extension WMERoomReserve on WMRoomReserve {
   }
 
   void priceChanged(String s) {
-    int d = _model.departureDate.difference(_model.entryDate).inDays;
-    _model.totalTextController.text = '${d * (double.tryParse(_model.priceTextController.text) ?? 0)}';
+    int d = _model.departureDate
+        .difference(_model.entryDate)
+        .inDays;
+    _model.totalTextController.text =
+    '${d * (double.tryParse(_model.priceTextController.text) ?? 0)}';
   }
 
   void save() {
-    Navigator.pop(prefs.context());
+    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
+        model.tr('Saving'), '/engine/hotel/save-reservation.php', {
+    'room': _model.room['f_id'],
+    'guests': _model.guests,
+    'guestid': _model.guests.isEmpty ? 0 : _model.guests[0]['f_id'],
+      'entry': prefs.dateMySqlText(_model.entryDate),
+      'departure': prefs.dateMySqlText(_model.departureDate),
+      'price': double.tryParse(_model.priceTextController.text) ?? 0,
+      'total': double.tryParse(_model.totalTextController.text) ?? 0,
+      'remarks': _model.remarksTextController.text
+    }, (e, d) {
+    if (e) {
+    return;
+    }
+    }, null));
   }
 }

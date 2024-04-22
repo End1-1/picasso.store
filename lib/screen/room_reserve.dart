@@ -87,6 +87,10 @@ class WMRoomReserve extends WMApp {
             child: Styling.textFormFieldNumbers(_model.totalTextController, '',
                 readOnly: true))
       ]),
+      Styling.columnSpacingWidget(),
+      Row(children: [
+        Expanded(child: Styling.textFormField(_model.remarksTextController, model.tr('Remarks'), maxLines: 4)),
+      ]),
       Divider(),
       Row(children: [
         Expanded(child: Styling.textCenter(model.tr('Guests').toUpperCase()))
