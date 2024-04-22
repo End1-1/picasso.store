@@ -1,5 +1,4 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/bloc/date_bloc.dart';
 import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/dashboard.dart';
 import 'package:cafe5_mworker/screen/login.dart';
@@ -10,25 +9,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'navigation.dart';
 
-part 'check_store_input_model.dart';
+class AppStateAppBar extends AppState {}
+class AppEventAppBar extends AppEvent {}
 
 class WMModel {
   final serverTextController = TextEditingController();
   final serverUserTextController = TextEditingController();
   final serverPasswordTextController = TextEditingController();
   final configPinTextController = TextEditingController();
-  final scancodeTextController = TextEditingController();
-  final reserveQtyTextController = TextEditingController();
-  final reserveCommentTextController = TextEditingController();
-  final scancodeFocus = FocusNode();
 
   late final Navigation navigation;
-
-  var reservationExpiration = DateTime.now();
-  var reservationStore = 0;
-  var reservationGoods = 0;
-  var reservationGoodsName = '';
-  var maxReserveQty = 0.0;
 
   WMModel() {
     navigation = Navigation(this);
@@ -53,7 +43,7 @@ class WMModel {
         serverUserTextController.clear();
         Navigator.pop(prefs.context(), true);
       }
-    }));
+    }, AppStateFinished()));
   }
 
   void loginUsernamePassword() {
@@ -72,7 +62,7 @@ class WMModel {
             MaterialPageRoute(builder: (builder) => WMDashboard(model: this)),
             (route) => false);
       }
-    }));
+    }, AppStateFinished()));
   }
 
   void loginPin() {}
@@ -94,7 +84,7 @@ class WMModel {
             MaterialPageRoute(builder: (builder) => WMDashboard(model: this)),
             (route) => false);
       }
-    }));
+    }, AppStateFinished()));
   }
 
   void closeDialog() {
@@ -105,109 +95,5 @@ class WMModel {
   void closeQuestionDialog() {
     BlocProvider.of<QuestionBloc>(Prefs.navigatorKey.currentContext!)
         .add(QuestionEvent());
-  }
-
-  void searchBarcode(String b) {
-    if (b.isEmpty) {
-      return;
-    }
-    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-        tr('Checking availability'),
-        'engine/reports/availability.php',
-        {'barcode': b},
-        (e, d) {}));
-  }
-  
-  void searchBarcodeStoreInput(String b) {
-    if (b.isEmpty) {
-      return;
-    }
-    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('Querying', 'engine/worker/store-input-check-barcode.php', {
-      'barcode':b,
-      'store': Prefs.config['store'] ?? 0,
-      'mode': 1
-    }, (e, d) {
-
-    }));
-  }
-
-  void setReservationExpiration() {
-    showDatePicker(
-            context: prefs.context(),
-            initialEntryMode: DatePickerEntryMode.calendarOnly,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(const Duration(days: 30)))
-        .then((value) {
-      if (value != null) {
-        reservationExpiration = value;
-        BlocProvider.of<DateBloc>(prefs.context()).add(DateEvent());
-      }
-    });
-  }
-
-  void reserveQtyChanged(String s) {
-    var nv = double.tryParse(s) ?? 0;
-    if (nv > maxReserveQty) {
-      nv = maxReserveQty;
-      reserveQtyTextController.text = prefs.df(nv.toString());
-    }
-  }
-
-  void createReservation() {
-    var err = '';
-    var qty = double.tryParse(reserveQtyTextController.text) ?? 0;
-    if (qty < 1) {
-      err += tr('Quantity is not set');
-      err += '\r\n';
-    }
-    if (err.isNotEmpty) {
-      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventError(err));
-      return;
-    }
-    Map<String, dynamic> d = {
-      'source': Prefs.config['store'] ?? 0,
-      'store': reservationStore,
-      'goods': reservationGoods,
-      'goodsname': reservationGoodsName,
-      'qty': double.tryParse(reserveQtyTextController.text) ?? 0,
-      'message': reserveCommentTextController.text,
-      'enddate': prefs.dateMySqlText(reservationExpiration),
-    };
-    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-        tr('Create reservation'), 'engine/worker/create-reservation.php', d,
-        (e, s) {
-      if (e) {
-      } else {
-        Navigator.pop(prefs.context(), true);
-      }
-    }));
-  }
-
-  void replaceBarcodeSize(String ss) {
-    String s = scancodeTextController.text;
-    if (s.length < 2) {
-      return;
-    }
-    s = s.replaceRange(0, 2, ss);
-    scancodeTextController.text = s;
-    searchBarcode(s);
-  }
-
-  void readBarcode() {
-    navigation.readBarcode().then((value) {
-      if (value != null) {
-        scancodeTextController.text = value;
-        searchBarcode(scancodeTextController.text);
-      }
-    });
-  }
-
-  void checkBarcodeStoreInput() {
-    navigation.readBarcode().then((value) {
-      if (value != null) {
-        scancodeTextController.text = value;
-        searchBarcodeStoreInput(scancodeTextController.text);
-      }
-    });
   }
 }

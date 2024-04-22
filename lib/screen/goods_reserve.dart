@@ -1,3 +1,4 @@
+import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/bloc/date_bloc.dart';
 import 'package:cafe5_mworker/screen/app.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
@@ -6,15 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+part 'goods_reserve.model.dart';
+
 class WMGoodsReserve extends WMApp {
   final Map<String, dynamic> info;
   final Map<String, dynamic> store;
+  final _model = GoodsReserveModel();
 
   WMGoodsReserve(this.info, this.store, {super.key, required super.model}) {
-    model.reservationStore = store['f_store'];
-    model.reservationGoods = info['goods']['f_id'];
-    model.reservationGoodsName = info['goods']['f_goodsname'];
-    model.maxReserveQty = (double.tryParse(store['f_qty']) ?? 0) -
+    _model.reservationStore = store['f_store'];
+    _model.reservationGoods = info['goods']['f_id'];
+    _model.reservationGoodsName = info['goods']['f_goodsname'];
+    _model.maxReserveQty = (double.tryParse(store['f_qty']) ?? 0) -
         (double.tryParse(store['f_reserve']) ?? 0);
   }
 
@@ -27,7 +31,7 @@ class WMGoodsReserve extends WMApp {
   List<Widget> actions() {
     return [
       IconButton(
-          onPressed: model.createReservation, icon: const Icon(Icons.save_outlined))
+          onPressed: createReservation, icon: const Icon(Icons.save_outlined))
     ];
   }
 
@@ -67,9 +71,9 @@ class WMGoodsReserve extends WMApp {
               Expanded(child: Container()),
               BlocBuilder<DateBloc, DateState>(builder: (builder, state) {
                 return InkWell(
-                    onTap: model.setReservationExpiration,
+                    onTap: setReservationExpiration,
                     child: Styling.text(
-                        prefs.dateText(model.reservationExpiration)));
+                        prefs.dateText(_model.reservationExpiration)));
               })
             ],
           ),
@@ -86,7 +90,7 @@ class WMGoodsReserve extends WMApp {
             children: [
               Styling.text(model.tr('Available quantity')),
               Expanded(child: Container()),
-              Styling.text(prefs.df('${model.maxReserveQty}'))
+              Styling.text(prefs.df('${_model.maxReserveQty}'))
             ],
           ),
           Styling.columnSpacingWidget(),
@@ -99,9 +103,9 @@ class WMGoodsReserve extends WMApp {
               SizedBox(
                   width: 50,
                   child: TextFormField(
-                    onChanged: model.reserveQtyChanged,
+                    onChanged: reserveQtyChanged,
                     textAlign: TextAlign.right,
-                    controller: model.reserveQtyTextController,
+                    controller: _model.reserveQtyTextController,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
@@ -111,7 +115,7 @@ class WMGoodsReserve extends WMApp {
           ),
           Styling.columnSpacingWidget(),
           Styling.textFormField(
-              model.reserveCommentTextController, model.tr('Comment'),
+              _model.reserveCommentTextController, model.tr('Comment'),
               maxLines: 5)
         ],
       ),

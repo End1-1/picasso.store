@@ -7,10 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app.dart';
 
+part 'dashboard.model.dart';
+
 class WMDashboard extends WMApp {
   WMDashboard({required super.model}) {
-    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-        model.tr('Wait, please'), 'engine/dashboard.php', {}, (e, d) {}));
+    getDashboard();
   }
 
   @override
@@ -27,6 +28,7 @@ class WMDashboard extends WMApp {
   List<Widget> menuWidgets() {
     return [
       Styling.menuButton(model.navigation.checkRoomAvailability, 'forecast', model.tr('Check room availability')),
+      Styling.menuButton(model.navigation.rooms, 'forecast', model.tr('Rooms')),
       Styling.menuButton(model.navigation.checkQuantity, 'available', model.tr('Check availability')),
       Styling.menuButton(model.navigation.checkStoreInput, 'checkstoreinput', model.tr('Check store input')),
       Styling.menuButton(model.navigation.settings, 'config', model.tr('Configuration')),
@@ -37,6 +39,14 @@ class WMDashboard extends WMApp {
 
   @override
   Widget body() {
-    return Container();
+    return Column(
+      children: [
+        Row(children:[Text(model.tr('Todays checkin')), Expanded(child: Container()), Text('4')]),
+        Row(children:[Text(model.tr('Inhouse guests')), Expanded(child: Container()), Text('35')]),
+        Row(children:[Text(model.tr('Todays checkout')), Expanded(child: Container()), Text('8')]),
+        Row(children:[Text(model.tr('Payments, cash')), Expanded(child: Container()), Text('123,500')]),
+
+      ],
+    );
   }
 }

@@ -17,9 +17,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   void loadingData(AppEventLoading event) async {
+    if (event.route.isEmpty) {
+      emit(event.state!);
+      return;
+    }
     emit(AppStateLoading(event.text));
     final result = await HttpQuery(event.route).request(event.data);
-    emit(AppStateFinished(result['data']));
+    if (event.state != null) {
+      emit(event.state!..data = result['data']);
+    }
     if (result['status'] == 0) {
       emit(AppStateError(result['data']));
     }

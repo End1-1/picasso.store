@@ -1,5 +1,6 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/screen/app.dart';
+import 'package:cafe5_mworker/screen/rooms.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class WMCheckRoomAvaiability extends WMApp {
           ),
           Styling.columnSpacingWidget(),
           BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
-            if (state is AppStateFinished) {
+            if (state is AppStateRoomAvailability) {
               return SingleChildScrollView(scrollDirection: Axis.horizontal, child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -57,8 +58,8 @@ class WMCheckRoomAvaiability extends WMApp {
                     for (final e in state.data) ...[
                       InkWell(onTap: () { showRoomOfCategory(e[0]);}, child: Row(children: [Styling.textWithWidth(e[0], 120),
                         Styling.textWithWidth(e[2], 100),
-                        Styling.textWithWidth(e[3].toString(), 100),
-                        Styling.textWithWidth('${(int.tryParse(e[2]) ?? 0) - e[3]}', 100),
+                        Styling.textWithWidth(e[4].toString(), 100),
+                        Styling.textWithWidth('${(int.tryParse(e[2]) ?? 0) - e[4]}', 100),
                       ])),
                       Styling.columnSpacingWidget()
                     ]

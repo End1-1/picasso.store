@@ -10,6 +10,8 @@ import 'package:cafe5_mworker/screen/goods_info.dart';
 import 'package:cafe5_mworker/screen/goods_reserve.dart';
 import 'package:cafe5_mworker/screen/login.dart';
 import 'package:cafe5_mworker/screen/qr_reader.dart';
+import 'package:cafe5_mworker/screen/room_reserve.dart';
+import 'package:cafe5_mworker/screen/rooms.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,16 +31,19 @@ class Navigation {
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckRoomAvaiability(model: model)));
   }
 
+  Future<void> rooms() {
+    hideMenu();
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomsScreen(model: model, entry: DateTime.now(), departure: DateTime.now())));
+  }
+
   Future<void> checkQuantity() {
     hideMenu();
-    model.scancodeTextController.clear();
     return Navigator.push(prefs.context(),
         MaterialPageRoute(builder: (builder) => WMCheckQty(model: model)));
   }
 
   Future<void> checkStoreInput() {
     hideMenu();
-    model.scancodeTextController.clear();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckStoreInput(model: model)));
   }
 
@@ -59,7 +64,7 @@ class Navigation {
           prefs.setString('sessionkey', '');
           Navigator.pushAndRemoveUntil(prefs.context(), MaterialPageRoute(builder: (builder) =>  App()), (route) => false);
         }
-      }));
+      }, null));
     }, null));
 
   }
@@ -77,8 +82,10 @@ class Navigation {
   }
 
   Future<bool?> goodsReservation(Map<String, dynamic> info, Map<String,dynamic> store) async {
-    model.reserveQtyTextController.clear();
-    model.reserveCommentTextController.clear();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMGoodsReserve(info, store, model: model)));
+  }
+
+  Future<void> openRoom(dynamic r) {
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomReserve(model: model, room: r)));
   }
 }

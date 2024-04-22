@@ -29,6 +29,32 @@ class Styling {
     );
   }
 
+  static TextFormField textFormFieldNumbers(
+      TextEditingController controller, String hintText,
+      {Function(String)? onSubmit,
+        int maxLines = 1,
+        bool autofocus = false,
+        bool readOnly = false,
+        Function(String)? onChange,
+        FocusNode? focusNode}) {
+    return TextFormField(
+      onFieldSubmitted: onSubmit,
+      controller: controller,
+      maxLines: maxLines,
+      keyboardType: TextInputType.number,
+      readOnly: readOnly,
+      autofocus: autofocus,
+      onChanged: onChange,
+      focusNode: focusNode,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+          contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+          border: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black26)),
+          labelText: hintText),
+    );
+  }
+
   static TextFormField textFormFieldPassword(
       TextEditingController controller, String hintText) {
     return TextFormField(

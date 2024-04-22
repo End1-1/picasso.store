@@ -7,7 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app.dart';
 
+part 'check_store_input.model.dart';
+
 class WMCheckStoreInput extends WMApp {
+  final _model = CheckStoreInputModel();
   WMCheckStoreInput({super.key, required super.model});
 
   @override
@@ -18,7 +21,7 @@ class WMCheckStoreInput extends WMApp {
   @override
   List<Widget> menuWidgets() {
     return [
-      Styling.menuButton(model.showAllCheckStoreInput, 'allcheckstoreinput',
+      Styling.menuButton(showAllCheckStoreInput, 'allcheckstoreinput',
           model.tr('Show whole list')),
     ];
   }
@@ -31,53 +34,60 @@ class WMCheckStoreInput extends WMApp {
           children: [
             Expanded(
                 child: Styling.textFormField(
-                    model.scancodeTextController, model.tr('Barcode'),
-                    onSubmit: model.searchBarcodeStoreInput,
+                    _model.scancodeTextController, model.tr('Barcode'),
+                    onSubmit: searchBarcodeStoreInput,
                     autofocus: true,
-                    focusNode: model.scancodeFocus)),
+                    focusNode: _model.scancodeFocus)),
             IconButton(
                 onPressed: () {
-                  model.scancodeTextController.clear();
-                  model.scancodeFocus.requestFocus();
+                  _model.scancodeTextController.clear();
+                  _model.scancodeFocus.requestFocus();
                 },
                 icon: const Icon(Icons.clear_sharp)),
             IconButton(
-                onPressed: model.checkBarcodeStoreInput,
+                onPressed: checkBarcodeStoreInput,
                 icon: const Icon(Icons.qr_code))
           ],
         ),
         Row(
           children: [
-            WMCheckbox(model.tr('Goods name'), (v) {
-
-            }, false),
+            WMCheckbox(model.tr('Goods name'), (v) {}, false),
             Expanded(child: Container()),
             Styling.text(model.tr('Qty')),
             Styling.rowSpacingWidget(),
-            Container(width: 80, child: Styling.text(model.tr('Price'), ta: TextAlign.right)),
+            Container(
+                width: 80,
+                child: Styling.text(model.tr('Price'), ta: TextAlign.right)),
             Styling.rowSpacingWidget(),
           ],
         ),
-        Expanded(child: BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
-          if (state is AppStateFinished) {
+        Expanded(
+            child: BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
+          if (state is AppStateCheckStoreInput) {
             if (state.data.isEmpty) {
               return Container();
             }
-            return SingleChildScrollView(child: Column(children: [for (final e in state.data['result']) ...[
-              Row(
-                children: [
-                  WMCheckbox(e['f_name'], (p) {
-                    model.checkedStoreInput(e['f_id'], state.data);
-                  }, e['f_acc'] != null),
-                  Expanded(child: Container()),
-                  Styling.text('${prefs.df(e['f_qty'])}'),
-                  Styling.rowSpacingWidget(),
-                  Container(width: 80, child: Styling.text('${prefs.df(e['f_price1'])}', ta: TextAlign.right)),
-                  Styling.rowSpacingWidget(),
-                ],
-              ),
-              Styling.columnSpacingWidget(),
-            ]]));
+            return SingleChildScrollView(
+                child: Column(children: [
+              for (final e in state.data['result']) ...[
+                Row(
+                  children: [
+                    WMCheckbox(e['f_name'], (p) {
+                      checkedStoreInput(e['f_id'], state.data);
+                    }, e['f_acc'] != null),
+                    Expanded(child: Container()),
+                    Styling.text('${prefs.df(e['f_qty'])}'),
+                    Styling.rowSpacingWidget(),
+                    Container(
+                        width: 80,
+                        child: Styling.text('${prefs.df(e['f_price1'])}',
+                            ta: TextAlign.right)),
+                    Styling.rowSpacingWidget(),
+                  ],
+                ),
+                Styling.columnSpacingWidget(),
+              ]
+            ]));
           }
           return Container();
         }))

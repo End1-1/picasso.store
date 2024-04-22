@@ -31,6 +31,10 @@ extension Prefs on SharedPreferences {
     return DateFormat('dd/MM/yyyy').format(dt);
   }
 
+  DateTime strDate(String s) {
+    return DateFormat('yyyy-MM-dd').parse(s);
+  }
+
   String dateText(DateTime dt) {
     return DateFormat('dd/MM/yyyy').format(dt);
   }

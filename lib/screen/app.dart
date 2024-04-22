@@ -19,12 +19,15 @@ abstract class WMApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: PreferredSize(preferredSize: const Size.fromHeight(56),
+    child: BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
+      return AppBar(
         backgroundColor: Styling.appBarBackgroundColor,
         leading: leadingButton(context),
         title: _title(),
         centerTitle: true,
-        actions: actions(),
+        actions:  actions()
+        );}),
       ),
       body: SafeArea(
         //minimum: const EdgeInsets.fromLTRB(5, 10, 5, 2),
@@ -44,13 +47,12 @@ abstract class WMApp extends StatelessWidget {
             return Container();
           }),
           WMAppMenu(model, menuWidgets()),
-          BlocBuilder<QuestionBloc, QuestionState>(builder: (builder, state){
+          BlocBuilder<QuestionBloc, QuestionState>(builder: (builder, state) {
             if (state is QuestionStateRaise) {
               return questionDialog(state.question, state.ifYes, state.ifNo);
             }
             return Container();
-          }
-          )
+          })
         ]),
       ),
     );
@@ -100,20 +102,20 @@ abstract class WMApp extends StatelessWidget {
   Widget loading(String text) {
     return Container(
       height: MediaQuery.sizeOf(prefs.context()).height,
-        width: MediaQuery.sizeOf(prefs.context()).width,
-        color: Colors.black26,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(
-                  height: 30, width: 30, child: CircularProgressIndicator()),
-              Styling.columnSpacingWidget(),
-              Styling.text(text)
-            ],
-          ),
-        );
+      width: MediaQuery.sizeOf(prefs.context()).width,
+      color: Colors.black26,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          const SizedBox(
+              height: 30, width: 30, child: CircularProgressIndicator()),
+          Styling.columnSpacingWidget(),
+          Styling.text(text)
+        ],
+      ),
+    );
   }
 
   Widget errorDialog(String text) {
@@ -179,11 +181,10 @@ abstract class WMApp extends StatelessWidget {
                         child: SingleChildScrollView(
                             child: Styling.textCenter(text))),
                     Styling.columnSpacingWidget(),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                        children: [
+                    Row(mainAxisSize: MainAxisSize.min, children: [
                       Styling.textButton(ifYes, model.tr('Yes')),
-                      Styling.textButton(ifNo ?? model.closeQuestionDialog, model.tr('Cancel'))
+                      Styling.textButton(
+                          ifNo ?? model.closeQuestionDialog, model.tr('Cancel'))
                     ])
                   ],
                 ),

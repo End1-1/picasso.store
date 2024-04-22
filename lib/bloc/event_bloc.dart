@@ -9,6 +9,7 @@ class AppEventLoading extends AppEvent {
   final String text;
   final String route;
   final Map<String, dynamic> data;
+  final AppStateFinished? state;
   final Function(bool, dynamic)? callback;
 
   ///{@template AppEventLoading}
@@ -16,7 +17,7 @@ class AppEventLoading extends AppEvent {
   ///callback 1st - bool, is error
   ///2nd - data
   ///{@endtemplate}
-  AppEventLoading(this.text, this.route, this.data, this.callback) ;
+  AppEventLoading(this.text, this.route, this.data, this.callback, this.state) ;
 }
 
 class AppEventError extends AppEvent {

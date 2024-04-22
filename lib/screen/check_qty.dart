@@ -5,7 +5,10 @@ import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+part 'check_qty.model.dart';
+
 class WMCheckQty extends WMApp {
+  final _model = CheckQtyModel();
   WMCheckQty({super.key, required super.model});
 
   @override
@@ -22,17 +25,17 @@ class WMCheckQty extends WMApp {
           children: [
             Expanded(
                 child: Styling.textFormField(
-                    model.scancodeTextController, model.tr('Barcode'),
-                    onSubmit: model.searchBarcode,
+                    _model.scancodeTextController, model.tr('Barcode'),
+                    onSubmit: searchBarcode,
                     autofocus: true,
-                    focusNode: model.scancodeFocus)),
+                    focusNode: _model.scancodeFocus)),
             IconButton(
                 onPressed: () {
-                  model.scancodeTextController.clear();
-                  model.scancodeFocus.requestFocus();
+                  _model.scancodeTextController.clear();
+                  _model.scancodeFocus.requestFocus();
                 },
                 icon: const Icon(Icons.clear_sharp)),
-            IconButton(onPressed: model.readBarcode, icon: const Icon(Icons.qr_code))
+            IconButton(onPressed: readBarcode, icon: const Icon(Icons.qr_code))
           ],
         ),
         Styling.columnSpacingWidget(),
@@ -42,7 +45,7 @@ class WMCheckQty extends WMApp {
               children: [
                 InkWell(
                     onTap: () {
-                      model.replaceBarcodeSize("34");
+                      replaceBarcodeSize("34");
                     },
                     child: Container(
                         decoration: const BoxDecoration(
@@ -53,7 +56,7 @@ class WMCheckQty extends WMApp {
                         child: Container(child: const Text('34')))),
                 InkWell(
                     onTap: () {
-                      model.replaceBarcodeSize("36");
+                      replaceBarcodeSize("36");
                     },
                     child: Container(
                         decoration: const BoxDecoration(
@@ -64,7 +67,7 @@ class WMCheckQty extends WMApp {
                         child: Container(child: const Text('36')))),
                 InkWell(
                     onTap: () {
-                      model.replaceBarcodeSize("38");
+                      replaceBarcodeSize("38");
                     },
                     child: Container(
                         decoration: const BoxDecoration(
@@ -75,7 +78,7 @@ class WMCheckQty extends WMApp {
                         child: Container(child: const Text('38')))),
                 InkWell(
                     onTap: () {
-                      model.replaceBarcodeSize("40");
+                      replaceBarcodeSize("40");
                     },
                     child: Container(
                         decoration: const BoxDecoration(
@@ -86,7 +89,7 @@ class WMCheckQty extends WMApp {
                         child: Container(child: const Text('40')))),
                 InkWell(
                     onTap: () {
-                      model.replaceBarcodeSize("42");
+                      replaceBarcodeSize("42");
                     },
                     child: Container(
                         decoration: const BoxDecoration(
@@ -97,7 +100,7 @@ class WMCheckQty extends WMApp {
                         child: Container(child: const Text('42')))),
                 InkWell(
                     onTap: () {
-                      model.replaceBarcodeSize("44");
+                      replaceBarcodeSize("44");
                     },
                     child: Container(
                         decoration: const BoxDecoration(
@@ -113,7 +116,7 @@ class WMCheckQty extends WMApp {
           if (state.runtimeType == AppState) {
             return Container();
           }
-          if (state is AppStateFinished) {
+          if (state is AppStateCheckQty) {
             if (state.data.isEmpty) {
               return Container();
             }
@@ -154,7 +157,7 @@ class WMCheckQty extends WMApp {
                       onTap: () {
                         model.navigation.goodsReservation(state.data, e).then((value) {
                           if (value ?? false) {
-                            model.searchBarcode(model.scancodeTextController.text);
+                            searchBarcode(_model.scancodeTextController.text);
                           }
                         });
                       },
