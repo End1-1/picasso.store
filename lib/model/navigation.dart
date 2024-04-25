@@ -100,7 +100,7 @@ class Navigation {
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomChart(model: model)));
   }
 
-  Future<Object?> openFolio(dynamic d) async {
+  Future<bool?> openFolio(dynamic d) async {
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomReserve(model: model,room: {}, folio: d)));
   }
 }

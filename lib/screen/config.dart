@@ -1,3 +1,4 @@
+import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,10 @@ class WMConfig extends WMApp {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
         Styling.textButton(model.registerOnServer, model.tr('Register on server'))
-      ])
+      ]),
+      Row(children: [
+        Expanded(child: Styling.textCenter(prefs.string('appversion')))
+      ],)
     ]));
   }
 }

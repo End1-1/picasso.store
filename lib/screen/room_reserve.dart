@@ -2,10 +2,13 @@ import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/app.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
+import 'package:cafe5_mworker/utils/res.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 part 'room_reserve.model.dart';
 
@@ -30,6 +33,10 @@ class WMRoomReserve extends WMApp {
   @override
   List<Widget> actions() {
     return [
+      if (canCancel())
+        IconButton(onPressed: cancel, icon: const Icon(Icons.cancel_outlined)),
+      if (canCheckin())
+        IconButton(onPressed: checkin, icon: SvgPicture.memory(Res.images['checkin']!, height: 30, width: 30,)),
       if (state() == 1)
         IconButton(onPressed: checkOut, icon: const Icon(Icons.departure_board_sharp)),
       IconButton(onPressed: save, icon: const Icon(Icons.save_outlined))

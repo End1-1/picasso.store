@@ -180,6 +180,20 @@ extension WMERoomReserve on WMRoomReserve {
     '${d * (double.tryParse(_model.priceTextController.text) ?? 0)}';
   }
 
+  void checkin() {
+    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Confirm to checkin'), (){
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Checkout'), '/engine/hotel/checkin.php', {
+        'reservation': _model.reservation
+      }, (e, d) {
+        if (e) {
+          return;
+        }
+        Navigator.pop(prefs.context(), true);
+      }, AppStateFinished()));
+
+    }, null));
+  }
+
   void checkOut() {
     if (folioBalance() != 0) {
       BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Balance not zero'), (){
@@ -199,6 +213,20 @@ extension WMERoomReserve on WMRoomReserve {
 
     }, null));
 
+  }
+
+  void cancel() {
+    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Confirm to cancel reservation'), (){
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Checkout'), '/engine/hotel/cancel-reservation.php', {
+        'reservation': _model.reservation
+      }, (e, d) {
+        if (e) {
+          return;
+        }
+        Navigator.pop(prefs.context(), true);
+      }, AppStateFinished()));
+
+    }, null));
   }
 
   void save() {
@@ -237,6 +265,19 @@ extension WMERoomReserve on WMRoomReserve {
     });
   }
 
+  bool canCheckin() {
+    if (_model.reservation == null) {
+      return false;
+    }
+    if (_model.reservation.isEmpty) {
+      return false;
+    }
+    if (_model.reservation['f_state'] == 2 && _model.entryDate == prefs.strDate(prefs.string('workingday'))) {
+      return true;
+    }
+    return false;
+  }
+
   int state() {
     if (_model.reservation == null) {
       return 0;
@@ -248,5 +289,18 @@ extension WMERoomReserve on WMRoomReserve {
       return int.tryParse(_model.reservation['f_state']) ?? 0;
     }
     return _model.reservation['f_state'];
+  }
+
+  bool canCancel() {
+    if (_model.reservation == null) {
+      return false;
+    }
+    if (_model.reservation.isEmpty) {
+      return false;
+    }
+    if (_model.reservation['f_state'] == 2) {
+      return true;
+    }
+    return false;
   }
 }
