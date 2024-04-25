@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'navigation.dart';
 
 class AppStateAppBar extends AppState {}
+
 class AppEventAppBar extends AppEvent {}
 
 class WMModel {
@@ -32,13 +33,13 @@ class WMModel {
     prefs.setString('serveraddress', serverTextController.text);
     BlocProvider.of<AppBloc>(Prefs.navigatorKey.currentContext!).add(
         AppEventLoading(
-            tr('Registering on server'), 'engine/register-on-server.php', {
+            tr('Registering on server'), 'engine/login.php', {
+              'method':1,
       'username': serverUserTextController.text,
       'password': serverPasswordTextController.text
     }, (e, d) {
       if (!e) {
         prefs.setString('serveraddress', serverTextController.text);
-        prefs.setString('apikey', d['apikey']);
         serverPasswordTextController.clear();
         serverUserTextController.clear();
         Navigator.pop(prefs.context(), true);
@@ -95,5 +96,10 @@ class WMModel {
   void closeQuestionDialog() {
     BlocProvider.of<QuestionBloc>(Prefs.navigatorKey.currentContext!)
         .add(QuestionEvent());
+  }
+
+  void menuRaise() {
+    BlocProvider.of<AppAnimateBloc>(prefs.context())
+        .add(AppAnimateEventRaise());
   }
 }

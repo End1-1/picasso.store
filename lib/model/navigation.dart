@@ -10,8 +10,10 @@ import 'package:cafe5_mworker/screen/goods_info.dart';
 import 'package:cafe5_mworker/screen/goods_reserve.dart';
 import 'package:cafe5_mworker/screen/login.dart';
 import 'package:cafe5_mworker/screen/qr_reader.dart';
+import 'package:cafe5_mworker/screen/room_chart.dart';
 import 'package:cafe5_mworker/screen/room_reserve.dart';
 import 'package:cafe5_mworker/screen/rooms.dart';
+import 'package:cafe5_mworker/screen/voucher.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,7 +87,20 @@ class Navigation {
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMGoodsReserve(info, store, model: model)));
   }
 
-  Future<void> openRoom(dynamic r) {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomReserve(model: model, room: r)));
+  Future<bool?> openRoom(dynamic r) async {
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomReserve(model: model, room: r, folio: <String,dynamic>{},)));
+  }
+
+  Future<bool?> openVoucher(String id, dynamic reservation) {
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMVoucher(model: model, id: id,  reservation: reservation,)));
+  }
+
+  Future<bool?> openRoomChart() async {
+    BlocProvider.of<AppAnimateBloc>(prefs.context()).add(AppAnimateEvent());
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomChart(model: model)));
+  }
+
+  Future<Object?> openFolio(dynamic d) async {
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomReserve(model: model,room: {}, folio: d)));
   }
 }

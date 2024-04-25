@@ -85,10 +85,7 @@ abstract class WMApp extends StatelessWidget {
     }
     return [
       IconButton(
-          onPressed: () {
-            BlocProvider.of<AppAnimateBloc>(prefs.context())
-                .add(AppAnimateEventRaise());
-          },
+          onPressed: model.menuRaise,
           icon: Icon(Icons.menu_sharp)),
     ];
   }
@@ -182,9 +179,9 @@ abstract class WMApp extends StatelessWidget {
                             child: Styling.textCenter(text))),
                     Styling.columnSpacingWidget(),
                     Row(mainAxisSize: MainAxisSize.min, children: [
-                      Styling.textButton(ifYes, model.tr('Yes')),
+                      Styling.textButton((){model.closeQuestionDialog(); ifYes();}, model.tr('Yes')),
                       Styling.textButton(
-                          ifNo ?? model.closeQuestionDialog, model.tr('Cancel'))
+                          (){model.closeQuestionDialog(); if(ifNo != null){ifNo!();}}, model.tr('Cancel'))
                     ])
                   ],
                 ),

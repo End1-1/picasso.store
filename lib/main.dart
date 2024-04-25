@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/bloc/date_bloc.dart';
 import 'package:cafe5_mworker/bloc/question_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'model/model.dart';
@@ -13,7 +16,10 @@ import 'model/navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   prefs = await SharedPreferences.getInstance();
+  PackageInfo pa = await PackageInfo.fromPlatform();
+  prefs.setString('appversion', '${pa.version}.${pa.buildNumber}');
   prefs.init();
   runApp(MultiBlocProvider(providers: [
     BlocProvider<AppBloc>(create: (context) => AppBloc()),
@@ -39,7 +45,7 @@ class _App extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Picasso',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
@@ -54,14 +60,14 @@ class _App extends State<App> {
                             .add(InitAppEvent());
                       }
                       if (state.runtimeType == InitAppStateFinished) {
-                        if (prefs.getBool('stayloggedin') ?? false && prefs.string('sessionkey').isNotEmpty) {
+                        if ((prefs.getBool('stayloggedin') ?? false) && prefs.string('sessionkey').isNotEmpty) {
                           widget.model.loginPasswordHash();
                         }
                       }
                     },
                     child: BlocBuilder<InitAppBloc, InitAppState>(
                       builder: (context, state) {
-                        if (prefs.string('serveraddress').isEmpty || prefs.string('apikey').isEmpty) {
+                        if (prefs.string('serveraddress').isEmpty) {
                           return Center(
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -94,6 +100,7 @@ class _App extends State<App> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
+                                      Expanded(child: Container()),
                                   Row(children: [
                                     Expanded(
                                         child:
@@ -107,7 +114,11 @@ class _App extends State<App> {
                                         Styling.textButton(() {
                                           BlocProvider.of<InitAppBloc>(context).add(InitAppEvent());
                                         }, widget.model.tr('Retry'))
-                                      ])
+                                      ]),
+                                      Expanded(child: Container()),
+                                      Row(children: [
+                                        Expanded(child: Styling.textCenter(prefs.string('appversion')))
+                                      ],)
                                 ]));
                           }
                           return Center(
@@ -117,5 +128,13 @@ class _App extends State<App> {
                         return Container();
                       },
                     )))));
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

@@ -102,7 +102,7 @@ class WMRoomsScreen extends WMApp {
         bgColor = Colors.indigo;
         break;
     }
-    return InkWell(onTap:(){model.navigation.openRoom(e);}, child: Container(
+    return InkWell(onTap:(){openRoom(e);}, child: Container(
         margin: const EdgeInsets.fromLTRB(3, 3, 3, 3),
         decoration: BoxDecoration(
             color: bgColor,

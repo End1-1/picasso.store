@@ -1,30 +1,38 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/app.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_launcher_icons/ios.dart';
 
 part 'room_reserve.model.dart';
 
 class WMRoomReserve extends WMApp {
   final _model = RoomReserveModel();
 
-  WMRoomReserve({super.key, required super.model, dynamic room}) {
+  WMRoomReserve({super.key, required super.model, dynamic room, dynamic folio}) {
     _model.room = room;
-    openRoom();
+    _model.reservation = folio;
+    if (folio.isEmpty && _model.room.isNotEmpty) {
+      openRoom();
+    } else {
+      openFolio();
+    }
   }
 
   @override
   String titleText() {
-    return _model.room['f_short'];
+    return _model.room.isEmpty ? '' :_model.room['f_short'];
   }
 
   @override
   List<Widget> actions() {
     return [
-      IconButton(onPressed: save, icon: Icon(Icons.save_outlined))
+      if (state() == 1)
+        IconButton(onPressed: checkOut, icon: const Icon(Icons.departure_board_sharp)),
+      IconButton(onPressed: save, icon: const Icon(Icons.save_outlined))
     ];
   }
 
@@ -36,7 +44,9 @@ class WMRoomReserve extends WMApp {
   }
 
   Widget reserve() {
-    return Column(children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
       Row(children: [
         Expanded(
             child: Styling.textCenter(model.tr('Reservation').toUpperCase()))
@@ -75,7 +85,8 @@ class WMRoomReserve extends WMApp {
         Expanded(child: Container()),
         SizedBox(
             width: 150,
-            child: Styling.textFormFieldNumbers(_model.priceTextController, '', onChange: priceChanged))
+            child: Styling.textFormFieldNumbers(_model.priceTextController, '',
+                onChange: priceChanged))
       ]),
       Styling.columnSpacingWidget(),
       Row(children: [
@@ -89,25 +100,33 @@ class WMRoomReserve extends WMApp {
       ]),
       Styling.columnSpacingWidget(),
       Row(children: [
-        Expanded(child: Styling.textFormField(_model.remarksTextController, model.tr('Remarks'), maxLines: 4)),
+        Expanded(
+            child: Styling.textFormField(
+                _model.remarksTextController, model.tr('Remarks'),
+                maxLines: 4)),
       ]),
       Divider(),
       Row(children: [
         Expanded(child: Styling.textCenter(model.tr('Guests').toUpperCase()))
       ]),
       for (int i = 0; i < _model.guests.length; i++) ...[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 20, child: Styling.text('${i + 1}')),
-            SizedBox(
-                width: 150,
-                child: Styling.text(_model.guests[i]['f_lastname'])),
-            SizedBox(
-                width: 150,
-                child: Styling.text(_model.guests[i]['f_firstname'])),
-          ],
-        )
+        SingleChildScrollView(scrollDirection: Axis.horizontal, child: InkWell(
+            onTap: () {},
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(width: 20, child: Styling.text('${i + 1}')),
+                SizedBox(
+                    width: 150,
+                    child: Styling.text(_model.guests[i]['f_lastname'])),
+                SizedBox(
+                    width: 150,
+                    child: Styling.text(_model.guests[i]['f_firstname'])),
+                SizedBox(
+                    width: 150,
+                    child: Styling.text(_model.guests[i]['f_tel1'] ?? '')),
+              ],
+            )))
       ],
       Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,6 +138,34 @@ class WMRoomReserve extends WMApp {
       Row(children: [
         Expanded(child: Styling.textCenter(model.tr('Folio').toUpperCase()))
       ]),
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(onPressed: addVoucher, icon: Icon(Icons.add_box_outlined))
+              ]),
+      for (int i = 0; i < _model.folio.length; i++) ...[
+        folioRow(i, _model.folio[i]),
+        Divider(),
+      ],
+          Divider(),
+          Row(children: [
+            SizedBox(width: 270, child: Styling.textBold(model.tr('Balance'))),
+            Styling.textBold('${folioBalance()}')
+          ],)
     ]);
+  }
+
+  Widget folioRow(int i, dynamic f) {
+    return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            SizedBox(width: 20, child: Styling.text('${i+1}.')),
+            SizedBox(width: 90, child: Styling.text(f['f_wdate'])),
+            SizedBox(width: 160, child: Styling.text(f['f_finalname'])),
+            SizedBox(width: 80, child: Styling.text('${(double.tryParse(f['f_amountamd'])??0) * f['f_sign']}')),
+          ],
+        ));
   }
 }

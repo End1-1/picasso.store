@@ -4,9 +4,11 @@ import 'package:cafe5_mworker/utils/http_query.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/res.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'event_bloc.dart';
+
 part 'state_bloc.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
@@ -41,19 +43,28 @@ class InitAppBloc extends Bloc<InitAppEvent, InitAppState> {
   }
 
   void configureClient(InitAppEvent event) async {
-    if (prefs.string('serveraddress').isEmpty || prefs.string('apikey').isEmpty) {
-      emit(InitAppState());
+    if (kIsWeb) {
+      prefs.setString('serveraddress', Uri.base.host);
+      final result = await HttpQuery('engine/client-config.php')
+          .request({'res_version': prefs.getInt('res_version') ?? 0});
+      initRes(result);
+      emit(InitAppStateFinished(result['status'] == 0,
+          result['status'] == 0 ? result['data'] : '', result['data']));
+      return;
+    }
+    if (prefs.string('serveraddress').isEmpty) {
+      emit(InitAppStateFinished(true, '', null));
       return;
     }
     emit(InitAppStateLoading());
-    final result = await HttpQuery('engine/client-config.php').request({
-      'res_version': prefs.getInt('res_version') ?? 0
-    });
-    if (result['status'] == 0) {
-      if (result['data'].contains('ugly cow')) {
-        prefs.setString('apikey', '');
-      }
-    }
+    final result = await HttpQuery('engine/client-config.php')
+        .request({'res_version': prefs.getInt('res_version') ?? 0});
+    initRes(result);
+    emit(InitAppStateFinished(result['status'] == 0,
+        result['status'] == 0 ? result['data'] : '', result['data']));
+  }
+
+  void initRes(dynamic result) {
     if (result['status'] == 1) {
       dynamic d = result['data'];
       if (d['res_version'] != (prefs.getInt('res_version') ?? 0)) {
@@ -64,8 +75,6 @@ class InitAppBloc extends Bloc<InitAppEvent, InitAppState> {
       Res.initFrom(prefs.string('res'));
       Res.initTr(prefs.string('translator_hy'));
     }
-    emit(InitAppStateFinished(result['status'] == 0,
-        result['status'] == 0 ? result['data'] : '', result['data']));
   }
 }
 
@@ -74,5 +83,4 @@ class AppAnimateBloc extends Bloc<AppAnimateEvent, AppAnimateStateIdle> {
     on<AppAnimateEvent>((event, emit) => emit(AppAnimateStateIdle()));
     on<AppAnimateEventRaise>((event, emit) => emit(AppAnimateStateRaise()));
   }
-
 }

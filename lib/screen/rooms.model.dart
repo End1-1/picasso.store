@@ -103,4 +103,11 @@ extension WMERoomsScreen on WMRoomsScreen {
     });
   }
 
+  void openRoom(dynamic e) {
+    model.navigation.openRoom(e).then((value) {
+      if (value ?? false){
+        getRooms(); }
+    });
+  }
+
 }

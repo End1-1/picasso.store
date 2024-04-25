@@ -12,6 +12,8 @@ class Styling {
       int maxLines = 1,
       bool autofocus = false,
       bool readOnly = false,
+        GestureTapCallback? onTap,
+        Function(String)? onChanged,
       FocusNode? focusNode}) {
     return TextFormField(
       onFieldSubmitted: onSubmit,
@@ -19,6 +21,8 @@ class Styling {
       maxLines: maxLines,
       readOnly: readOnly,
       autofocus: autofocus,
+      onTap: onTap,
+      onChanged: onChanged,
       focusNode: focusNode,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
@@ -119,6 +123,10 @@ class Styling {
 
   static text(String s, {TextAlign ta = TextAlign.left}) {
     return Text(s, textAlign: ta, style: const TextStyle(color: Colors.black));
+  }
+
+  static textBold(String s, {TextAlign ta = TextAlign.left}) {
+    return Text(s, textAlign: ta, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold));
   }
 
   static textWithWidth(String s, double w,

@@ -1,0 +1,157 @@
+import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/screen/app.dart';
+import 'package:cafe5_mworker/utils/prefs.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+part 'room_chart.model.dart';
+
+class WMRoomChart extends WMApp {
+  final _model = RoomChartModel();
+
+  WMRoomChart({super.key, required super.model}) {
+    getChart();
+  }
+
+  @override
+  Widget body() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                  onPressed: backMonth,
+                  icon: Icon(Icons.keyboard_double_arrow_left)),
+              IconButton(onPressed: backWeek, icon: Icon(Icons.arrow_back)),
+              IconButton(
+                  onPressed: forwardWeek, icon: Icon(Icons.arrow_forward)),
+              IconButton(
+                  onPressed: forwardMonth,
+                  icon: Icon(Icons.keyboard_double_arrow_right))
+            ]),
+        Expanded(
+            child: BlocBuilder<AppBloc, AppState>(
+                buildWhen: (p, c) => c is AppStateRoomChart,
+                builder: (builder, state) {
+                  return chart();
+                })),
+      ],
+    );
+  }
+
+  Widget chart() {
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              Container(
+                width: 100,
+                height: 50,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    color: Colors.black12,
+                    border: Border.fromBorderSide(
+                        BorderSide(color: Colors.black12))),
+                child: Text(model.tr('Room')),
+              ),
+              Expanded(
+                  child: SingleChildScrollView(
+
+                    controller: _model.roomsVertScrollController,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                    for (final r in _model.rooms) ...[
+                      Container(
+                          width: 100,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: colorOfRoomState(r['f_state']),
+                              border: Border.fromBorderSide(
+                                  BorderSide(color: Colors.black12))),
+                          child: Text(r['f_short']))
+                    ]
+                  ])))
+            ],
+          ),
+          Expanded(
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          for (int i = 0; i < 40; i++) ...[headerDay(i)]
+                        ],
+                      ),
+                      Expanded(child: SingleChildScrollView(
+                        controller: _model.chartVertScrollController,
+                          child: Stack(children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (int i = 0; i < _model.rooms.length; i++) ...[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (int j = 0; j < 40; j++) chartWhite(i, j)
+                                ],
+                              )
+                            ]
+                          ],
+                        ),
+
+                            for (final r in filterReservations())
+                              chartReserve(r)
+                      ])))
+                    ],
+                  )))
+        ]);
+  }
+
+  Widget headerDay(int i) {
+    return Container(
+      width: 50,
+      height: 50,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+          color: Colors.black12,
+          border: Border.fromBorderSide(BorderSide(color: Colors.black12))),
+      child: Text('${_model.date.add(Duration(days: i)).day}'),
+    );
+  }
+
+  Widget chartWhite(int i, int j) {
+    return  InkWell(
+      onTap:(){},
+        child: Container(
+      width: 50,
+      height: 50,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border.fromBorderSide(BorderSide(color: Colors.black12))),
+    ));
+  }
+  
+  Widget chartReserve(dynamic d) {
+    return Positioned(
+      top: _model.roomPos[d['f_room']]! * RoomChartModel.squareside,
+        left: leftOfReserve(d),
+        child: InkWell(onTap: (){model.navigation.openFolio(d);}, child: Container(
+      height: RoomChartModel.squareside - 4,
+      width: (RoomChartModel.squareside * lengthOfReserve(d)) - 4,
+      margin: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        color: colorOfReserveState(d['f_state']),
+        border: Border.fromBorderSide(BorderSide(color: Colors.black12))
+      )),
+    ));
+  }
+}

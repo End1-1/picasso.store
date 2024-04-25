@@ -8,20 +8,26 @@ import 'package:http/http.dart' as http;
 
 class HttpQuery {
 
+  bool needlonglog = false;
   final String route;
   final int timeout;
   HttpQuery(this.route, {this.timeout = 10});
 
   Future<Map<String, dynamic>> request(Map<String, dynamic> inData) async {
-    inData['apikey'] = prefs.apiKey();
     inData['sessionkey'] = prefs.string('sessionkey');
+    inData['appversion'] = prefs.string('appversion');
+    inData['app'] = 'mobileworker';
     inData['config'] = prefs.string('config');
     inData['language'] = 'am';
 
     Map<String, Object?> outData = {};
     String strBody = jsonEncode(inData);
     if (kDebugMode) {
-      print('request ${prefs.string("serveraddress")}/$route: $strBody');
+      if (needlonglog) {
+        debugPrint('request ${prefs.string("serveraddress")}/$route: $strBody');
+      } else {
+          print('request ${prefs.string("serveraddress")}/$route: $strBody');
+      }
     }
     try {
       var response = await http
@@ -36,7 +42,11 @@ class HttpQuery {
       });
       String strResponse = utf8.decode(response.bodyBytes);
       if (kDebugMode) {
-        print('Row body $strResponse');
+        if (needlonglog) {
+          debugPrint('Row body $strResponse');
+        } else {
+          print('Row body $strResponse');
+        }
       }
       if (response.statusCode < 299) {
         try {
@@ -66,7 +76,11 @@ class HttpQuery {
       outData['data'] = e.toString();
     }
     if (kDebugMode) {
-      print('Output $outData');
+      if (needlonglog) {
+        debugPrint('Output $outData');
+      } else {
+        print('Output $outData');
+      }
     }
     return outData;
   }

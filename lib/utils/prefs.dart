@@ -10,10 +10,6 @@ extension Prefs on SharedPreferences {
   static final regex = RegExp(r"([.]*0+)(?!.*\d)");
   static Map<String, dynamic> config = {};
 
-  String apiKey() {
-    return string('apikey');
-  }
-
   BuildContext context() {
     return navigatorKey.currentContext!;
   }

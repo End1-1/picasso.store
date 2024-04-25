@@ -6,9 +6,11 @@ class RoomReserveModel {
   final remarksTextController = TextEditingController();
   final guestFirstNameTextController = TextEditingController();
   final guestLastNameTextController = TextEditingController();
+  final guestPhoneTextController = TextEditingController();
   final guests = <dynamic>[];
-  final reservation = <String, dynamic>{};
-  dynamic room;
+  var reservation = <String, dynamic>{};
+  final folio = <dynamic>[];
+  var room = {};
   var createdDate = DateTime.now();
   var entryDate = DateTime.now();
   var departureDate = DateTime.now();
@@ -28,8 +30,9 @@ extension WMERoomReserve on WMRoomReserve {
         return;
       }
       if (d['reservation'].isNotEmpty) {
-        final r = d['reservation'][0];
-        _model.reservation.addAll(d['reservation'][0]);
+        final r = d['reservation'];
+        _model.reservation.clear();
+        _model.reservation = r;
         _model.createdDate = prefs.strDate(r['f_created']);
         _model.entryDate = prefs.strDate(r['f_startDate']);
         _model.departureDate = prefs.strDate(r['f_endDate']);
@@ -39,6 +42,37 @@ extension WMERoomReserve on WMRoomReserve {
         for (final e in d['guests']) {
           _model.guests.add(e);
         }
+        _model.folio.clear();
+        _model.folio.addAll(d['folio']);
+        _model.room = d['room'];
+      }
+    }, AppStateRoomReserve()));
+  }
+
+  void openFolio(){
+    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
+        model.tr('Open folio'),
+        '/engine/hotel/open-folio.php',
+        {'f_id': _model.reservation['f_id']}, (e, d) {
+      if (e) {
+        return;
+      }
+      if (d['reservation'].isNotEmpty) {
+        final r = d['reservation'];
+        _model.reservation.clear();
+        _model.reservation = r;
+        _model.createdDate = prefs.strDate(r['f_created']);
+        _model.entryDate = prefs.strDate(r['f_startDate']);
+        _model.departureDate = prefs.strDate(r['f_endDate']);
+        _model.priceTextController.text = r['f_roomFee'];
+        _model.totalTextController.text = r['f_grandTotal'];
+        _model.guests.clear();
+        for (final e in d['guests']) {
+          _model.guests.add(e);
+        }
+        _model.folio.clear();
+        _model.folio.addAll(d['folio']);
+        _model.room = d['room'];
       }
     }, AppStateRoomReserve()));
   }
@@ -78,6 +112,7 @@ extension WMERoomReserve on WMRoomReserve {
   void addGuest() {
     _model.guestLastNameTextController.clear();
     _model.guestFirstNameTextController.clear();
+    _model.guestPhoneTextController.clear();
     showDialog(
         context: prefs.context(),
         builder: (builder) {
@@ -104,6 +139,15 @@ extension WMERoomReserve on WMRoomReserve {
                                 model.tr('Last name')))
                       ],
                     ),
+                    Styling.columnSpacingWidget(),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Styling.textFormField(
+                                _model.guestPhoneTextController,
+                                model.tr('Phone number')))
+                      ],
+                    ),
                     Row(
                       children: [
                         Styling.textButton(() {
@@ -119,7 +163,8 @@ extension WMERoomReserve on WMRoomReserve {
         _model.guests.add({
           'f_id': 0,
           'f_firstname': _model.guestFirstNameTextController.text,
-          'f_lastname': _model.guestLastNameTextController.text
+          'f_lastname': _model.guestLastNameTextController.text,
+          'f_phone': _model.guestPhoneTextController.text
         });
         BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
             '', '', {}, (p0, p1) => null, AppStateRoomReserveGuest()));
@@ -133,6 +178,27 @@ extension WMERoomReserve on WMRoomReserve {
         .inDays;
     _model.totalTextController.text =
     '${d * (double.tryParse(_model.priceTextController.text) ?? 0)}';
+  }
+
+  void checkOut() {
+    if (folioBalance() != 0) {
+      BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Balance not zero'), (){
+
+      }, null));
+      return;
+    }
+    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Confirm to checkout'), (){
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Checkout'), '/engine/hotel/checkout.php', {
+        'reservation': _model.reservation
+      }, (e, d) {
+        if (e) {
+          return;
+        }
+        Navigator.pop(prefs.context(), true);
+      }, AppStateFinished()));
+
+    }, null));
+
   }
 
   void save() {
@@ -150,6 +216,37 @@ extension WMERoomReserve on WMRoomReserve {
     if (e) {
     return;
     }
-    }, null));
+    }, AppStateFinished()));
+  }
+
+  double folioBalance() {
+    double b = 0;
+    for (final e in _model.folio) {
+      b += (double.tryParse(e['f_amountamd']) ?? 0) * e['f_sign'];
+    }
+    return b;
+  }
+
+  void addVoucher() {
+    if (_model.reservation.isEmpty) {
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventError(model.tr('Save first')));
+      return;
+    }
+    model.navigation.openVoucher('', _model.reservation).then((value) {
+      openRoom();
+    });
+  }
+
+  int state() {
+    if (_model.reservation == null) {
+      return 0;
+    }
+    if (_model.reservation.isEmpty) {
+      return 0;
+    }
+    if (_model.reservation['f_state'] is String) {
+      return int.tryParse(_model.reservation['f_state']) ?? 0;
+    }
+    return _model.reservation['f_state'];
   }
 }
