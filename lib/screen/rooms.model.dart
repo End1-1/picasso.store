@@ -29,8 +29,12 @@ class RoomsModel {
 
 }
 
-class AppStateRooms extends AppStateFinished {}
-class AppStateRoomsFilter extends AppStateFinished {}
+class AppStateRooms extends AppStateFinished {
+  AppStateRooms({required super.data});
+}
+class AppStateRoomsFilter extends AppStateFinished {
+  AppStateRoomsFilter({required super.data});
+}
 
 extension WMERoomsScreen on WMRoomsScreen {
   void getRooms() {
@@ -50,7 +54,7 @@ extension WMERoomsScreen on WMRoomsScreen {
           _model.categories.add(['0', '[-]', model.tr('All')]);
           _model.categories.addAll(d['categories']);
         },
-        AppStateRooms()));
+        AppStateRooms(data: null)));
   }
 
   void filterCategories() {
@@ -82,7 +86,7 @@ extension WMERoomsScreen on WMRoomsScreen {
         _model.entryDate = value;
         _model.entryDateTextController.text =
             DateFormat('dd/MM/yyyy').format(value);
-        BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, (p0, p1) => null, AppStateRoomsFilter()));
+        BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, (p0, p1) => null, AppStateRoomsFilter(data: null)));
       }
     });
   }
@@ -98,7 +102,7 @@ extension WMERoomsScreen on WMRoomsScreen {
         _model.departureDate = value;
         _model.departureDateTextController.text =
             DateFormat('dd/MM/yyyy').format(value);
-        BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, (p0, p1) => null, AppStateRoomsFilter()));
+        BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, (p0, p1) => null, AppStateRoomsFilter(data: null)));
       }
     });
   }

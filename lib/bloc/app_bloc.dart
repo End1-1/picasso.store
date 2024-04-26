@@ -25,11 +25,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
     emit(AppStateLoading(event.text));
     final result = await HttpQuery(event.route).request(event.data);
-    if (event.state != null) {
-      emit(event.state!..data = result['data']);
-    }
     if (result['status'] == 0) {
       emit(AppStateError(result['data']));
+    }
+    if (event.state != null) {
+      emit(event.state!..data = result['data']);
     }
     if (event.callback != null) {
       event.callback!(result['status'] == 0, result['data']);

@@ -29,8 +29,10 @@ class WMDashboard extends WMApp {
   @override
   List<Widget> actions() {
     return [
-
-        IconButton(onPressed: model.navigation.openRoomChart, icon: const Icon(Icons.table_chart_outlined)),
+      IconButton(onPressed: getDashboard, icon: Icon(Icons.refresh)),
+      IconButton(
+          onPressed: model.navigation.openRoomChart,
+          icon: const Icon(Icons.table_chart_outlined)),
       IconButton(onPressed: model.menuRaise, icon: const Icon(Icons.menu))
     ];
   }
@@ -53,83 +55,128 @@ class WMDashboard extends WMApp {
 
   @override
   Widget body() {
-    return BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
-      return SingleChildScrollView(
-          child: Column(
-        children: [
-          Container(
-              color: const Color(0xff84f1ff),
-              child: Row(children: [
-                Styling.textBold(model.tr('Todays checkin')),
+    return BlocBuilder<AppBloc, AppState>(
+        buildWhen: (p, c) => c is AppStateDashboard,
+        builder: (builder, state) {
+          if (!(state is AppStateDashboard)) {
+            return Container();
+          }
+          final checkin = state.data['checkin'];
+          final checkout = state.data['checkout'];
+          final inhouse = state.data['inhouse'];
+          return SingleChildScrollView(
+              child: Column(
+            children: [
+              Container(
+                  color: const Color(0xff84f1ff),
+                  child: Row(children: [
+                    Styling.textBold(model.tr('Todays checkin')),
+                    Expanded(child: Container()),
+                    Text('${checkin.length}'),
+                    Styling.rowSpacingWidget()
+                  ])),
+              for (final c in checkin) ...[
+                InkWell(
+                    onTap: () {
+                      model.navigation.openFolio(c);
+                    },
+                    child: Container(
+                        color: const Color(0xff84f1ff),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Styling.text(
+                                    '${c['f_startdate']} - ${c['f_enddate']}'),
+                                Expanded(child: Container()),
+                                Styling.text(c['f_roomshort']),
+                                Styling.rowSpacingWidget()
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Styling.text(c['f_guests']),
+                              ],
+                            ),
+                            const Divider(),
+                          ],
+                        )))
+              ],
+              Container(
+                  color: const Color(0xffa7ff84),
+                  child: Row(children: [
+                    Styling.textBold(model.tr('Inhouse guests')),
+                    Expanded(child: Container()),
+                    Text('${inhouse.length}'),
+                    Styling.rowSpacingWidget()
+                  ])),
+              Container(
+                  color: const Color(0xffa7ff84),
+                  child: Column(children: [
+                    for (final c in inhouse) ...[
+                      InkWell(
+                          onTap: () {
+                            model.navigation.openFolio(c);
+                          },
+                          child: Row(
+                            children: [
+                              Styling.text(
+                                  '${c['f_startdate']} - ${c['f_enddate']}'),
+                              Expanded(child: Container()),
+                              Styling.text(c['f_roomshort']),
+                              Styling.rowSpacingWidget()
+                            ],
+                          )),
+                      Row(
+                        children: [
+                          Styling.text(c['f_guests']),
+                        ],
+                      ),
+                      const Divider()
+                    ]
+                  ])),
+              Container(
+                  color: const Color(0xfffff6b3),
+                  child: Row(children: [
+                    Styling.textBold(model.tr('Todays checkout')),
+                    Expanded(child: Container()),
+                    Text('${checkout.length}'),
+                    Styling.rowSpacingWidget()
+                  ])),
+              Container(
+                  color: const Color(0xfffff6b3),
+                  child: Column(children: [
+                    for (final c in checkout) ...[
+                      InkWell(
+                          onTap: () {
+                            model.navigation.openFolio(c).then((value) {
+                              if (value ?? false) getDashboard();
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Styling.text(
+                                  '${c['f_startdate']} - ${c['f_enddate']}'),
+                              Expanded(child: Container()),
+                              Styling.text(c['f_roomshort']),
+                              Styling.rowSpacingWidget()
+                            ],
+                          )),
+                      Row(
+                        children: [
+                          Styling.text(c['f_guests']),
+                        ],
+                      ),
+                      const Divider()
+                    ]
+                  ])),
+              Row(children: [
+                Styling.textBold(model.tr('Payments, cash')),
                 Expanded(child: Container()),
-                Text('${_model.checkin.length}'),
-                Styling.rowSpacingWidget()
-              ])),
-          for (final c in _model.checkin) ...[
-            Container(
-                color: const Color(0xff84f1ff),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Styling.text('${c['f_startdate']} - ${c['f_enddate']}'),
-                        Expanded(child: Container()),
-                        Styling.text(c['f_roomshort']),
-                        Styling.rowSpacingWidget()
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Styling.text(c['f_guests']),
-                      ],
-                    ),
-                    const Divider(),
-                  ],
-                ))
-          ],
-          Container(
-              color: const Color(0xffa7ff84),
-              child: Row(children: [
-                Styling.textBold(model.tr('Inhouse guests')),
-                Expanded(child: Container()),
-                Text('${_model.inhouse.length}'),
-                Styling.rowSpacingWidget()
-              ])),
-          Container(
-              color: const Color(0xffa7ff84),
-              child: Column(children: [
-                for (final c in _model.inhouse) ...[
-                  Row(
-                    children: [
-                      Styling.text('${c['f_startdate']} - ${c['f_enddate']}'),
-                      Expanded(child: Container()),
-                      Styling.text(c['f_roomshort']),
-                      Styling.rowSpacingWidget()
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Styling.text(c['f_guests']),
-                    ],
-                  ),
-                  const Divider()
-                ]
-              ])),
-      Container(
-      color: const Color(0xfffff6b3),
-      child: Row(children: [
-            Styling.textBold(model.tr('Todays checkout')),
-            Expanded(child: Container()),
-            Text('${_model.checkout.length}'),
-        Styling.rowSpacingWidget()
-          ])),
-          Row(children: [
-            Styling.textBold(model.tr('Payments, cash')),
-            Expanded(child: Container()),
-            const Text('0')
-          ]),
-        ],
-      ));
-    });
+                Text('${state.data['payment'][0]["f_amountamd"]}')
+              ]),
+            ],
+          ));
+        });
   }
 }

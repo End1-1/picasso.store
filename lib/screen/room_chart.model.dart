@@ -26,7 +26,9 @@ class RoomChartModel {
   }
 }
 
-class AppStateRoomChart extends AppStateFinished {}
+class AppStateRoomChart extends AppStateFinished {
+  AppStateRoomChart({required super.data});
+}
 
 class AppEventRoomChart extends AppEventLoading {
   AppEventRoomChart(
@@ -73,7 +75,7 @@ extension WMERoomChart on WMRoomChart {
       for (int i = 0; i < _model.rooms.length; i++) {
         _model.roomPos[_model.rooms[i]['f_id']] = i * 1.0;
       }
-    }, AppStateRoomChart()));
+    }, AppStateRoomChart(data:null)));
   }
 
   Color colorOfReserveState(String state) {

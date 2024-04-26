@@ -19,7 +19,7 @@ class AppStateError extends AppState {
 
 class AppStateFinished extends AppState {
   dynamic data;
-  AppStateFinished({this.data});
+  AppStateFinished({required this.data});
 }
 
 class InitAppState extends Equatable {

@@ -5,7 +5,9 @@ class CheckStoreInputModel {
   final scancodeFocus = FocusNode();
 }
 
-class AppStateCheckStoreInput extends AppStateFinished{}
+class AppStateCheckStoreInput extends AppStateFinished{
+  AppStateCheckStoreInput({required super.data});
+}
 
 extension WMECheckStoreInput on WMCheckStoreInput {
   void searchBarcodeStoreInput(String b) {
@@ -18,7 +20,7 @@ extension WMECheckStoreInput on WMCheckStoreInput {
       'mode': 1
     }, (e, d) {
 
-    }, AppStateCheckStoreInput()));
+    }, AppStateCheckStoreInput(data:null)));
   }
 
   void checkBarcodeStoreInput() {
@@ -36,7 +38,7 @@ extension WMECheckStoreInput on WMCheckStoreInput {
         'Querying',
         'engine/worker/store-input-check-barcode.php',
         {'store': Prefs.config['store'] ?? 0, 'mode': 2},
-            (e, d) => null, AppStateCheckStoreInput() ));
+            (e, d) => null, AppStateCheckStoreInput(data:null) ));
   }
 
   void checkedStoreInput(String s, dynamic d) {
@@ -53,7 +55,7 @@ extension WMECheckStoreInput on WMCheckStoreInput {
               if (e['f_id'] == s){
                 e['f_acc'] = d['acc'];
                 a['result'][i] = e;
-                BlocProvider.of<AppBloc>(prefs.context()).emit(AppStateCheckStoreInput()..data = a);
+                BlocProvider.of<AppBloc>(prefs.context()).emit(AppStateCheckStoreInput(data: a));
                 return;
               }
             }

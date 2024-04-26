@@ -36,7 +36,7 @@ class WMRoomReserve extends WMApp {
       if (canCancel())
         IconButton(onPressed: cancel, icon: const Icon(Icons.cancel_outlined)),
       if (canCheckin())
-        IconButton(onPressed: checkin, icon: SvgPicture.memory(Res.images['checkin']!, height: 30, width: 30,)),
+        IconButton(onPressed: checkin, icon: SvgPicture.memory(Res.images['checkin']!, color: Colors.black, height: 24, width: 24,)),
       if (state() == 1)
         IconButton(onPressed: checkOut, icon: const Icon(Icons.departure_board_sharp)),
       IconButton(onPressed: save, icon: const Icon(Icons.save_outlined))

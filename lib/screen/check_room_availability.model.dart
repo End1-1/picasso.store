@@ -15,7 +15,9 @@ class RoomAvailabilityModel {
   }
 }
 
-class AppStateRoomAvailability extends AppStateFinished {}
+class AppStateRoomAvailability extends AppStateFinished {
+  AppStateRoomAvailability({required super.data});
+}
 
 extension RoomAvailability on WMCheckRoomAvaiability {
   void editEntryDate() {
@@ -57,7 +59,7 @@ extension RoomAvailability on WMCheckRoomAvaiability {
           'departure': DateFormat('yyyy-MM-dd').format(_model.departureDate)
         },
         (e, d) {},
-        AppStateRoomAvailability()));
+        AppStateRoomAvailability(data:null)));
   }
 
   void showRoomOfCategory(String cat) {

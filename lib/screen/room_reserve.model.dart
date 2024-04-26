@@ -16,9 +16,13 @@ class RoomReserveModel {
   var departureDate = DateTime.now();
 }
 
-class AppStateRoomReserve extends AppStateFinished {}
+class AppStateRoomReserve extends AppStateFinished {
+  AppStateRoomReserve({required super.data});
+}
 
-class AppStateRoomReserveGuest extends AppStateFinished {}
+class AppStateRoomReserveGuest extends AppStateFinished {
+  AppStateRoomReserveGuest({required super.data});
+}
 
 extension WMERoomReserve on WMRoomReserve {
   void openRoom() {
@@ -46,7 +50,7 @@ extension WMERoomReserve on WMRoomReserve {
         _model.folio.addAll(d['folio']);
         _model.room = d['room'];
       }
-    }, AppStateRoomReserve()));
+    }, AppStateRoomReserve(data:null)));
   }
 
   void openFolio(){
@@ -74,7 +78,7 @@ extension WMERoomReserve on WMRoomReserve {
         _model.folio.addAll(d['folio']);
         _model.room = d['room'];
       }
-    }, AppStateRoomReserve()));
+    }, AppStateRoomReserve(data:null)));
   }
 
   void editEntry() {
@@ -88,7 +92,7 @@ extension WMERoomReserve on WMRoomReserve {
         _model.entryDate = value;
         priceChanged('');
         BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-            '', '', {}, (p0, p1) => null, AppStateRoomReserve()));
+            '', '', {}, (p0, p1) => null, AppStateRoomReserve(data:null)));
       }
     });
   }
@@ -104,7 +108,7 @@ extension WMERoomReserve on WMRoomReserve {
         _model.departureDate = value;
         priceChanged('');
         BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-            '', '', {}, (p0, p1) => null, AppStateRoomReserve()));
+            '', '', {}, (p0, p1) => null, AppStateRoomReserve(data:null)));
       }
     });
   }
@@ -164,10 +168,10 @@ extension WMERoomReserve on WMRoomReserve {
           'f_id': 0,
           'f_firstname': _model.guestFirstNameTextController.text,
           'f_lastname': _model.guestLastNameTextController.text,
-          'f_phone': _model.guestPhoneTextController.text
+          'f_tel1': _model.guestPhoneTextController.text
         });
         BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-            '', '', {}, (p0, p1) => null, AppStateRoomReserveGuest()));
+            '', '', {}, (p0, p1) => null, AppStateRoomReserveGuest(data:null)));
       }
     });
   }
@@ -189,7 +193,7 @@ extension WMERoomReserve on WMRoomReserve {
           return;
         }
         Navigator.pop(prefs.context(), true);
-      }, AppStateFinished()));
+      }, AppStateFinished(data: null)));
 
     }, null));
   }
@@ -209,7 +213,7 @@ extension WMERoomReserve on WMRoomReserve {
           return;
         }
         Navigator.pop(prefs.context(), true);
-      }, AppStateFinished()));
+      }, AppStateFinished(data: null)));
 
     }, null));
 
@@ -224,7 +228,7 @@ extension WMERoomReserve on WMRoomReserve {
           return;
         }
         Navigator.pop(prefs.context(), true);
-      }, AppStateFinished()));
+      }, AppStateFinished(data: null)));
 
     }, null));
   }
@@ -244,7 +248,7 @@ extension WMERoomReserve on WMRoomReserve {
     if (e) {
     return;
     }
-    }, AppStateFinished()));
+    }, AppStateFinished(data: null)));
   }
 
   double folioBalance() {

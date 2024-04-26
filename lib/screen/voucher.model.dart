@@ -14,6 +14,7 @@ class AppStateItemSuggestion extends AppStateFinished{
   AppStateItemSuggestion(dynamic data) : super(data: data);
 }
 class AppStateItemSetItem extends AppStateFinished {
+  AppStateItemSetItem({required super.data});
 
 }
 
@@ -30,7 +31,7 @@ extension WMEVoucher on WMVoucher {
           _model.items.clear();
           _model.items.addAll(d['items']);
         },
-        AppStateFinished()));
+        AppStateFinished(data: null)));
   }
 
   void openVoucher() {
@@ -39,20 +40,20 @@ extension WMEVoucher on WMVoucher {
           if (e){
             return;
           }
-        }, AppStateFinished()));
+        }, AppStateFinished(data : null)));
   }
 
   void setItem(dynamic? item) {
     _model.item = item;
     _model.itemTextController.text = item['f_name'];
-    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, null, AppStateItemSetItem()));
+    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, null, AppStateItemSetItem(data: null)));
     BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, null, AppStateItemSuggestion([])));
   }
 
   void clearItem() {
     _model.item = null;
     _model.itemTextController.clear();
-    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, null, AppStateItemSetItem()));
+    BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '', {}, null, AppStateItemSetItem(data:null)));
   }
 
   void onItemChange(String s) {
@@ -73,7 +74,7 @@ extension WMEVoucher on WMVoucher {
       'id': _model.voucherId,
       'reservation': _model.reservation,
       'item': _model.item,
-      'wdate': prefs.dateMySqlText(DateTime.now()),
+      'wdate': prefs.string('workingday'),
       'comment': _model.commentTextController.text,
       'price': double.tryParse(_model.priceTextController.text) ?? 0
     }, (e, p1) {
@@ -81,6 +82,6 @@ extension WMEVoucher on WMVoucher {
         return;
       }
       Navigator.pop(prefs.context(), true);
-    }, AppStateFinished()));
+    }, AppStateFinished(data: null)));
   }
 }

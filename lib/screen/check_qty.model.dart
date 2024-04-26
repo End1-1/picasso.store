@@ -5,7 +5,9 @@ class CheckQtyModel {
   final scancodeFocus = FocusNode();
 }
 
-class AppStateCheckQty extends AppStateFinished{}
+class AppStateCheckQty extends AppStateFinished{
+  AppStateCheckQty({required super.data});
+}
 
 extension WMECheckQty on WMCheckQty {
   void searchBarcode(String b) {
@@ -16,7 +18,7 @@ extension WMECheckQty on WMCheckQty {
         model.tr('Checking availability'),
         'engine/reports/availability.php',
         {'barcode': b},
-            (e, d) {}, AppStateCheckQty()));
+            (e, d) {}, AppStateCheckQty(data:null)));
   }
 
   void replaceBarcodeSize(String ss) {

@@ -44,7 +44,7 @@ class WMModel {
         serverUserTextController.clear();
         Navigator.pop(prefs.context(), true);
       }
-    }, AppStateFinished()));
+    }, AppStateFinished(data: null)));
   }
 
   void loginUsernamePassword() {
@@ -63,7 +63,7 @@ class WMModel {
             MaterialPageRoute(builder: (builder) => WMDashboard(model: this)),
             (route) => false);
       }
-    }, AppStateFinished()));
+    }, AppStateFinished(data: null)));
   }
 
   void loginPin() {}
@@ -85,7 +85,7 @@ class WMModel {
             MaterialPageRoute(builder: (builder) => WMDashboard(model: this)),
             (route) => false);
       }
-    }, AppStateFinished()));
+    }, AppStateFinished(data: null)));
   }
 
   void closeDialog() {
