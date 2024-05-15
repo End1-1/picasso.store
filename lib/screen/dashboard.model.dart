@@ -11,9 +11,23 @@ class AppStateDashboard extends AppStateFinished {
 }
 
 extension WMEDashboard on WMDashboard {
+
   void getDashboard() {
+    switch (Prefs.config['dashboard']) {
+      case 'shop':
+        return;
+      case 'store':
+        return;
+      case 'hotel':
+        return getDashboardHotel();
+      default:
+        return;
+    }
+  }
+
+  void getDashboardHotel() {
     BlocProvider.of<AppBloc>(prefs.context())
-        .add(AppEventLoading(model.tr('Wait, please'), 'engine/dashboard.php', {
+        .add(AppEventLoading(model.tr('Wait, please'), 'engine/hotel/dashboard.php', {
       'mode': 1,
       'date': prefs.string('workingday').isEmpty
           ? DateFormat('yyyy-MM-dd').format(DateTime.now())

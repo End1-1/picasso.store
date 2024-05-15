@@ -2,7 +2,7 @@ name: cafe5_mworker
 description: "Mobile worker module of cafe5."
 publish_to: 'none'
 
-version: 1.0.0+4
+version: 1.0.0+8
 
 environment:
   sdk: '>=3.2.6 <4.0.0'

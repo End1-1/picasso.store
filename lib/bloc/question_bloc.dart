@@ -15,6 +15,12 @@ class QuestionStateRaise extends QuestionState {
   QuestionStateRaise(this.question, this.ifYes, this.ifNo);
 }
 
+class QuestionStateList extends QuestionState {
+  final List<String> variants;
+  final Function(int) callback;
+  QuestionStateList(this.variants, this.callback);
+}
+
 class QuestionEvent extends Equatable {
   @override
   List<Object?> get props => [];
@@ -28,10 +34,17 @@ class QuestionEventRaise extends QuestionEvent {
   QuestionEventRaise(this.question, this.ifYes, this.ifNo);
 }
 
+class QuestionEventList extends QuestionEvent {
+  final List<String> variants;
+  final Function(int) callback;
+  QuestionEventList(this.variants, this.callback);
+}
+
 class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   QuestionBloc() : super(QuestionState()) {
     on<QuestionEvent>((event, emit) => emit(QuestionState()));
     on<QuestionEventRaise>(
         (event, emit) => emit(QuestionStateRaise(event.question, event.ifYes, event.ifNo)));
+    on<QuestionEventList>((event, emit) => emit(QuestionStateList(event.variants, event.callback)));
   }
 }

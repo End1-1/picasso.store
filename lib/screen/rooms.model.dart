@@ -108,6 +108,28 @@ extension WMERoomsScreen on WMRoomsScreen {
   }
 
   void openRoom(dynamic e) {
+    if (e['f_state'].toString() == "1") {
+      BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventList([
+        model.tr('Open folio'),
+        model.tr('Create reservation')
+      ], (i) {
+        switch (i) {
+          case 0:
+            model.closeQuestionDialog();
+            model.navigation.openFolio({'f_id': e['f_reservation'], 'f_state': "0"});
+            break;
+          case 1:
+            model.closeQuestionDialog();
+            final et = {}..addAll(e);
+            et['f_state'] = 0;
+            model.navigation.openRoom(et);
+            break;
+          default:
+            return;
+        }
+      }));
+      return;
+    }
     model.navigation.openRoom(e).then((value) {
       if (value ?? false){
         getRooms(); }

@@ -37,12 +37,14 @@ class WMLogin extends StatelessWidget {
                   Expanded(
                       child: Styling.textFormFieldPassword(
                           model.serverPasswordTextController,
-                          model.tr('Password')))
+                          model.tr('Password'),
+                        onFieldSubmitted: model.passwordSubmitted
+                      ))
                 ]),
                 Styling.columnSpacingWidget(),
-                WMCheckbox(model.tr('Stay in'), (b) {
+                Row(children:[WMCheckbox(model.tr('Stay in'), (b) {
                   prefs.setBool('stayloggedin', b ?? false);
-                }, prefs.getBool('stayloggedin') ?? false),
+                }, prefs.getBool('stayloggedin') ?? false), Expanded(child: Container()), Styling.textButton(model.navigation.settings , model.tr('Configuration'))]),
                 Styling.columnSpacingWidget(),
                 if (state.runtimeType == AppStateLoading) ...[
                   const SizedBox(

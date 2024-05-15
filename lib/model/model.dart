@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/dashboard.dart';
@@ -31,10 +33,9 @@ class WMModel {
 
   void registerOnServer() {
     prefs.setString('serveraddress', serverTextController.text);
-    BlocProvider.of<AppBloc>(Prefs.navigatorKey.currentContext!).add(
-        AppEventLoading(
-            tr('Registering on server'), 'engine/login.php', {
-              'method':1,
+    BlocProvider.of<AppBloc>(Prefs.navigatorKey.currentContext!)
+        .add(AppEventLoading(tr('Registering on server'), 'engine/login.php', {
+      'method': 1,
       'username': serverUserTextController.text,
       'password': serverPasswordTextController.text
     }, (e, d) {
@@ -56,7 +57,7 @@ class WMModel {
     }, (e, d) {
       if (!e) {
         prefs.setString('sessionkey', d['sessionkey']);
-        prefs.setString('config', d['config']['f_config']);
+        prefs.setString('config', jsonEncode(d['config']['f_config']));
         prefs.init();
         Navigator.pushAndRemoveUntil(
             prefs.context(),
@@ -64,6 +65,10 @@ class WMModel {
             (route) => false);
       }
     }, AppStateFinished(data: null)));
+  }
+
+  void passwordSubmitted(String s) {
+    loginUsernamePassword();
   }
 
   void loginPin() {}

@@ -13,7 +13,8 @@ class WMVoucher extends WMApp {
   WMVoucher(
       {required super.model, required String id, required dynamic reservation}) {
     if (id.isEmpty) {
-      _model.reservation = reservation;
+      _model.reservation = {};
+      _model.reservation.addAll(reservation);
       getItems();
     } else {
       _model.voucherId = id;

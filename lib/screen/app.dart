@@ -19,15 +19,16 @@ abstract class WMApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(preferredSize: const Size.fromHeight(56),
-    child: BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
-      return AppBar(
-        backgroundColor: Styling.appBarBackgroundColor,
-        leading: leadingButton(context),
-        title: _title(),
-        centerTitle: true,
-        actions:  actions()
-        );}),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(56),
+        child: BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
+          return AppBar(
+              backgroundColor: Styling.appBarBackgroundColor,
+              leading: leadingButton(context),
+              title: _title(),
+              centerTitle: true,
+              actions: actions());
+        }),
       ),
       body: SafeArea(
         //minimum: const EdgeInsets.fromLTRB(5, 10, 5, 2),
@@ -50,6 +51,12 @@ abstract class WMApp extends StatelessWidget {
           BlocBuilder<QuestionBloc, QuestionState>(builder: (builder, state) {
             if (state is QuestionStateRaise) {
               return questionDialog(state.question, state.ifYes, state.ifNo);
+            }
+            return Container();
+          }),
+          BlocBuilder<QuestionBloc, QuestionState>(builder: (builder, state) {
+            if (state is QuestionStateList) {
+              return listDialog(state.variants, state.callback);
             }
             return Container();
           })
@@ -84,9 +91,7 @@ abstract class WMApp extends StatelessWidget {
       return [];
     }
     return [
-      IconButton(
-          onPressed: model.menuRaise,
-          icon: Icon(Icons.menu_sharp)),
+      IconButton(onPressed: model.menuRaise, icon: Icon(Icons.menu_sharp)),
     ];
   }
 
@@ -179,9 +184,66 @@ abstract class WMApp extends StatelessWidget {
                             child: Styling.textCenter(text))),
                     Styling.columnSpacingWidget(),
                     Row(mainAxisSize: MainAxisSize.min, children: [
-                      Styling.textButton((){model.closeQuestionDialog(); ifYes();}, model.tr('Yes')),
-                      Styling.textButton(
-                          (){model.closeQuestionDialog(); if(ifNo != null){ifNo!();}}, model.tr('Cancel'))
+                      Styling.textButton(() {
+                        model.closeQuestionDialog();
+                        ifYes();
+                      }, model.tr('Yes')),
+                      Styling.textButton(() {
+                        model.closeQuestionDialog();
+                        if (ifNo != null) {
+                          ifNo!();
+                        }
+                      }, model.tr('Cancel'))
+                    ])
+                  ],
+                ),
+              )
+            ])));
+  }
+
+  Widget listDialog(List<String> variants, Function(int) callback) {
+    return Container(
+        color: Colors.black26,
+        child: Center(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.question_answer_outlined,
+                      color: Colors.green,
+                    ),
+                    Styling.columnSpacingWidget(),
+                    Container(
+                        constraints: BoxConstraints(
+                            maxHeight:
+                                MediaQuery.sizeOf(prefs.context()).height *
+                                    0.7),
+                        child: SingleChildScrollView(
+                            child: Column(children: [
+                          for (int i = 0; i < variants.length; i++)
+                            InkWell(
+                                onTap: () {
+                                  callback(i);
+                                },
+                                child: Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    child: Styling.textCenter(variants[i])))
+                        ]))),
+                    Styling.columnSpacingWidget(),
+                    Row(mainAxisSize: MainAxisSize.min, children: [
+                      Styling.textButton(() {
+                        model.closeQuestionDialog();
+                        callback(-1);
+                      }, model.tr('Cancel'))
                     ])
                   ],
                 ),

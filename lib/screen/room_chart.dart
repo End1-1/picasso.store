@@ -1,8 +1,10 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
 import 'package:cafe5_mworker/screen/app.dart';
+import 'package:cafe5_mworker/utils/calendar.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 part 'room_chart.model.dart';
 
@@ -17,12 +19,9 @@ class WMRoomChart extends WMApp {
   List<Widget> actions() {
     return [
       IconButton(
-          onPressed: backMonth, icon: Icon(Icons.keyboard_double_arrow_left)),
-      IconButton(onPressed: backWeek, icon: Icon(Icons.arrow_back)),
-      IconButton(onPressed: forwardWeek, icon: Icon(Icons.arrow_forward)),
+          onPressed: setStartDate, icon: Icon(Icons.calendar_month_sharp)),
       IconButton(
-          onPressed: forwardMonth,
-          icon: Icon(Icons.keyboard_double_arrow_right))
+          onPressed: getChart, icon: Icon(Icons.refresh_outlined)),
     ];
   }
 
@@ -130,7 +129,9 @@ class WMRoomChart extends WMApp {
       decoration: const BoxDecoration(
           color: Colors.black12,
           border: Border.fromBorderSide(BorderSide(color: Colors.black12))),
-      child: Text('${_model.date.add(Duration(days: i)).day}'),
+      child: Text(
+          '${_model.date.add(Duration(days: i)).day}\r\n${DateFormat("MMM").format(_model.date.add(Duration(days: i)))}',
+      textAlign: TextAlign.center,),
     );
   }
 
@@ -162,7 +163,7 @@ class WMRoomChart extends WMApp {
           child: Container(
             alignment: Alignment.center,
             height: RoomChartModel.squareside - 4,
-            width: (RoomChartModel.squareside * lengthOfReserve(d)) - 4,
+            width: lengthOfReserve(d) - 4,
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
                 color: colorOfReserveState(d['f_state']),

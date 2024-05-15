@@ -26,17 +26,21 @@ class AppStateRoomReserveGuest extends AppStateFinished {
 
 extension WMERoomReserve on WMRoomReserve {
   void openRoom() {
+    if (_model.reservation.isNotEmpty) {
+      openFolio();
+      return;
+    }
     BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
         model.tr('Open room'),
         '/engine/hotel/open-room.php',
-        {'room': _model.room['f_id']}, (e, d) {
+        {'room': _model.room['f_id'], 'state': _model.room['f_state']}, (e, d) {
       if (e) {
         return;
       }
       if (d['reservation'].isNotEmpty) {
         final r = d['reservation'];
         _model.reservation.clear();
-        _model.reservation = r;
+        _model.reservation.addAll(r);
         _model.createdDate = prefs.strDate(r['f_created']);
         _model.entryDate = prefs.strDate(r['f_startDate']);
         _model.departureDate = prefs.strDate(r['f_endDate']);
@@ -48,7 +52,8 @@ extension WMERoomReserve on WMRoomReserve {
         }
         _model.folio.clear();
         _model.folio.addAll(d['folio']);
-        _model.room = d['room'];
+        _model.room.clear();
+        _model.room.addAll(d['room']);
       }
     }, AppStateRoomReserve(data:null)));
   }
@@ -70,6 +75,7 @@ extension WMERoomReserve on WMRoomReserve {
         _model.departureDate = prefs.strDate(r['f_endDate']);
         _model.priceTextController.text = r['f_roomFee'];
         _model.totalTextController.text = r['f_grandTotal'];
+        _model.remarksTextController.text = r['f_remarks'];
         _model.guests.clear();
         for (final e in d['guests']) {
           _model.guests.add(e);
@@ -85,7 +91,8 @@ extension WMERoomReserve on WMRoomReserve {
     showDatePicker(
         context: prefs.context(),
         initialEntryMode: DatePickerEntryMode.calendarOnly,
-        firstDate: DateTime.now(),
+        currentDate: _model.entryDate,
+        firstDate: prefs.workingDay(),
         lastDate: DateTime.now().add(const Duration(days: 30)))
         .then((value) {
       if (value != null) {
@@ -101,7 +108,8 @@ extension WMERoomReserve on WMRoomReserve {
     showDatePicker(
         context: prefs.context(),
         initialEntryMode: DatePickerEntryMode.calendarOnly,
-        firstDate: DateTime.now(),
+        currentDate: _model.departureDate,
+        firstDate: prefs.workingDay(),
         lastDate: DateTime.now().add(const Duration(days: 30)))
         .then((value) {
       if (value != null) {
@@ -236,6 +244,7 @@ extension WMERoomReserve on WMRoomReserve {
   void save() {
     BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
         model.tr('Saving'), '/engine/hotel/save-reservation.php', {
+          'reservation': _model.reservation,
     'room': _model.room['f_id'],
     'guests': _model.guests,
     'guestid': _model.guests.isEmpty ? 0 : _model.guests[0]['f_id'],
@@ -265,7 +274,9 @@ extension WMERoomReserve on WMRoomReserve {
       return;
     }
     model.navigation.openVoucher('', _model.reservation).then((value) {
-      openRoom();
+      if (value ?? false) {
+        openRoom();
+      }
     });
   }
 

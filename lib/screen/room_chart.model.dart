@@ -38,16 +38,16 @@ class AppEventRoomChart extends AppEventLoading {
 extension WMERoomChart on WMRoomChart {
   void backWeek() {
     _model.date = _model.date.add(Duration(days: -7));
-    if (_model.date.isBefore(DateTime.now())) {
-      _model.date = DateTime.now();
+    if (_model.date.isBefore(prefs.workingDay())) {
+      _model.date = prefs.workingDay();
     }
     getChart();
   }
 
   void backMonth() {
     _model.date = _model.date.add(Duration(days: -30));
-    if (_model.date.isBefore(DateTime.now())) {
-      _model.date = DateTime.now();
+    if (_model.date.isBefore(prefs.workingDay())) {
+      _model.date = prefs.workingDay();
     }
     getChart();
   }
@@ -60,6 +60,15 @@ extension WMERoomChart on WMRoomChart {
   void forwardMonth() {
     _model.date = _model.date.add(Duration(days: 30));
     getChart();
+  }
+
+  void setStartDate() {
+    Calendar.show(currentDate: _model.date).then((value) {
+      if (value != null) {
+        _model.date = value;
+        getChart();
+      }
+    });
   }
 
   void getChart() {
@@ -104,20 +113,26 @@ extension WMERoomChart on WMRoomChart {
     }
   }
 
-  int lengthOfReserve(dynamic d) {
+  double lengthOfReserve(dynamic d) {
+    final l = _model.reservations.firstWhere((element) => element['f_endDate'] == d['f_startDate'] && element['f_room'] == d['f_room'], orElse: ()=>null);
+    var loffset = l == null ? RoomChartModel.squareside / 2 : 0;
     DateTime d1 = prefs.strDate(d['f_startDate']);
     DateTime d2 = prefs.strDate(d['f_endDate']);
-    var r = d2.difference(d1).inDays;
+    var r = d2.difference(d1).inDays * 1.0;
     r = r > 0 ? r : 1;
+    r *= RoomChartModel.squareside;
+    r += loffset.toInt();
     //print("lenof of ${d['f_id']} ${d['f_startDate']}-${d['f_endDate']} $r");
     return r;
   }
 
   double leftOfReserve(dynamic d) {
+    final l = _model.reservations.firstWhere((element) => element['f_endDate'] == d['f_startDate'] && element['f_room'] == d['f_room'], orElse: ()=>null);
+    var loffset = l == null ? RoomChartModel.squareside / -2 : 0;
     DateTime dt = prefs.strDate(d['f_startDate']);
     int diffdays = dt.difference(_model.date).inDays;
     double length = diffdays * RoomChartModel.squareside;
-    var left = length + (RoomChartModel.squareside / 2);
+    var left = length + (RoomChartModel.squareside / 2) + loffset;
     //print("Left ${d['f_id']} $left  diffdays $diffdays workingday ${prefs.dateMySqlText(_model.date)}");
     return left;
   }

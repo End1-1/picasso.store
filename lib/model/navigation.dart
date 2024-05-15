@@ -52,6 +52,8 @@ class Navigation {
   Future<void> settings() {
     hideMenu();
     model.serverTextController.text = prefs.string('serveraddress');
+    model.serverUserTextController.clear();
+    model.serverPasswordTextController.clear();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMConfig(model: model)));
   }
 
@@ -66,7 +68,7 @@ class Navigation {
           prefs.setString('sessionkey', '');
           Navigator.pushAndRemoveUntil(prefs.context(), MaterialPageRoute(builder: (builder) =>  App()), (route) => false);
         }
-      }, null));
+      }, AppStateFinished(data: null)));
     }, null));
 
   }

@@ -16,8 +16,8 @@ class WMRoomReserve extends WMApp {
   final _model = RoomReserveModel();
 
   WMRoomReserve({super.key, required super.model, dynamic room, dynamic folio}) {
-    _model.room = room;
-    _model.reservation = folio;
+    _model.room.addAll(room);
+    _model.reservation.addAll(folio);
     if (folio.isEmpty && _model.room.isNotEmpty) {
       openRoom();
     } else {

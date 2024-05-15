@@ -52,7 +52,7 @@ class Styling {
       focusNode: focusNode,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
-          contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+          contentPadding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
           border: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black26)),
           labelText: hintText),
@@ -60,10 +60,11 @@ class Styling {
   }
 
   static TextFormField textFormFieldPassword(
-      TextEditingController controller, String hintText) {
+      TextEditingController controller, String hintText, {ValueChanged<String>? onFieldSubmitted}) {
     return TextFormField(
       obscureText: true,
       controller: controller,
+      onFieldSubmitted: onFieldSubmitted,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),

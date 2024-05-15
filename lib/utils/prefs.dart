@@ -39,6 +39,10 @@ extension Prefs on SharedPreferences {
     return DateFormat('yyyy-MM-dd').format(dt);
   }
 
+  DateTime workingDay() {
+    return strDate(string('workingday'));
+  }
+
   void init() {
     config.clear();
 
@@ -46,7 +50,12 @@ extension Prefs on SharedPreferences {
     if (configString.isEmpty) {
       configString = '{}';
     }
-    config = jsonDecode(configString);
+    try {
+      config = jsonDecode(configString);
+    } catch (e) {
+      print(e.toString());
+      prefs.setString('config', '{}');
+    }
   }
 }
 
