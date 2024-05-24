@@ -1,4 +1,5 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/app.dart';
 import 'package:cafe5_mworker/utils/calendar.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
@@ -69,14 +70,16 @@ class WMRoomChart extends WMApp {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             for (final r in _model.rooms) ...[
-                              Container(
+                              InkWell(
+                                onTap: (){changeRoomState(r);},
+                                  child: Container(
                                   width: 100,
                                   height: 50,
                                   decoration: BoxDecoration(
                                       color: colorOfRoomState(r['f_state']),
                                       border: Border.fromBorderSide(
                                           BorderSide(color: Colors.black12))),
-                                  child: Text(r['f_short']))
+                                  child: Text(r['f_short'])))
                             ]
                           ])))
             ],

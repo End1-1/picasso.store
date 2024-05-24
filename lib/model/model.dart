@@ -56,9 +56,13 @@ class WMModel {
       "method": WMLogin.username_password
     }, (e, d) {
       if (!e) {
-        prefs.setString('sessionkey', d['sessionkey']);
-        prefs.setString('config', jsonEncode(d['config']['f_config']));
-        prefs.init();
+        try {
+          prefs.setString('sessionkey', d['sessionkey']);
+          prefs.setString('config', d['config']['f_config']);
+          prefs.init();
+        } catch (e) {
+          print(e.toString());
+        }
         Navigator.pushAndRemoveUntil(
             prefs.context(),
             MaterialPageRoute(builder: (builder) => WMDashboard(model: this)),

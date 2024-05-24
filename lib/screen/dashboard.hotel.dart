@@ -25,7 +25,7 @@ extension DashboardHotel on WMDashboard {
     return BlocBuilder<AppBloc, AppState>(
         buildWhen: (p, c) => c is AppStateDashboard,
         builder: (builder, state) {
-          if (!(state is AppStateDashboard)) {
+          if (state is! AppStateDashboard) {
             return Container();
           }
           final checkin = state.data['checkin'];

@@ -13,7 +13,7 @@ class AppStateDashboard extends AppStateFinished {
 extension WMEDashboard on WMDashboard {
 
   void getDashboard() {
-    switch (Prefs.config['dashboard']) {
+    switch (Prefs.config['dashboard'] ?? '') {
       case 'shop':
         return;
       case 'store':
@@ -27,7 +27,7 @@ extension WMEDashboard on WMDashboard {
 
   void getDashboardHotel() {
     BlocProvider.of<AppBloc>(prefs.context())
-        .add(AppEventLoading(model.tr('Wait, please'), 'engine/hotel/dashboard.php', {
+        .add(AppEventLoading(model.tr('Wait, please'), 'engine/dashboard.php', {
       'mode': 1,
       'date': prefs.string('workingday').isEmpty
           ? DateFormat('yyyy-MM-dd').format(DateTime.now())

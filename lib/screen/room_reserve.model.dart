@@ -11,9 +11,9 @@ class RoomReserveModel {
   var reservation = <String, dynamic>{};
   final folio = <dynamic>[];
   var room = {};
-  var createdDate = DateTime.now();
-  var entryDate = DateTime.now();
-  var departureDate = DateTime.now();
+  var createdDate = DateUtils.dateOnly(DateTime.now());
+  var entryDate = DateUtils.dateOnly(DateTime.now());
+  var departureDate = DateUtils.dateOnly(DateTime.now());
 }
 
 class AppStateRoomReserve extends AppStateFinished {

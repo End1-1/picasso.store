@@ -47,14 +47,15 @@ extension Prefs on SharedPreferences {
     config.clear();
 
     var configString = string('config');
+    print(configString);
     if (configString.isEmpty) {
       configString = '{}';
     }
     try {
       config = jsonDecode(configString);
     } catch (e) {
-      print(e.toString());
-      prefs.setString('config', '{}');
+      setString('config', '{}');
+      config = {'dashboard': ''};
     }
   }
 }

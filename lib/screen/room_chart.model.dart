@@ -152,4 +152,13 @@ extension WMERoomChart on WMRoomChart {
     print("FILTERED ${_model.reservations.length} of ${r.length}");
     return r;
   }
+
+  void changeRoomState(dynamic r) {
+    if (r['f_state'] == "2") {
+      BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Change the current state to vacant ready?'), () {
+        BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Please, wait...'), '/engine/hotel/change-room-state.php',
+            {'newState': 0, 'room': r['f_id']}, (p0, p1) => getChart(), null));
+      }, () { }));
+    }
+  }
 }

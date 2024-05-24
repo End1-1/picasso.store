@@ -10,12 +10,13 @@ import 'app.dart';
 part 'dashboard.model.dart';
 
 part 'dashboard.hotel.dart';
+
 part 'dashboard.store.dart';
 
 class WMDashboard extends WMApp {
   final _model = DashboardModel();
 
-  WMDashboard({required super.model}) {
+  WMDashboard({super.key, required super.model}) {
     getDashboard();
   }
 
@@ -51,7 +52,8 @@ class WMDashboard extends WMApp {
         return [
           Styling.menuButton(
               model.navigation.settings, 'config', model.tr('Configuration')),
-          Styling.menuButton(model.navigation.logout, 'logout', model.tr('Logout')),
+          Styling.menuButton(
+              model.navigation.logout, 'logout', model.tr('Logout')),
         ];
     }
   }

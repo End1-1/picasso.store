@@ -19,13 +19,16 @@ class WMLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
       if (mode == username_password) {
-        return Container(padding: const EdgeInsets.all(5), child: SingleChildScrollView(
-            child: Column(
+        return Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.all(5),
+            child: SingleChildScrollView(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Icon(Icons.login_outlined, size: 60, color: Colors.green),
-                Styling.text( model.tr('Login')),
+                Styling.text(model.tr('Login')),
                 Styling.columnSpacingWidget(),
                 Row(children: [
                   Expanded(
@@ -38,13 +41,17 @@ class WMLogin extends StatelessWidget {
                       child: Styling.textFormFieldPassword(
                           model.serverPasswordTextController,
                           model.tr('Password'),
-                        onFieldSubmitted: model.passwordSubmitted
-                      ))
+                          onFieldSubmitted: model.passwordSubmitted))
                 ]),
                 Styling.columnSpacingWidget(),
-                Row(children:[WMCheckbox(model.tr('Stay in'), (b) {
-                  prefs.setBool('stayloggedin', b ?? false);
-                }, prefs.getBool('stayloggedin') ?? false), Expanded(child: Container()), Styling.textButton(model.navigation.settings , model.tr('Configuration'))]),
+                Row(children: [
+                  WMCheckbox(model.tr('Stay in'), (b) {
+                    prefs.setBool('stayloggedin', b ?? false);
+                  }, prefs.getBool('stayloggedin') ?? false),
+                  Expanded(child: Container()),
+                  Styling.textButton(
+                      model.navigation.settings, model.tr('Configuration'))
+                ]),
                 Styling.columnSpacingWidget(),
                 if (state.runtimeType == AppStateLoading) ...[
                   const SizedBox(
@@ -56,9 +63,7 @@ class WMLogin extends StatelessWidget {
                         model.loginUsernamePassword, model.tr('Next'))
                   ])
                 ],
-                if (state is AppStateError)...[
-                  Styling.textError(state.text)
-                ]
+                if (state is AppStateError) ...[Styling.textError(state.text)]
               ],
             )));
       } else {
