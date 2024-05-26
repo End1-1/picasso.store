@@ -115,6 +115,13 @@ class _App extends State<App> {
                                           BlocProvider.of<InitAppBloc>(context).add(InitAppEvent());
                                         }, widget.model.tr('Retry'))
                                       ]),
+                                      Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Styling.textButton(widget.model.navigation.settings
+                                            , widget.model.tr('Setting'))
+                                          ]),
                                       Expanded(child: Container()),
                                       Row(children: [
                                         Expanded(child: Styling.textCenter(prefs.string('appversion')))

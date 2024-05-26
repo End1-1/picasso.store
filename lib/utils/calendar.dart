@@ -9,6 +9,6 @@ class Calendar {
         initialEntryMode: DatePickerEntryMode.calendarOnly,
         currentDate: currentDate ?? prefs.workingDay(),
         firstDate: firstDate ?? prefs.workingDay(),
-        lastDate: lastDate ?? DateTime.now().add(const Duration(days: 30)));
+        lastDate: lastDate ?? DateTime.now().add(const Duration(days: 30 * 120)));
   }
 }

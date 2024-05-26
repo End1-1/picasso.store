@@ -93,7 +93,7 @@ extension WMERoomReserve on WMRoomReserve {
         initialEntryMode: DatePickerEntryMode.calendarOnly,
         currentDate: _model.entryDate,
         firstDate: prefs.workingDay(),
-        lastDate: DateTime.now().add(const Duration(days: 30)))
+        lastDate: DateTime.now().add(const Duration(days: 30 * 120)))
         .then((value) {
       if (value != null) {
         _model.entryDate = value;
@@ -110,7 +110,7 @@ extension WMERoomReserve on WMRoomReserve {
         initialEntryMode: DatePickerEntryMode.calendarOnly,
         currentDate: _model.departureDate,
         firstDate: prefs.workingDay(),
-        lastDate: DateTime.now().add(const Duration(days: 30)))
+        lastDate: DateTime.now().add(const Duration(days: 30 * 120)))
         .then((value) {
       if (value != null) {
         _model.departureDate = value;
