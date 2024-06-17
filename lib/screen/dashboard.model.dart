@@ -4,6 +4,7 @@ class DashboardModel {
   final checkin = [];
   final inhouse = [];
   final checkout = [];
+  final drafts = [];
 }
 
 class AppStateDashboard extends AppStateFinished {
@@ -17,9 +18,11 @@ extension WMEDashboard on WMDashboard {
       case 'shop':
         return;
       case 'store':
+        getDashboardStore();
         return;
       case 'hotel':
-        return getDashboardHotel();
+        getDashboardHotel();
+        return;
       default:
         return;
     }
@@ -47,5 +50,25 @@ extension WMEDashboard on WMDashboard {
           DateFormat('yyyy-MM-dd')
               .format(DateFormat('dd/MM/yyyy').parse(d['workingday'])));
     }, AppStateDashboard(data: _model)));
+  }
+
+  void getDashboardStore() {
+    BlocProvider.of<AppBloc>(prefs.context())
+        .add(AppEventLoading(model.tr('Wait, please'), 'engine/dashboard.php', {
+      'mode': 2
+    }, (e, d) {
+      if (e) {
+        return;
+      }
+
+      _model.drafts.clear();
+      _model.drafts.addAll(d);
+
+    }, AppStateDashboard(data: _model)));
+  }
+
+  void openDraft(String id) {
+    Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => WMDraftSale(model: model, draftid: id)));
   }
 }

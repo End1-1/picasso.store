@@ -3,6 +3,8 @@ part of 'dashboard.dart';
 extension DashboardStore on WMDashboard {
   List<Widget> menuWidgetsStore() {
     return [
+      Styling.menuButton(model.navigation.createDraftSale, 'draftsale',
+          model.tr('Create draft sale')),
       Styling.menuButton(model.navigation.checkQuantity, 'available',
           model.tr('Check availability')),
       Styling.menuButton(model.navigation.checkStoreInput, 'checkstoreinput',

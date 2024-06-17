@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import 'app.dart';
+import 'draft_sale.dart';
 
 part 'dashboard.model.dart';
 
@@ -64,7 +65,7 @@ class WMDashboard extends WMApp {
       case 'shop':
         return Container();
       case 'store':
-        return Container();
+        return bodyStore();
       case 'hotel':
         return bodyHotel();
       default:

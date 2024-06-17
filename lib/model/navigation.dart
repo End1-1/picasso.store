@@ -6,6 +6,7 @@ import 'package:cafe5_mworker/screen/check_qty.dart';
 import 'package:cafe5_mworker/screen/check_room_availability.dart';
 import 'package:cafe5_mworker/screen/check_store_input.dart';
 import 'package:cafe5_mworker/screen/config.dart';
+import 'package:cafe5_mworker/screen/draft_sale.dart';
 import 'package:cafe5_mworker/screen/goods_info.dart';
 import 'package:cafe5_mworker/screen/goods_reserve.dart';
 import 'package:cafe5_mworker/screen/login.dart';
@@ -36,6 +37,12 @@ class Navigation {
   Future<void> rooms() {
     hideMenu();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomsScreen(model: model, entry: DateTime.now(), departure: DateTime.now())));
+  }
+
+  Future<void> createDraftSale() {
+    hideMenu();
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => WMDraftSale(model: model, draftid: '')));
   }
 
   Future<void> checkQuantity() {

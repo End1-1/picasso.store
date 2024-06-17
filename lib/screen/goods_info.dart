@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 import 'app.dart';
 
 class WMGoodsInfo extends WMApp {
   final Map<String, dynamic> info;
-  WMGoodsInfo(this.info, {required super.model});
+  WMGoodsInfo(this.info, {super.key, required super.model});
 
   @override
   String titleText() {

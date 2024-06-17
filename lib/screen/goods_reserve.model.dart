@@ -6,6 +6,7 @@ class GoodsReserveModel {
   var reservationExpiration = DateTime.now();
   var reservationStore = 0;
   var reservationGoods = 0;
+  var reservationBarcode = '';
   var reservationGoodsName = '';
   var maxReserveQty = 0.0;
 }
@@ -27,6 +28,7 @@ extension WMEGoodsReserve on WMGoodsReserve {
       'store': _model.reservationStore,
       'goods': _model.reservationGoods,
       'goodsname': _model.reservationGoodsName,
+      'barcode': _model.reservationBarcode,
       'qty': double.tryParse(_model.reserveQtyTextController.text) ?? 0,
       'message': _model.reserveCommentTextController.text,
       'enddate': prefs.dateMySqlText(_model.reservationExpiration),

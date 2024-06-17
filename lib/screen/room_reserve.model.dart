@@ -55,10 +55,10 @@ extension WMERoomReserve on WMRoomReserve {
         _model.room.clear();
         _model.room.addAll(d['room']);
       }
-    }, AppStateRoomReserve(data:null)));
+    }, AppStateRoomReserve(data: null)));
   }
 
-  void openFolio(){
+  void openFolio() {
     BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
         model.tr('Open folio'),
         '/engine/hotel/open-folio.php',
@@ -84,39 +84,39 @@ extension WMERoomReserve on WMRoomReserve {
         _model.folio.addAll(d['folio']);
         _model.room = d['room'];
       }
-    }, AppStateRoomReserve(data:null)));
+    }, AppStateRoomReserve(data: null)));
   }
 
   void editEntry() {
     showDatePicker(
-        context: prefs.context(),
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        currentDate: _model.entryDate,
-        firstDate: prefs.workingDay(),
-        lastDate: DateTime.now().add(const Duration(days: 30 * 120)))
+            context: prefs.context(),
+            initialEntryMode: DatePickerEntryMode.calendarOnly,
+            currentDate: _model.entryDate,
+            firstDate: prefs.workingDay(),
+            lastDate: DateTime.now().add(const Duration(days: 30 * 120)))
         .then((value) {
       if (value != null) {
         _model.entryDate = value;
         priceChanged('');
         BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-            '', '', {}, (p0, p1) => null, AppStateRoomReserve(data:null)));
+            '', '', {}, (p0, p1) => null, AppStateRoomReserve(data: null)));
       }
     });
   }
 
   void editDeparture() {
     showDatePicker(
-        context: prefs.context(),
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        currentDate: _model.departureDate,
-        firstDate: prefs.workingDay(),
-        lastDate: DateTime.now().add(const Duration(days: 30 * 120)))
+            context: prefs.context(),
+            initialEntryMode: DatePickerEntryMode.calendarOnly,
+            currentDate: _model.departureDate,
+            firstDate: prefs.workingDay(),
+            lastDate: DateTime.now().add(const Duration(days: 30 * 120)))
         .then((value) {
       if (value != null) {
         _model.departureDate = value;
         priceChanged('');
         BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-            '', '', {}, (p0, p1) => null, AppStateRoomReserve(data:null)));
+            '', '', {}, (p0, p1) => null, AppStateRoomReserve(data: null)));
       }
     });
   }
@@ -178,85 +178,87 @@ extension WMERoomReserve on WMRoomReserve {
           'f_lastname': _model.guestLastNameTextController.text,
           'f_tel1': _model.guestPhoneTextController.text
         });
-        BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
-            '', '', {}, (p0, p1) => null, AppStateRoomReserveGuest(data:null)));
+        BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading('', '',
+            {}, (p0, p1) => null, AppStateRoomReserveGuest(data: null)));
       }
     });
   }
 
   void priceChanged(String s) {
-    int d = _model.departureDate
-        .difference(_model.entryDate)
-        .inDays;
+    int d = _model.departureDate.difference(_model.entryDate).inDays;
     _model.totalTextController.text =
-    '${d * (double.tryParse(_model.priceTextController.text) ?? 0)}';
+        '${d * (double.tryParse(_model.priceTextController.text) ?? 0)}';
   }
 
   void checkin() {
-    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Confirm to checkin'), (){
-      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Checkout'), '/engine/hotel/checkin.php', {
-        'reservation': _model.reservation
-      }, (e, d) {
+    BlocProvider.of<QuestionBloc>(prefs.context())
+        .add(QuestionEventRaise(model.tr('Confirm to checkin'), () {
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
+          model.tr('Checkout'),
+          '/engine/hotel/checkin.php',
+          {'reservation': _model.reservation}, (e, d) {
         if (e) {
           return;
         }
         Navigator.pop(prefs.context(), true);
       }, AppStateFinished(data: null)));
-
     }, null));
   }
 
   void checkOut() {
     if (folioBalance() != 0) {
-      BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Balance not zero'), (){
-
-      }, null));
+      BlocProvider.of<QuestionBloc>(prefs.context())
+          .add(QuestionEventRaise(model.tr('Balance not zero'), () {}, null));
       return;
     }
-    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Confirm to checkout'), (){
-      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Checkout'), '/engine/hotel/checkout.php', {
-        'reservation': _model.reservation
-      }, (e, d) {
+    BlocProvider.of<QuestionBloc>(prefs.context())
+        .add(QuestionEventRaise(model.tr('Confirm to checkout'), () {
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
+          model.tr('Checkout'),
+          '/engine/hotel/checkout.php',
+          {'reservation': _model.reservation}, (e, d) {
         if (e) {
           return;
         }
         Navigator.pop(prefs.context(), true);
       }, AppStateFinished(data: null)));
-
     }, null));
-
   }
 
   void cancel() {
-    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Confirm to cancel reservation'), (){
-      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Checkout'), '/engine/hotel/cancel-reservation.php', {
-        'reservation': _model.reservation
-      }, (e, d) {
+    BlocProvider.of<QuestionBloc>(prefs.context())
+        .add(QuestionEventRaise(model.tr('Confirm to cancel reservation'), () {
+      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
+          model.tr('Checkout'),
+          '/engine/hotel/cancel-reservation.php',
+          {'reservation': _model.reservation}, (e, d) {
         if (e) {
           return;
         }
         Navigator.pop(prefs.context(), true);
       }, AppStateFinished(data: null)));
-
     }, null));
   }
 
   void save() {
     BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
         model.tr('Saving'), '/engine/hotel/save-reservation.php', {
-          'reservation': _model.reservation,
-    'room': _model.room['f_id'],
-    'guests': _model.guests,
-    'guestid': _model.guests.isEmpty ? 0 : _model.guests[0]['f_id'],
+      'reservation': _model.reservation,
+      'room': _model.room['f_id'],
+      'guests': _model.guests,
+      'guestid': _model.guests.isEmpty ? 0 : _model.guests[0]['f_id'],
       'entry': prefs.dateMySqlText(_model.entryDate),
       'departure': prefs.dateMySqlText(_model.departureDate),
       'price': double.tryParse(_model.priceTextController.text) ?? 0,
       'total': double.tryParse(_model.totalTextController.text) ?? 0,
       'remarks': _model.remarksTextController.text
     }, (e, d) {
-    if (e) {
-    return;
-    }
+      if (e) {
+        return;
+      }
+      print(d);
+      _model.reservation = d["reservation"];
+      openFolio();
     }, AppStateFinished(data: null)));
   }
 
@@ -270,7 +272,8 @@ extension WMERoomReserve on WMRoomReserve {
 
   void addVoucher() {
     if (_model.reservation.isEmpty) {
-      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventError(model.tr('Save first')));
+      BlocProvider.of<AppBloc>(prefs.context())
+          .add(AppEventError(model.tr('Save first')));
       return;
     }
     model.navigation.openVoucher('', _model.reservation).then((value) {
@@ -287,7 +290,8 @@ extension WMERoomReserve on WMRoomReserve {
     if (_model.reservation.isEmpty) {
       return false;
     }
-    if (_model.reservation['f_state'] == 2 && _model.entryDate == prefs.strDate(prefs.string('workingday'))) {
+    if (_model.reservation['f_state'] == 2 &&
+        _model.entryDate == prefs.strDate(prefs.string('workingday'))) {
       return true;
     }
     return false;

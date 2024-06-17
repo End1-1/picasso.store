@@ -17,6 +17,7 @@ class WMGoodsReserve extends WMApp {
   WMGoodsReserve(this.info, this.store, {super.key, required super.model}) {
     _model.reservationStore = store['f_store'];
     _model.reservationGoods = info['goods']['f_id'];
+    _model.reservationBarcode = info['goods']['f_scancode'];
     _model.reservationGoodsName = info['goods']['f_goodsname'];
     _model.maxReserveQty = (double.tryParse(store['f_qty']) ?? 0) -
         (double.tryParse(store['f_reserve']) ?? 0);
