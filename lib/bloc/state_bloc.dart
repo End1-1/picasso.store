@@ -42,3 +42,5 @@ class AppAnimateStateIdle extends Equatable {
 }
 
 class AppAnimateStateRaise extends AppAnimateStateIdle{}
+
+class AppAnimateShowMenu extends AppAnimateStateIdle {}

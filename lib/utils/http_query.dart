@@ -18,6 +18,7 @@ class HttpQuery {
     inData['appversion'] = prefs.string('appversion');
     inData['app'] = 'mobileworker';
     inData['config'] = prefs.string('config');
+    inData['workingday'] = prefs.dateMySqlText(prefs.workingDay());
     inData['language'] = 'am';
 
     Map<String, Object?> outData = {};

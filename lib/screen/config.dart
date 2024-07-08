@@ -39,7 +39,14 @@ class WMConfig extends WMApp {
       ]),
       Row(children: [
         Expanded(child: Styling.textCenter(prefs.string('appversion')))
-      ],)
+      ],),
+      Row(
+          mainAxisAlignment:
+          MainAxisAlignment.center,
+          children: [
+            Styling.textButton(model.downloadLatestVersion, model.tr('Download latest version'))
+          ]
+      ),
     ]));
   }
 }

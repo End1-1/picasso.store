@@ -36,3 +36,6 @@ class AppAnimateEvent extends Equatable {
 }
 
 class AppAnimateEventRaise extends AppAnimateEvent {}
+
+class AppAnimateEventShowMenu extends AppAnimateEvent {}
+class AppAnimateEventHideMenu extends AppAnimateEvent {}

@@ -1,8 +1,13 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/question_bloc.dart';
+import 'package:cafe5_mworker/model/model.dart';
+import 'package:cafe5_mworker/utils/calendar.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 import 'app.dart';
@@ -13,6 +18,10 @@ part 'dashboard.model.dart';
 part 'dashboard.hotel.dart';
 
 part 'dashboard.store.dart';
+
+part 'dashboard.reports.dart';
+
+part 'dashboard.waiter.dart';
 
 class WMDashboard extends WMApp {
   final _model = DashboardModel();
@@ -42,32 +51,34 @@ class WMDashboard extends WMApp {
 
   @override
   List<Widget> menuWidgets() {
+    final defaultButtons = [
+      Styling.menuButton(
+          model.navigation.settings, 'config', model.tr('Configuration')),
+      Styling.menuButton(model.navigation.logout, 'logout', model.tr('Logout')),
+    ];
     switch (Prefs.config['dashboard']) {
-      case 'shop':
-        return [];
+      case 'reports':
+        return menuWidgetsReports()..addAll(defaultButtons);
       case 'store':
-        return menuWidgetsStore();
+        return menuWidgetsStore()..addAll(defaultButtons);
       case 'hotel':
-        return menuWidgetsHotel();
+        return menuWidgetsHotel()..addAll(defaultButtons);
       default:
-        return [
-          Styling.menuButton(
-              model.navigation.settings, 'config', model.tr('Configuration')),
-          Styling.menuButton(
-              model.navigation.logout, 'logout', model.tr('Logout')),
-        ];
+        return defaultButtons;
     }
   }
 
   @override
   Widget body() {
     switch (Prefs.config['dashboard']) {
-      case 'shop':
-        return Container();
+      case 'reports':
+        return bodyReports();
       case 'store':
         return bodyStore();
       case 'hotel':
         return bodyHotel();
+      case 'waiter':
+        return bodyWaiter();
       default:
         return Container();
     }

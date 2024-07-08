@@ -132,7 +132,7 @@ class WMCheckQty extends WMApp {
                       child: Styling.text(
                           '${state.data['goods']['f_groupname']} ${state.data['goods']['f_goodsname']}')),
                   Expanded(child: Container()),
-                  Styling.text('${prefs.df(state.data['goods']['f_price1'])} ֏'),
+                  Styling.text('${state.data['goods']['f_price1']} ֏'),
                   IconButton(onPressed: () {model.navigation.goodsInfo(state.data['goods']);}, icon: const Icon(Icons.info_outline)),
                   Styling.rowSpacingWidget()
                 ]),
@@ -174,7 +174,7 @@ class WMCheckQty extends WMApp {
                         Container(
                             padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                             width: 50,
-                            child:Styling.text('${prefs.df(e['f_reserve'])}'))
+                            child:Styling.text('${e['f_reserve']}'))
                       ]))
                 ]
               ],

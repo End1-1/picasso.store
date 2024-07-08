@@ -21,8 +21,7 @@ class WMRoomChart extends WMApp {
     return [
       IconButton(
           onPressed: setStartDate, icon: Icon(Icons.calendar_month_sharp)),
-      IconButton(
-          onPressed: getChart, icon: Icon(Icons.refresh_outlined)),
+      IconButton(onPressed: getChart, icon: Icon(Icons.refresh_outlined)),
     ];
   }
 
@@ -71,15 +70,18 @@ class WMRoomChart extends WMApp {
                           children: [
                             for (final r in _model.rooms) ...[
                               InkWell(
-                                onTap: (){changeRoomState(r);},
+                                  onTap: () {
+                                    changeRoomState(r);
+                                  },
                                   child: Container(
-                                  width: 100,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: colorOfRoomState(r['f_state']),
-                                      border: Border.fromBorderSide(
-                                          BorderSide(color: Colors.black12))),
-                                  child: Text(r['f_short'])))
+                                      width: 100,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                          color: colorOfRoomState(r['f_state']),
+                                          border: Border.fromBorderSide(
+                                              BorderSide(
+                                                  color: Colors.black12))),
+                                      child: Text(r['f_short'])))
                             ]
                           ])))
             ],
@@ -133,8 +135,9 @@ class WMRoomChart extends WMApp {
           color: Colors.black12,
           border: Border.fromBorderSide(BorderSide(color: Colors.black12))),
       child: Text(
-          '${_model.date.add(Duration(days: i)).day}\r\n${DateFormat("MMM").format(_model.date.add(Duration(days: i)))}',
-      textAlign: TextAlign.center,),
+        '${_model.date.add(Duration(days: i)).day}\r\n${DateFormat("MMM").format(_model.date.add(Duration(days: i)))}',
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -153,7 +156,7 @@ class WMRoomChart extends WMApp {
 
   Widget chartReserve(dynamic d) {
     return Positioned(
-        top: _model.roomPos[d['f_room']]! * RoomChartModel.squareside,
+        top: (_model.roomPos[d['f_room']] ?? 0) * RoomChartModel.squareside,
         left: leftOfReserve(d),
         child: InkWell(
           onTap: () {

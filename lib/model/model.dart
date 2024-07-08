@@ -8,8 +8,11 @@ import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/res.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'navigation.dart';
+
+part 'model.menu.dart';
 
 class AppStateAppBar extends AppState {}
 
@@ -59,6 +62,7 @@ class WMModel {
         try {
           prefs.setString('sessionkey', d['sessionkey']);
           prefs.setString('config', d['config']['f_config']);
+          prefs.setInt('userid', d['user']['f_id']);
           prefs.init();
         } catch (e) {
           print(e.toString());
@@ -86,8 +90,13 @@ class WMModel {
       if (e) {
         prefs.setBool('stayloggedin', false);
         prefs.setString('sessionkey', '');
+        prefs.setInt('userid', d['user']['f_id']);
       } else {
-        prefs.setString('config', d['config']['f_config']);
+        if (d['config']['f_config'] is String) {
+          prefs.setString('config', d['config']['f_config']);
+        } else {
+          prefs.setString('config', jsonEncode(d['config']['f_config']));
+        }
         prefs.init();
         Navigator.pushAndRemoveUntil(
             prefs.context(),
@@ -110,5 +119,12 @@ class WMModel {
   void menuRaise() {
     BlocProvider.of<AppAnimateBloc>(prefs.context())
         .add(AppAnimateEventRaise());
+  }
+
+  void downloadLatestVersion() async {
+    launchUrl(
+        Uri.parse('https://download.picasso.am/'),
+        mode: LaunchMode.inAppBrowserView);
+
   }
 }

@@ -28,7 +28,7 @@ extension Prefs on SharedPreferences {
   }
 
   DateTime strDate(String s) {
-    return DateFormat('yyyy-MM-dd').parse(s);
+    return DateFormat('yyyy-MM-dd').tryParse(s) ?? DateTime.now();
   }
 
   String dateText(DateTime dt) {
@@ -41,6 +41,12 @@ extension Prefs on SharedPreferences {
 
   DateTime workingDay() {
     return strDate(string('workingday'));
+  }
+
+  String number(num v) {
+    var nf = NumberFormat.decimalPatternDigits(locale: 'en_us',
+      decimalDigits:0);
+    return nf.format(v);
   }
 
   void init() {

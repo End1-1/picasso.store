@@ -25,15 +25,18 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
     emit(AppStateLoading(event.text));
     final result = await HttpQuery(event.route).request(event.data);
-    if (result['status'] == 0) {
+    if (result['status'] == 0 && event.route != 'engine/logout.php') {
       emit(AppStateError(result['data']));
+      if (event.callback != null) {
+        event.callback!(true, result['data'] ?? result);
+      }
       return;
     }
     if (event.state != null) {
-      emit(event.state!..data = result['data']);
+      emit(event.state!..data = result['data'] ?? result);
     }
     if (event.callback != null) {
-      event.callback!(result['status'] == 0, result['data']);
+      event.callback!(result['status'] == 0, result['data'] ?? result);
     }
   }
 }
@@ -83,5 +86,6 @@ class AppAnimateBloc extends Bloc<AppAnimateEvent, AppAnimateStateIdle> {
   AppAnimateBloc() : super(AppAnimateStateIdle()) {
     on<AppAnimateEvent>((event, emit) => emit(AppAnimateStateIdle()));
     on<AppAnimateEventRaise>((event, emit) => emit(AppAnimateStateRaise()));
+    on<AppAnimateEventShowMenu>((event, emit) => emit(AppAnimateShowMenu()));
   }
 }

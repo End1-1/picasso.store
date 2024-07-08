@@ -14,33 +14,7 @@ extension DashboardHotel on WMDashboard {
       Styling.menuButton(model.navigation.checkRoomAvailability, 'forecast',
           model.tr('Check room availability')),
       Styling.menuButton(model.navigation.rooms, 'forecast', model.tr('Rooms')),
-      Styling.menuButton(
-          model.navigation.settings, 'config', model.tr('Configuration')),
-      Styling.menuButton(model.navigation.logout, 'logout', model.tr('Logout')),
     ];
-  }
-
-  Widget bodyStore() {
-    return BlocBuilder<AppBloc, AppState>(
-        buildWhen: (p, c) => c is AppStateDashboard,
-        builder: (builder, state) {
-          if (state is! AppStateDashboard) {
-            return Container();
-          }
-          return SingleChildScrollView(
-              child: Column(
-              children: [
-                for (final e in _model.drafts) ... [
-                  InkWell(
-                    onTap:(){openDraft(e['f_id']);},
-                      child: Row(children: [
-                    SizedBox(width: 120, child: Styling.text('${e['f_date']}')),
-                    SizedBox(width: 100, child: Styling.text('${e['f_amount']}'))
-                  ])),
-                  Divider(),
-                ]
-              ]));
-        });
   }
 
   Widget bodyHotel() {
@@ -52,10 +26,12 @@ extension DashboardHotel on WMDashboard {
           }
           final checkin = state.data['checkin'];
           final checkout = state.data['checkout'];
+          final alreadycheckout = state.data['alreadycheckout'];
           final inhouse = state.data['inhouse'];
           return SingleChildScrollView(
               child: Column(
             children: [
+              //CHEKING GUESTS
               Container(
                   color: const Color(0xff84f1ff),
                   child: Row(children: [
@@ -64,6 +40,7 @@ extension DashboardHotel on WMDashboard {
                     Text('${checkin.length}'),
                     Styling.rowSpacingWidget()
                   ])),
+              const Divider(),
               for (final c in checkin) ...[
                 InkWell(
                     onTap: () {
@@ -91,6 +68,8 @@ extension DashboardHotel on WMDashboard {
                           ],
                         )))
               ],
+
+              //INHOUSE GUESTS
               Container(
                   color: const Color(0xffa7ff84),
                   child: Row(children: [
@@ -99,6 +78,7 @@ extension DashboardHotel on WMDashboard {
                     Text('${inhouse.length}'),
                     Styling.rowSpacingWidget()
                   ])),
+              const Divider(),
               Container(
                   color: const Color(0xffa7ff84),
                   child: Column(children: [
@@ -124,6 +104,8 @@ extension DashboardHotel on WMDashboard {
                       const Divider()
                     ]
                   ])),
+
+              //WAITING FOR CHECKOUT TODAY
               Container(
                   color: const Color(0xfffff6b3),
                   child: Row(children: [
@@ -132,6 +114,7 @@ extension DashboardHotel on WMDashboard {
                     Text('${checkout.length}'),
                     Styling.rowSpacingWidget()
                   ])),
+              const Divider(),
               Container(
                   color: const Color(0xfffff6b3),
                   child: Column(children: [
@@ -159,6 +142,45 @@ extension DashboardHotel on WMDashboard {
                       const Divider()
                     ]
                   ])),
+
+              //ALREADY CHECKOUT
+              Container(
+                  color: const Color(0xffffaabb),
+                  child: Row(children: [
+                    Styling.textBold(model.tr('Already checkout')),
+                    Expanded(child: Container()),
+                    Text('${alreadycheckout.length}'),
+                    Styling.rowSpacingWidget()
+                  ])),
+              const Divider(),
+              Container(
+                  color: const Color(0xffffaabb),
+                  child: Column(children: [
+                    for (final c in alreadycheckout) ...[
+                      InkWell(
+                          onTap: () {
+                            model.navigation.openFolio(c).then((value) {
+                              if (value ?? false) getDashboard();
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Styling.text(
+                                  '${c['f_startdate']} - ${c['f_enddate']}'),
+                              Expanded(child: Container()),
+                              Styling.text(c['f_roomshort']),
+                              Styling.rowSpacingWidget()
+                            ],
+                          )),
+                      Row(
+                        children: [
+                          Styling.text(c['f_guests']),
+                        ],
+                      ),
+                      const Divider()
+                    ]
+                  ])),
+
               Row(children: [
                 Styling.textBold(model.tr('Payments, cash')),
                 Expanded(child: Container()),

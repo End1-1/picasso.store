@@ -12,8 +12,8 @@ class Styling {
       int maxLines = 1,
       bool autofocus = false,
       bool readOnly = false,
-        GestureTapCallback? onTap,
-        Function(String)? onChanged,
+      GestureTapCallback? onTap,
+      Function(String)? onChanged,
       FocusNode? focusNode}) {
     return TextFormField(
       onFieldSubmitted: onSubmit,
@@ -36,11 +36,11 @@ class Styling {
   static TextFormField textFormFieldNumbers(
       TextEditingController controller, String hintText,
       {Function(String)? onSubmit,
-        int maxLines = 1,
-        bool autofocus = false,
-        bool readOnly = false,
-        Function(String)? onChange,
-        FocusNode? focusNode}) {
+      int maxLines = 1,
+      bool autofocus = false,
+      bool readOnly = false,
+      Function(String)? onChange,
+      FocusNode? focusNode}) {
     return TextFormField(
       onFieldSubmitted: onSubmit,
       controller: controller,
@@ -60,7 +60,8 @@ class Styling {
   }
 
   static TextFormField textFormFieldPassword(
-      TextEditingController controller, String hintText, {ValueChanged<String>? onFieldSubmitted}) {
+      TextEditingController controller, String hintText,
+      {ValueChanged<String>? onFieldSubmitted}) {
     return TextFormField(
       obscureText: true,
       controller: controller,
@@ -127,7 +128,10 @@ class Styling {
   }
 
   static textBold(String s, {TextAlign ta = TextAlign.left}) {
-    return Text(s, textAlign: ta, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold));
+    return Text(s,
+        textAlign: ta,
+        style:
+            const TextStyle(color: Colors.black, fontWeight: FontWeight.bold));
   }
 
   static textWithWidth(String s, double w,
