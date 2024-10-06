@@ -29,6 +29,7 @@ extension WMEGoodsReserve on WMGoodsReserve {
       'goods': _model.reservationGoods,
       'goodsname': _model.reservationGoodsName,
       'barcode': _model.reservationBarcode,
+      'scancode': _model.reservationBarcode,
       'qty': double.tryParse(_model.reserveQtyTextController.text) ?? 0,
       'message': _model.reserveCommentTextController.text,
       'enddate': prefs.dateMySqlText(_model.reservationExpiration),

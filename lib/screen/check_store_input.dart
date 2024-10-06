@@ -76,11 +76,11 @@ class WMCheckStoreInput extends WMApp {
                       checkedStoreInput(e['f_id'], state.data);
                     }, e['f_acc'] != null),
                     Expanded(child: Container()),
-                    Styling.text('${prefs.df(e['f_qty'])}'),
+                    Styling.text(prefs.df(e['f_qty'].toString())),
                     Styling.rowSpacingWidget(),
                     Container(
                         width: 80,
-                        child: Styling.text('${prefs.df(e['f_price1'])}',
+                        child: Styling.text(prefs.df(e['f_price1'].toString()),
                             ta: TextAlign.right)),
                     Styling.rowSpacingWidget(),
                   ],

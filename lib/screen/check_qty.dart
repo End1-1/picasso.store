@@ -170,7 +170,7 @@ class WMCheckQty extends WMApp {
           Container(
           padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
           width: 50,
-          child:Styling.text('${prefs.df(e['f_qty'])}')),
+          child:Styling.text(prefs.df(e['f_qty'].toString()))),
                         Container(
                             padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                             width: 50,

@@ -112,14 +112,14 @@ extension WMEOrder on WMOrder {
     d['header'] = _model.order['f_id'];
     d['dish'] = e['f_dish'];
     d['price'] = e['f_price'];
-    d['service'] = _model.order['f_servicefactor'];
+    d['service_factor'] = _model.order['f_servicefactor'];
     d['discount'] = _model.order['f_discountfactor'];
     d['store'] = e['f_store'];
     d['print1'] = e['f_print1'];
     d['print2'] = e['f_print2'];
     d['adgcode'] = e['f_adgcode'];
-    d['canservice'] = e['f_canservice'];
-    d['candiscount'] = e['f_candiscount'];
+    d['canservice'] = e['f_service'];
+    d['candiscount'] = e['f_discount'];
     d['emarks'] = '';
     BlocProvider.of<AppBloc>(prefs.context()).add(AppLoadOpenOrder('Wait',
         '/engine/waiter/order.php', d, (err, d) {
@@ -166,7 +166,7 @@ extension WMEOrder on WMOrder {
     var alert = AlertDialog(
       title: Text(ddd['f_name']),
       content: TextField(
-        style: TextStyle(
+        style: const TextStyle(
             decoration: TextDecoration.none),
         maxLines: 1,
         keyboardType: TextInputType.number,
@@ -178,17 +178,17 @@ extension WMEOrder on WMOrder {
         },
         controller: _controller,
         decoration:  InputDecoration(
-          errorStyle: TextStyle(color: Colors.redAccent),
+          errorStyle: const TextStyle(color: Colors.redAccent),
           border:  UnderlineInputBorder(
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Color.fromRGBO(40, 40, 40, 1.0),),
             borderRadius: BorderRadius.circular(10.0),),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Color.fromRGBO(40, 40, 40, 1.0),),
             borderRadius: BorderRadius.circular(10.0),),
           disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Color.fromRGBO(40, 40, 40, 1.0),),
             borderRadius: BorderRadius.circular(10.0),),
           prefixIcon: const Icon(
