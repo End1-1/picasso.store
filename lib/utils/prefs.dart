@@ -19,7 +19,7 @@ extension Prefs on SharedPreferences {
   }
 
   String df(String v) {
-    return v.replaceAll(Prefs.regex, '');
+    return v.replaceAll(RegExp('r(?!\d[\.\,][1-9]+)0+\$'), '').replaceAll('[\.\,]\$', '');
   }
 
   String currentDateText() {

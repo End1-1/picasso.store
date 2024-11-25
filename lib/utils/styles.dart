@@ -110,7 +110,7 @@ class Styling {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Styling.rowSpacingWidget(),
-              SvgPicture.memory(Res.images[image]!,
+              SvgPicture.memory(Res.images[image]! ,
                   colorFilter: const ColorFilter.mode(
                       Colors.transparent, BlendMode.softLight),
                   height: 25),

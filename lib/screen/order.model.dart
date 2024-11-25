@@ -112,6 +112,7 @@ extension WMEOrder on WMOrder {
     d['header'] = _model.order['f_id'];
     d['dish'] = e['f_dish'];
     d['price'] = e['f_price'];
+    d['f_working_day'] = DateFormat('yyyy-MM-dd').format(DateTime.now());
     d['service_factor'] = _model.order['f_servicefactor'];
     d['discount'] = _model.order['f_discountfactor'];
     d['store'] = e['f_store'];
@@ -120,7 +121,7 @@ extension WMEOrder on WMOrder {
     d['adgcode'] = e['f_adgcode'];
     d['canservice'] = e['f_service'];
     d['candiscount'] = e['f_discount'];
-    d['emarks'] = '';
+    d['emarks'] = null;
     BlocProvider.of<AppBloc>(prefs.context()).add(AppLoadOpenOrder('Wait',
         '/engine/waiter/order.php', d, (err, d) {
           if (err) {

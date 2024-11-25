@@ -61,7 +61,11 @@ class WMModel {
       if (!e) {
         try {
           prefs.setString('sessionkey', d['sessionkey']);
-          prefs.setString('config', d['config']['f_config']);
+          if (d['config']['f_config'] is Map) {
+            prefs.setString('config', jsonEncode(d['config']['f_config']));
+          } else {
+            prefs.setString('config', d['config']['f_config']);
+          }
           prefs.setInt('userid', d['user']['f_id']);
           prefs.init();
         } catch (e) {

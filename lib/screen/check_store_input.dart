@@ -22,7 +22,7 @@ class WMCheckStoreInput extends WMApp {
   List<Widget> menuWidgets() {
     return [
       Styling.menuButton(showAllCheckStoreInput, 'allcheckstoreinput',
-          model.tr('Show whole list')),
+          locale().showAll),
     ];
   }
 

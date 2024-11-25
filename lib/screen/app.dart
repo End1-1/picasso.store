@@ -7,6 +7,7 @@ import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 abstract class WMApp extends StatelessWidget {
   late final Navigation nav;
@@ -249,5 +250,9 @@ abstract class WMApp extends StatelessWidget {
                 ),
               )
             ])));
+  }
+
+  AppLocalizations locale() {
+    return AppLocalizations.of(prefs.context())!;
   }
 }
