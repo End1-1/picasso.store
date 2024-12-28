@@ -13,6 +13,8 @@ class DashboardModel {
 
   var hallFilter = 0;
   final halls = <dynamic>[];
+  var hallId = 0;
+  var hallName = '';
   final tables = <dynamic>[];
   final openTables = {};
   final filteredTables = {};
@@ -65,6 +67,9 @@ extension WMEDashboard on WMDashboard {
         return;
       case 'waiter':
         getDashboardWaiter();
+        break;
+      case 'elinarep':
+        getDashboardElinaRep();
         break;
       default:
         return;

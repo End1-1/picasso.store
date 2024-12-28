@@ -2,7 +2,7 @@ name: cafe5_mworker
 description: "Mobile worker module of cafe5. Included shop check store qty, part of SmartHotel, waiter of cafe5"
 publish_to: 'none'
 
-version: 1.0.2+29
+version: 1.0.2+33
 
 environment:
   sdk: ^3.5.3

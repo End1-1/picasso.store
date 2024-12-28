@@ -1,4 +1,4 @@
-part of 'dashboard.dart';
+part of '../dashboard.dart';
 
 extension DashboardHotel on WMDashboard {
   List<Widget> actionsHotel() {

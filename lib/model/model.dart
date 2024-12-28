@@ -14,7 +14,9 @@ import 'navigation.dart';
 
 part 'model.menu.dart';
 
-class AppStateAppBar extends AppState {}
+class AppStateAppBar extends AppState {
+  AppStateAppBar():super(0);
+}
 
 class AppEventAppBar extends AppEvent {}
 

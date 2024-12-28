@@ -1,4 +1,5 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/app_cubits.dart';
 import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/model/model.dart';
 import 'package:cafe5_mworker/model/navigation.dart';
@@ -35,12 +36,9 @@ abstract class WMApp extends StatelessWidget {
         //minimum: const EdgeInsets.fromLTRB(5, 10, 5, 2),
         child: Stack(children: [
           Container(padding: const EdgeInsets.all(5), child: body()),
-          BlocBuilder<AppBloc, AppState>(builder: (context, state) {
-            if (state is AppStateLoading) {
-              return loading(state.text);
-            } else {
-              return Container();
-            }
+          BlocBuilder<AppLoadingCubit, AppLoadingState>(builder: (context, state) {
+            return state == AppLoadingState.loading ? loading(locale().working) : Container();
+
           }),
           BlocBuilder<AppBloc, AppState>(builder: (context, state) {
             if (state is AppStateError) {

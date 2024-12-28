@@ -12,6 +12,7 @@ import 'package:cafe5_mworker/screen/goods_info.dart';
 import 'package:cafe5_mworker/screen/goods_reserve.dart';
 import 'package:cafe5_mworker/screen/hotel_inventory.dart';
 import 'package:cafe5_mworker/screen/order.dart';
+import 'package:cafe5_mworker/screen/reports/elina/day_end.dart';
 import 'package:cafe5_mworker/screen/room_chart.dart';
 import 'package:cafe5_mworker/screen/room_reserve.dart';
 import 'package:cafe5_mworker/screen/rooms.dart';
@@ -55,6 +56,11 @@ class Navigation {
   Future<void> checkStoreInput() {
     hideMenu();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckStoreInput(model: model)));
+  }
+
+  Future<void> dayEnd() {
+    hideMenu();
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMDayEnd(model: model)));
   }
 
   Future<void> settings() {

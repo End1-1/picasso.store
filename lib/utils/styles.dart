@@ -68,6 +68,7 @@ class Styling {
       onFieldSubmitted: onFieldSubmitted,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
+        suffix: IconButton(onPressed: (){}, icon: Icon(Icons.remove_red_eye_outlined)),
           contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
           border: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black26)),
@@ -110,10 +111,31 @@ class Styling {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Styling.rowSpacingWidget(),
-              SvgPicture.memory(Res.images[image]! ,
+              SvgPicture.memory(Res.images[image]!,
                   colorFilter: const ColorFilter.mode(
                       Colors.transparent, BlendMode.softLight),
                   height: 25),
+              Styling.rowSpacingWidget(),
+              Expanded(
+                  child: Text(text,
+                      maxLines: 2,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 16)))
+            ]));
+  }
+
+  ///{@template menuButton}
+  ///1st: function , 2nd imagename, 3rd - text
+  ///{@endtemplate}
+  static Widget menuButton2(VoidCallback callback, String image, String text) {
+    return InkWell(
+        onTap: callback,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Styling.rowSpacingWidget(),
+              Image.asset('assets/$image.png', height: 25, color: Colors.white),
               Styling.rowSpacingWidget(),
               Expanded(
                   child: Text(text,

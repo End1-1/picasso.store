@@ -11,7 +11,7 @@ class HttpQuery {
   bool needlonglog = false;
   final String route;
   final int timeout;
-  HttpQuery(this.route, {this.timeout = 10});
+  HttpQuery(this.route, {this.timeout = 20});
 
   Future<Map<String, dynamic>> request(Map<String, dynamic> inData) async {
     inData['sessionkey'] = prefs.string('sessionkey');
@@ -20,6 +20,7 @@ class HttpQuery {
     inData['config'] = prefs.string('config');
     inData['workingday'] = prefs.dateMySqlText(prefs.workingDay());
     inData['language'] = 'am';
+    inData['debug'] = 1;
 
     Map<String, Object?> outData = {};
     String strBody = jsonEncode(inData);

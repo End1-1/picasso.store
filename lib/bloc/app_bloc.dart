@@ -7,15 +7,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'event_bloc.dart';
+import 'app_cubits.dart';
 
+part 'event_bloc.dart';
 part 'state_bloc.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc() : super(AppState()) {
-    on<AppEvent>((event, emit) => emit(AppState()));
+  AppBloc() : super(AppState(0)) {
+    on<AppEvent>((event, emit) => emit(AppState(0)));
     on<AppEventLoading>((event, emit) => loadingData(event));
     on<AppEventError>((event, emit) => emit(AppStateError(event.text)));
+    on<AppEventLoading2>((event, emit)=>_loadingData(event));
   }
 
   void loadingData(AppEventLoading event) async {
@@ -23,8 +25,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       emit(event.state!);
       return;
     }
-    emit(AppStateLoading(event.text));
+    prefs.context().read<AppLoadingCubit>().change(AppLoadingState.loading);
     final result = await HttpQuery(event.route).request(event.data);
+    prefs.context().read<AppLoadingCubit>().change(AppLoadingState.idle);
     if (result['status'] == 0 && event.route != 'engine/logout.php') {
       emit(AppStateError(result['data']));
       if (event.callback != null) {
@@ -38,6 +41,17 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     if (event.callback != null) {
       event.callback!(result['status'] == 0, result['data'] ?? result);
     }
+  }
+
+  void _loadingData(AppEventLoading2 event) async {
+    prefs.context().read<AppLoadingCubit>().change(AppLoadingState.loading);
+    final result = await HttpQuery(event.route).request(event.data);
+    prefs.context().read<AppLoadingCubit>().change(AppLoadingState.idle);
+    if (result['status'] != 1) {
+      emit(AppStateError(result['data']));
+      return;
+    }
+      emit(event.state!..id = event.id ..data = result['data'] ?? result);
   }
 }
 

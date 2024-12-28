@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/app_cubits.dart';
 import 'package:cafe5_mworker/bloc/date_bloc.dart';
 import 'package:cafe5_mworker/bloc/question_bloc.dart';
 import 'package:cafe5_mworker/screen/login.dart';
@@ -18,7 +19,6 @@ import 'model/navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  HttpOverrides.global = MyHttpOverrides();
   prefs = await SharedPreferences.getInstance();
   PackageInfo pa = await PackageInfo.fromPlatform();
   prefs.setString('appversion', '${pa.version}.${pa.buildNumber}');
@@ -29,7 +29,9 @@ void main() async {
         create: (context) => InitAppBloc()..add(InitAppEvent())),
     BlocProvider<AppAnimateBloc>(create: (context) => AppAnimateBloc()),
     BlocProvider<DateBloc>(create: (context) => DateBloc()),
-    BlocProvider<QuestionBloc>(create: (context) => QuestionBloc())
+    BlocProvider<QuestionBloc>(create: (context) => QuestionBloc()),
+    BlocProvider<AppLoadingCubit>(create: (_) => AppLoadingCubit()),
+    BlocProvider<AppCubits>(create: (_) => AppCubits())
   ], child: App()));
 }
 
@@ -153,14 +155,5 @@ class _App extends State<App> {
             return Container();
           },
         )))));
-  }
-}
-
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
   }
 }

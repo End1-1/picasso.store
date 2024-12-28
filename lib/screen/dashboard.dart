@@ -15,13 +15,15 @@ import 'draft_sale.dart';
 
 part 'dashboard.model.dart';
 
-part 'dashboard.hotel.dart';
+part 'hotel/dashboard.hotel.dart';
 
 part 'dashboard.store.dart';
 
 part 'dashboard.reports.dart';
 
 part 'dashboard.waiter.dart';
+
+part 'reports/elina/dashboard.elinarep.dart';
 
 class WMDashboard extends WMApp {
   final _model = DashboardModel();
@@ -63,6 +65,8 @@ class WMDashboard extends WMApp {
         return menuWidgetsStore()..addAll(defaultButtons);
       case 'hotel':
         return menuWidgetsHotel()..addAll(defaultButtons);
+      case 'elinarep':
+        return menuWidgetsElinarep()..addAll(defaultButtons);
       default:
         return defaultButtons;
     }
@@ -79,6 +83,8 @@ class WMDashboard extends WMApp {
         return bodyHotel();
       case 'waiter':
         return bodyWaiter();
+      case 'elinarep':
+        return bodyElinaRep();
       default:
         return Container();
     }

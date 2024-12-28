@@ -1,4 +1,5 @@
 import 'package:cafe5_mworker/bloc/app_bloc.dart';
+import 'package:cafe5_mworker/bloc/app_cubits.dart';
 import 'package:cafe5_mworker/model/model.dart';
 import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:cafe5_mworker/utils/styles.dart';
@@ -19,7 +20,7 @@ class WMLogin extends StatelessWidget {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
       if (mode == username_password) {
         return Container(
-          constraints: const BoxConstraints(maxWidth: 500),
+            constraints: const BoxConstraints(maxWidth: 500),
             padding: const EdgeInsets.all(5),
             child: SingleChildScrollView(
                 child: Column(
@@ -37,10 +38,19 @@ class WMLogin extends StatelessWidget {
                 Styling.columnSpacingWidget(),
                 Row(children: [
                   Expanded(
-                      child: Styling.textFormFieldPassword(
-                          model.serverPasswordTextController,
-                          model.tr('Password'),
-                          onFieldSubmitted: model.passwordSubmitted))
+                      child:  BlocBuilder<AppCubits, int>(builder: (builder, state) {return TextFormField(
+                controller: model.serverPasswordTextController,
+                obscureText: state &cubIsPasswordShow != 0,
+                  onFieldSubmitted: model.passwordSubmitted,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                      suffix: IconButton(onPressed: (){builder.read<AppCubits>().toggleShowPassword();}, icon: Icon(Icons.remove_red_eye_outlined)),
+                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black26)),
+                      labelText: model.tr('Password')),
+                );}))
+
                 ]),
                 Styling.columnSpacingWidget(),
                 Row(children: [
@@ -52,16 +62,24 @@ class WMLogin extends StatelessWidget {
                       model.navigation.settings, model.tr('Configuration'))
                 ]),
                 Styling.columnSpacingWidget(),
-                if (state.runtimeType == AppStateLoading) ...[
-                  const SizedBox(
-                      height: 30, width: 30, child: CircularProgressIndicator())
-                ],
-                if (state.runtimeType != AppStateLoading) ...[
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Styling.textButton(
-                        model.loginUsernamePassword, model.tr('Next'))
-                  ])
-                ],
+                BlocBuilder<AppLoadingCubit, AppLoadingState>(
+                    builder: (builder, state) {
+                  if (state == AppLoadingState.loading) {
+                    return Column(children: [
+                      const SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator()),
+                    ]);
+                  } else {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Styling.textButton(
+                              model.loginUsernamePassword, model.tr('Next'))
+                        ]);
+                  }
+                }),
                 if (state is AppStateError) ...[Styling.textError(state.text)]
               ],
             )));
