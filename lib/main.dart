@@ -1,16 +1,18 @@
-import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/bloc/app_cubits.dart';
-import 'package:cafe5_mworker/bloc/date_bloc.dart';
-import 'package:cafe5_mworker/bloc/question_bloc.dart';
-import 'package:cafe5_mworker/screen/login.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
-import 'package:cafe5_mworker/utils/styles.dart';
+import 'package:picassostore/bloc/app_bloc.dart';
+import 'package:picassostore/bloc/app_cubits.dart';
+import 'package:picassostore/bloc/date_bloc.dart';
+import 'package:picassostore/bloc/http_bloc.dart';
+import 'package:picassostore/bloc/question_bloc.dart';
+import 'package:picassostore/screen/login.dart';
+import 'package:picassostore/screen/orders.dart';
+import 'package:picassostore/utils/prefs.dart';
+import 'package:picassostore/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'model/model.dart';
 import 'model/navigation.dart';
@@ -30,7 +32,8 @@ void main() async {
     BlocProvider<DateBloc>(create: (context) => DateBloc()),
     BlocProvider<QuestionBloc>(create: (context) => QuestionBloc()),
     BlocProvider<AppLoadingCubit>(create: (_) => AppLoadingCubit()),
-    BlocProvider<AppCubits>(create: (_) => AppCubits())
+    BlocProvider<AppCubits>(create: (_) => AppCubits()),
+    BlocProvider<HttpBloc>(create: (_) => HttpBloc())
   ], child: App()));
 }
 

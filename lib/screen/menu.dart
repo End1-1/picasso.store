@@ -1,7 +1,7 @@
-import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/model/model.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
-import 'package:cafe5_mworker/utils/styles.dart';
+import 'package:picassostore/bloc/app_bloc.dart';
+import 'package:picassostore/model/model.dart';
+import 'package:picassostore/utils/prefs.dart';
+import 'package:picassostore/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,7 +38,7 @@ class _WMAppMenu extends State<WMAppMenu> {
                   : Container()),
           AnimatedPositioned(
               width: width,
-              height: MediaQuery.sizeOf(context).height,
+              height: MediaQuery.sizeOf(context).height - kToolbarHeight ,
               right:
                   state.runtimeType == AppAnimateStateRaise ? pos : 0 - width,
               duration: const Duration(milliseconds: 300),
@@ -64,7 +64,7 @@ class _WMAppMenu extends State<WMAppMenu> {
                   },
                   child: Container(
                     color: Color(0xff1e3d4b),
-                    child: Column(
+                    child: SingleChildScrollView(child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -73,7 +73,7 @@ class _WMAppMenu extends State<WMAppMenu> {
                           w,
                         ]
                       ],
-                    ),
+                    )),
                   )))
         ],
       );

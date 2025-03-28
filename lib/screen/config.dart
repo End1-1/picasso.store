@@ -1,5 +1,5 @@
-import 'package:cafe5_mworker/utils/prefs.dart';
-import 'package:cafe5_mworker/utils/styles.dart';
+import 'package:picassostore/utils/prefs.dart';
+import 'package:picassostore/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 import 'app.dart';
@@ -19,27 +19,24 @@ class WMConfig extends WMApp {
         ],
       ),
       Styling.columnSpacingWidget(),
-      Row(children: [
-        Expanded(
-            child: Styling.textFormField(
-                model.serverUserTextController, model.tr('Server user')))
-      ]),
-      Styling.columnSpacingWidget(),
-      Row(children: [
-        Expanded(
-            child: Styling.textFormField(model.serverPasswordTextController,
-                model.tr('Server password')))
-      ]),
+      Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Styling.textButton(model.registerDemoServer, locale().useDemoServer)
+          ]),
       Styling.columnSpacingWidget(),
       Row(
         crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-        Styling.textButton(model.registerOnServer, model.tr('Register on server'))
+        Styling.textButton(model.registerOnServer, locale().saveServerAddress)
       ]),
+      Styling.columnSpacingWidget(),
       Row(children: [
         Expanded(child: Styling.textCenter(prefs.string('appversion')))
       ],),
+      Styling.columnSpacingWidget(),
       Row(
           mainAxisAlignment:
           MainAxisAlignment.center,

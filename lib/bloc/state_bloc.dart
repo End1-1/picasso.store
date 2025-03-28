@@ -1,8 +1,15 @@
 part of 'app_bloc.dart';
 
 class AppState extends Equatable {
-  int id = 0;
-  AppState(this.id);
+  static int _counter = 0;
+  late final int id;
+  AppState() {
+    _counter++;
+    id = _counter;
+    if (kDebugMode) {
+      print('new state id $id');
+    }
+  }
   @override
   List<Object?> get props => [id];
 }
@@ -10,12 +17,12 @@ class AppState extends Equatable {
 class AppStateError extends AppState {
   final String text;
 
-  AppStateError(this.text) : super(0);
+  AppStateError(this.text);
 }
 
 class AppStateFinished extends AppState {
   dynamic data;
-  AppStateFinished({required this.data}) : super(0);
+  AppStateFinished({required this.data});
 }
 
 class InitAppState extends Equatable {

@@ -1,25 +1,24 @@
-import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/bloc/question_bloc.dart';
-import 'package:cafe5_mworker/main.dart';
-import 'package:cafe5_mworker/mobiles_scanner/barcode_reader.dart';
-import 'package:cafe5_mworker/model/model.dart';
-import 'package:cafe5_mworker/screen/check_qty.dart';
-import 'package:cafe5_mworker/screen/check_room_availability.dart';
-import 'package:cafe5_mworker/screen/check_store_input.dart';
-import 'package:cafe5_mworker/screen/config.dart';
-import 'package:cafe5_mworker/screen/draft_sale.dart';
-import 'package:cafe5_mworker/screen/goods_info.dart';
-import 'package:cafe5_mworker/screen/goods_reserve.dart';
-import 'package:cafe5_mworker/screen/hotel_inventory.dart';
-import 'package:cafe5_mworker/screen/order.dart';
-import 'package:cafe5_mworker/screen/reports/elina/day_end.dart';
-import 'package:cafe5_mworker/screen/room_chart.dart';
-import 'package:cafe5_mworker/screen/room_reserve.dart';
-import 'package:cafe5_mworker/screen/rooms.dart';
-import 'package:cafe5_mworker/screen/voucher.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:picassostore/bloc/app_bloc.dart';
+import 'package:picassostore/bloc/http_bloc.dart';
+import 'package:picassostore/bloc/question_bloc.dart';
+import 'package:picassostore/main.dart';
+import 'package:picassostore/mobiles_scanner/barcode_reader.dart';
+import 'package:picassostore/model/model.dart';
+import 'package:picassostore/screen/check_qty.dart';
+import 'package:picassostore/screen/check_store_input.dart';
+import 'package:picassostore/screen/completed_orders.dart';
+import 'package:picassostore/screen/config.dart';
+import 'package:picassostore/screen/debts.dart';
+import 'package:picassostore/screen/deliver_note.dart';
+import 'package:picassostore/screen/draft_sale.dart';
+import 'package:picassostore/screen/goods_info.dart';
+import 'package:picassostore/screen/goods_reserve.dart';
+import 'package:picassostore/screen/new_order.dart';
+import 'package:picassostore/screen/order.dart';
+import 'package:picassostore/screen/orders.dart';
+import 'package:picassostore/utils/prefs.dart';
 
 class Navigation {
   final WMModel model;
@@ -31,20 +30,12 @@ class Navigation {
         MaterialPageRoute(builder: (builder) => WMConfig(model: model)));
   }
 
-  Future<void> checkRoomAvailability() {
-    hideMenu();
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckRoomAvaiability(model: model)));
-  }
-
-  Future<void> rooms() {
-    hideMenu();
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomsScreen(model: model, entry: DateTime.now(), departure: DateTime.now())));
-  }
-
   Future<void> createDraftSale() {
     hideMenu();
-    return Navigator.push(prefs.context(),
-        MaterialPageRoute(builder: (builder) => WMDraftSale(model: model, draftid: '')));
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => WMDraftSale(model: model, draftid: '')));
   }
 
   Future<void> checkQuantity() {
@@ -55,12 +46,10 @@ class Navigation {
 
   Future<void> checkStoreInput() {
     hideMenu();
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMCheckStoreInput(model: model)));
-  }
-
-  Future<void> dayEnd() {
-    hideMenu();
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMDayEnd(model: model)));
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => WMCheckStoreInput(model: model)));
   }
 
   Future<void> settings() {
@@ -68,23 +57,36 @@ class Navigation {
     model.serverTextController.text = prefs.string('serveraddress');
     model.serverUserTextController.clear();
     model.serverPasswordTextController.clear();
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMConfig(model: model)));
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => WMConfig(model: model)));
+  }
+
+  Future<void> deliveryNote() {
+    hideMenu();
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => DeliveryNote(model: model)));
+  }
+
+  Future<void> returnGoods() {
+    hideMenu();
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => DeliveryNote(model: model)));
   }
 
   void logout() {
     hideMenu();
-    BlocProvider.of<QuestionBloc>(prefs.context()).add(QuestionEventRaise(model.tr('Logout?'), (){
+    BlocProvider.of<QuestionBloc>(prefs.context())
+        .add(QuestionEventRaise(model.tr('Logout?'), () {
       BlocProvider.of<QuestionBloc>(Prefs.navigatorKey.currentContext!)
           .add(QuestionEvent());
-      BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(model.tr('Logout'), 'engine/logout.php', {}, (e, d) {
-
-          prefs.setBool('stayloggedin', false);
-          prefs.setString('sessionkey', '');
-          Navigator.pushAndRemoveUntil(prefs.context(), MaterialPageRoute(builder: (builder) =>  App()), (route) => false);
-
+      BlocProvider.of<AppBloc>(prefs.context()).add(
+          AppEventLoading(model.tr('Logout'), 'engine/logout.php', {}, (e, d) {
+        prefs.setBool('stayloggedin', false);
+        prefs.setString('sessionkey', '');
+        Navigator.pushAndRemoveUntil(prefs.context(),
+            MaterialPageRoute(builder: (builder) => App()), (route) => false);
       }, AppStateFinished(data: null)));
     }, null));
-
   }
 
   void hideMenu() {
@@ -92,39 +94,69 @@ class Navigation {
   }
 
   Future<String?> readBarcode() async {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => BarcodeScannerWithOverlay()));
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => BarcodeScannerWithOverlay()));
   }
 
-  Future<Object?> goodsInfo(Map<String,dynamic> info) async {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMGoodsInfo(info, model: model)));
+  Future<Object?> goodsInfo(Map<String, dynamic> info) async {
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => WMGoodsInfo(info, model: model)));
   }
 
-  Future<bool?> goodsReservation(Map<String, dynamic> info, Map<String,dynamic> store) async {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMGoodsReserve(info, store, model: model)));
-  }
-
-  Future<bool?> openRoom(dynamic r) async {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomReserve(model: model, room: r, folio: <String,dynamic>{},)));
-  }
-
-  Future<bool?> openVoucher(String id, dynamic reservation) {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMVoucher(model: model, id: id,  reservation: reservation,)));
-  }
-
-  Future<bool?> openRoomChart() async {
-    BlocProvider.of<AppAnimateBloc>(prefs.context()).add(AppAnimateEvent());
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomChart(model: model)));
-  }
-
-  Future<bool?> openFolio(dynamic d) async {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMRoomReserve(model: model,room: {}, folio: d)));
-  }
-
-  Future<bool?> openRoomInventory(dynamic d) {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMHotelInventory(model: model,room: d)));
+  Future<bool?> goodsReservation(
+      Map<String, dynamic> info, Map<String, dynamic> store) async {
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => WMGoodsReserve(info, store, model: model)));
   }
 
   Future<bool?> openWaiterTable(int table) {
-    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (builder) => WMOrder(model: model, table: table)));
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => WMOrder(model: model, table: table)));
+  }
+
+  Future<void> newOrder() {
+    hideMenu();
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => NewOrder(model: model, orderId: '')));
+  }
+
+  Future<void> openOrder(String id) {
+    hideMenu();
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => NewOrder(model: model, orderId: id)));
+  }
+
+  Future<void> orders() {
+    hideMenu();
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) =>Orders(model: model)));
+  }
+
+  Future<void> completedOrders() {
+    hideMenu();
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) => CompletedOrders(model: model)));
+  }
+
+  Future<void> debts() {
+    hideMenu();
+    return Navigator.push(
+        prefs.context(),
+        MaterialPageRoute(
+            builder: (builder) =>  Debts(model: model)));
   }
 }

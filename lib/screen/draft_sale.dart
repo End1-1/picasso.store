@@ -1,8 +1,8 @@
-import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/screen/app.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
-import 'package:cafe5_mworker/utils/qty_dialog.dart';
-import 'package:cafe5_mworker/utils/styles.dart';
+import 'package:picassostore/bloc/app_bloc.dart';
+import 'package:picassostore/screen/app.dart';
+import 'package:picassostore/utils/prefs.dart';
+import 'package:picassostore/utils/qty_dialog.dart';
+import 'package:picassostore/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

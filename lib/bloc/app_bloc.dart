@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:cafe5_mworker/utils/http_query.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
-import 'package:cafe5_mworker/utils/res.dart';
+import 'package:picassostore/utils/http_query.dart';
+import 'package:picassostore/utils/prefs.dart';
+import 'package:picassostore/utils/res.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +13,8 @@ part 'event_bloc.dart';
 part 'state_bloc.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc() : super(AppState(0)) {
-    on<AppEvent>((event, emit) => emit(AppState(0)));
+  AppBloc() : super(AppState()) {
+    on<AppEvent>((event, emit) => emit(AppState()));
     on<AppEventLoading>((event, emit) => loadingData(event));
     on<AppEventError>((event, emit) => emit(AppStateError(event.text)));
     on<AppEventLoading2>((event, emit)=>_loadingData(event));

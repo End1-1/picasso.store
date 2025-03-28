@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:cafe5_mworker/main.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
+import 'package:picassostore/main.dart';
+import 'package:picassostore/utils/prefs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +16,7 @@ class HttpQuery {
   Future<Map<String, dynamic>> request(Map<String, dynamic> inData) async {
     inData['sessionkey'] = prefs.string('sessionkey');
     inData['appversion'] = prefs.string('appversion');
-    inData['app'] = 'mobileworker';
+    inData['app'] = 'picasso.store';
     inData['config'] = prefs.string('config');
     inData['workingday'] = prefs.dateMySqlText(prefs.workingDay());
     inData['language'] = 'am';

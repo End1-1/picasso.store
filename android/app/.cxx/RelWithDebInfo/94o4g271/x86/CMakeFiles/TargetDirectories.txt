@@ -1,0 +1,2 @@
+C:/projects/picasso.store/android/app/.cxx/RelWithDebInfo/94o4g271/x86/CMakeFiles/edit_cache.dir
+C:/projects/picasso.store/android/app/.cxx/RelWithDebInfo/94o4g271/x86/CMakeFiles/rebuild_cache.dir

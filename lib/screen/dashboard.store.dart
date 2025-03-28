@@ -1,20 +1,6 @@
 part of 'dashboard.dart';
 
 extension DashboardStore on WMDashboard {
-  List<Widget> menuWidgetsStore() {
-    return [
-      Styling.menuButton(() {
-        model.navigation.createDraftSale().then((value) {
-          getDashboard();
-        });
-      }, 'draftsale', model.tr('Create draft sale')),
-      Styling.menuButton(model.navigation.checkQuantity, 'available',
-          model.tr('Check availability')),
-      Styling.menuButton(model.navigation.checkStoreInput, 'checkstoreinput',
-          model.tr('Check store input')),
-    ];
-  }
-
   Widget bodyStore() {
     return BlocBuilder<AppBloc, AppState>(
         buildWhen: (p, c) => c is AppStateDashboard,

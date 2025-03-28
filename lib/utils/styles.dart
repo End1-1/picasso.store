@@ -135,13 +135,30 @@ class Styling {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Styling.rowSpacingWidget(),
-              Image.asset('assets/$image.png', height: 25, color: Colors.white),
+              Image.asset('assets/$image.png', height: 25, width: 25, color: Colors.white),
               Styling.rowSpacingWidget(),
               Expanded(
                   child: Text(text,
                       maxLines: 2,
                       style:
                           const TextStyle(color: Colors.white, fontSize: 16)))
+            ]));
+  }
+
+  static Widget menuButton3(VoidCallback callback, String image, Color color, String text) {
+    return InkWell(
+        onTap: callback,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Styling.rowSpacingWidget(),
+              Image.asset('assets/$image.png', height: 30, width: 30, color: color),
+              Styling.rowSpacingWidget(),
+             Text(text,
+                      maxLines: 2,
+                      style:
+                      TextStyle(color: color, fontSize: 16))
             ]));
   }
 

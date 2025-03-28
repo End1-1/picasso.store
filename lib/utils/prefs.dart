@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension Prefs on SharedPreferences {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final mdDoubleFormatter = NumberFormat.decimalPattern('en_us');
   static final regex = RegExp(r"([.]*0+)(?!.*\d)");
   static Map<String, dynamic> config = {};
 
@@ -49,6 +51,15 @@ extension Prefs on SharedPreferences {
     return nf.format(v);
   }
 
+  String mdFormatDouble(double? value) {
+    return value == null
+        ? '0'
+        : mdDoubleFormatter
+        .format(value)
+        .replaceAll(RegExp('r(?!\d[\.\,][1-9]+)0+\$'), '')
+        .replaceAll('[\.\,]\$', '');
+  }
+
   void init() {
     config.clear();
 
@@ -67,3 +78,7 @@ extension Prefs on SharedPreferences {
 }
 
 late final SharedPreferences prefs;
+
+AppLocalizations locale() {
+  return AppLocalizations.of(prefs.context())!;
+}

@@ -1,11 +1,11 @@
-import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/bloc/app_cubits.dart';
-import 'package:cafe5_mworker/bloc/question_bloc.dart';
-import 'package:cafe5_mworker/model/model.dart';
-import 'package:cafe5_mworker/model/navigation.dart';
-import 'package:cafe5_mworker/screen/menu.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
-import 'package:cafe5_mworker/utils/styles.dart';
+import 'package:picassostore/bloc/app_bloc.dart';
+import 'package:picassostore/bloc/app_cubits.dart';
+import 'package:picassostore/bloc/question_bloc.dart';
+import 'package:picassostore/model/model.dart';
+import 'package:picassostore/model/navigation.dart';
+import 'package:picassostore/screen/menu.dart';
+import 'package:picassostore/utils/prefs.dart';
+import 'package:picassostore/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -68,7 +68,7 @@ abstract class WMApp extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
-        Navigator.pop(context);
+        goBack(context);
       },
     );
   }
@@ -250,7 +250,7 @@ abstract class WMApp extends StatelessWidget {
             ])));
   }
 
-  AppLocalizations locale() {
-    return AppLocalizations.of(prefs.context())!;
+  void goBack(BuildContext context) {
+    Navigator.pop(context);
   }
 }

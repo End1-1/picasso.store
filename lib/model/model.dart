@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-import 'package:cafe5_mworker/bloc/app_bloc.dart';
-import 'package:cafe5_mworker/bloc/question_bloc.dart';
-import 'package:cafe5_mworker/screen/dashboard.dart';
-import 'package:cafe5_mworker/screen/login.dart';
-import 'package:cafe5_mworker/utils/prefs.dart';
-import 'package:cafe5_mworker/utils/res.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:picassostore/bloc/app_bloc.dart';
+import 'package:picassostore/bloc/question_bloc.dart';
+import 'package:picassostore/model/goods_group.dart';
+import 'package:picassostore/screen/dashboard.dart';
+import 'package:picassostore/screen/login.dart';
+import 'package:picassostore/utils/app_websocket.dart';
+import 'package:picassostore/utils/prefs.dart';
+import 'package:picassostore/utils/res.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'navigation.dart';
@@ -15,7 +17,7 @@ import 'navigation.dart';
 part 'model.menu.dart';
 
 class AppStateAppBar extends AppState {
-  AppStateAppBar():super(0);
+  AppStateAppBar() ;
 }
 
 class AppEventAppBar extends AppEvent {}
@@ -25,6 +27,8 @@ class WMModel {
   final serverUserTextController = TextEditingController();
   final serverPasswordTextController = TextEditingController();
   final configPinTextController = TextEditingController();
+  final appWebsocket = AppWebSocket();
+  final List<GoodsGroup> goodsGroups = [];
 
   late final Navigation navigation;
 
@@ -36,21 +40,14 @@ class WMModel {
     return Res.tr[s] ?? s;
   }
 
+  void registerDemoServer() {
+    prefs.setString('serveraddress', 'home.picasso.am');
+    Navigator.pop(prefs.context(), true);
+  }
+
   void registerOnServer() {
     prefs.setString('serveraddress', serverTextController.text);
-    BlocProvider.of<AppBloc>(Prefs.navigatorKey.currentContext!)
-        .add(AppEventLoading(tr('Registering on server'), 'engine/login.php', {
-      'method': 1,
-      'username': serverUserTextController.text,
-      'password': serverPasswordTextController.text
-    }, (e, d) {
-      if (!e) {
-        prefs.setString('serveraddress', serverTextController.text);
-        serverPasswordTextController.clear();
-        serverUserTextController.clear();
-        Navigator.pop(prefs.context(), true);
-      }
-    }, AppStateFinished(data: null)));
+    Navigator.pop(prefs.context(), true);
   }
 
   void loginUsernamePassword() {
@@ -69,6 +66,7 @@ class WMModel {
             prefs.setString('config', d['config']['f_config']);
           }
           prefs.setInt('userid', d['user']['f_id']);
+          prefs.setString('database', d['database']);
           prefs.init();
         } catch (e) {
           print(e.toString());
@@ -97,13 +95,16 @@ class WMModel {
         prefs.setBool('stayloggedin', false);
         prefs.setString('sessionkey', '');
         prefs.setInt('userid', d['user']['f_id']);
+        prefs.setString('database', d['database']);
       } else {
+        prefs.setString('database', d['database']);
         if (d['config']['f_config'] is String) {
           prefs.setString('config', d['config']['f_config']);
         } else {
           prefs.setString('config', jsonEncode(d['config']['f_config']));
         }
         prefs.init();
+
         Navigator.pushAndRemoveUntil(
             prefs.context(),
             MaterialPageRoute(builder: (builder) => WMDashboard(model: this)),
@@ -128,9 +129,17 @@ class WMModel {
   }
 
   void downloadLatestVersion() async {
-    launchUrl(
-        Uri.parse('https://download.picasso.am/'),
+    launchUrl(Uri.parse('https://download.picasso.am/'),
         mode: LaunchMode.inAppBrowserView);
+  }
 
+  void question(String text, VoidCallback ifYes, VoidCallback ifNo) {
+    BlocProvider.of<QuestionBloc>(prefs.context())
+        .add(QuestionEventRaise(text, ifYes, ifNo));
+  }
+
+  void error(String text) {
+    BlocProvider.of<AppBloc>(prefs.context())
+        .add(AppEventError(text));
   }
 }
