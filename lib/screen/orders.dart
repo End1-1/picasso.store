@@ -18,7 +18,7 @@ class Orders extends WMApp {
   }
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
     return BlocBuilder<HttpBloc, HttpState>(
         buildWhen: (p, c) => c.mark == httpMark,
         builder: (context, state) {

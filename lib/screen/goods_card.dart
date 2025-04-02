@@ -19,7 +19,7 @@ class GoodsCard extends StatefulWidget {
   final Goods goods;
   final NewOrderModel? orderModel;
 
-  GoodsCard(this.goods, this.orderModel, {super.key});
+  const GoodsCard(this.goods, this.orderModel, {super.key});
 
   @override
   State<StatefulWidget> createState() => _GoodsCardState();

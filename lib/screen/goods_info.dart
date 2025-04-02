@@ -12,7 +12,7 @@ class WMGoodsInfo extends WMApp {
   }
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
    return Container();
   }
 

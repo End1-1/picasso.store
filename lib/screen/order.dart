@@ -34,7 +34,7 @@ class WMOrder extends WMApp {
   }
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
     return Column(
       children: [Expanded(child: dishesWidget()), menuWidget()],
     );

@@ -6,7 +6,7 @@ import 'package:picassostore/utils/prefs.dart';
 
 class Debts extends WMApp {
   static const httpMark = 'fdded085-0ad5-11f0-9523-02c88e00dcd1';
-  Debts({super.key, required super.model});
+  Debts({super.key, required super.model}) ;
 
   @override
   String titleText() {
@@ -21,7 +21,7 @@ class Debts extends WMApp {
   }
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
     return BlocBuilder<HttpBloc, HttpState>(
         buildWhen: (p, c) => c.mark == httpMark,
         builder: (context, state) {

@@ -25,7 +25,7 @@ class SearchPartnerScreen extends WMApp {
   }
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
     return _SearchScreen(model, key: _searchStateKey);
   }
 }
@@ -127,7 +127,6 @@ class _SearchState extends State<_SearchScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 100) {
-      _page++;
       _previouseSearch = _controller.text;
       _onSearchChanged(_controller.text);
     }
@@ -168,6 +167,10 @@ class _SearchState extends State<_SearchScreen> {
   }
 
   void _newPartner() {
-
+    widget.model.navigation.newPatner().then((p) {
+      if (p != null) {
+        Navigator.pop(prefs.context(), p);
+      }
+    });
   }
 }

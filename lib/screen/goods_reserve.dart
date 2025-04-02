@@ -37,7 +37,7 @@ class WMGoodsReserve extends WMApp {
   }
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [

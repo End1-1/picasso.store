@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:picassostore/model/goods.dart';
 import 'package:picassostore/model/model.dart';
 import 'package:picassostore/model/new_order_model.dart';
@@ -23,7 +25,7 @@ class SearchGoods extends WMApp {
   }
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
     return _SearchGoodsScreen(model: model, key: _searchStateKey, orderModel: orderModel);
   }
 
@@ -59,7 +61,8 @@ class _SearchGoodsScreen extends StatefulWidget {
 }
 
 class _SearchGoodsState extends State<_SearchGoodsScreen> {
-  static const cardWidth = 160.0;
+  static const cardWidth = 170.0;
+  static const cardHeight = 310.0;
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
   var _groupid = 0;
@@ -106,19 +109,19 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
         ]),
         Expanded(
             child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        (MediaQuery.sizeOf(context).width / cardWidth).floor(),
-                    crossAxisSpacing: 10,
-                    childAspectRatio: cardWidth / 180,
-                    mainAxisSpacing: 10),
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: cardWidth,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                  childAspectRatio: cardWidth / cardHeight
+                ),
                 controller: _scrollController,
                 itemCount: _goods.length + (_isLoading ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == _goods.length) {
                     return Center(child: CircularProgressIndicator());
                   }
-                  return _goodsItem(_goods[index]);
+                  return  _goodsItem(_goods[index], index);
                 })),
       ],
     );
@@ -127,7 +130,6 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      _page++;
       _previouse = _textController.text;
       _onSearchChanged(_textController.text);
     }
@@ -180,16 +182,19 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
         for (final e in r['result']) {
           _goods.add(Goods.fromJson(e));
         }
+        if (kDebugMode) {
+          print('Page now $_page and will++');
+        }
         _page++;
         setState(() => _isLoading = false);
       }
     });
   }
 
-  Widget _goodsItem(Goods g) {
+  Widget _goodsItem(Goods g, int index) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+      child:   Padding(
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -221,19 +226,21 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
               },
             )),
             Styling.columnSpacingWidget(),
-            Text(g.name,
+           Row(children: [ Expanded(child: Text(g.name,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-            Row(children: [
-              Text(prefs.mdFormatDouble(g.p1d > 0 ? g.p1d : g.p1),
-                  style: const TextStyle(
-                      color: Colors.indigo,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold)),
-              Expanded(child: Container()),
-              IconButton(
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)))]),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 24,
+                      height: 24,
+                      child: IconButton(
+                padding: EdgeInsets.zero,
+                constraints: BoxConstraints(),
                   onPressed: () {
                     focus.unfocus();
                     QtyDialog().getQty().then((qty) {
@@ -242,10 +249,31 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
                       }
                       Goods newGoods = g.copyWith(qty: qty!);
                       widget.orderModel.goods.add(newGoods);
+                      Hive.openBox<NewOrderModel>('box').then((box) {
+                        box.put('tempmodel', widget.orderModel);
+                        box.close();
+                      });
+
                     });
                   },
-                  icon: Icon(Icons.add_shopping_cart))
+                  icon: Icon(Icons.add_shopping_cart))),
+              Expanded(child: Container()),
+              if (kDebugMode)
+                Text('($index)',style: const TextStyle(
+                    color: Colors.indigo,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold)),
+              Text(prefs.mdFormatDouble(g.p1d > 0 ? g.p1d : g.p1),
+                  style: const TextStyle(
+                      color: Colors.indigo,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold)),
+
+
             ]),
+            Row(children: [
+             Text('SKU: ${g.sku}', style: const TextStyle(fontSize: 10, color: Colors.black))
+            ])
           ],
         ),
       ),

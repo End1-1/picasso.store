@@ -27,6 +27,7 @@ extension WMEGoodsReserve on WMGoodsReserve {
       'action': 1,
       'userfrom': Prefs.config['store'] ?? 0,
       'userto': _model.reservationStore,
+      'f_userto': _model.reservationStore,
       'goods': _model.reservationGoods,
       'goodsname': _model.reservationGoodsName,
       'barcode': _model.reservationBarcode,
@@ -37,7 +38,10 @@ extension WMEGoodsReserve on WMGoodsReserve {
       'f_enddate': prefs.dateMySqlText(_model.reservationExpiration),
       'f_goods': _model.reservationGoods,
       'f_qty': double.tryParse(_model.reserveQtyTextController.text) ?? 0,
-      'f_message': _model.reserveCommentTextController.text.replaceAll('\n', ' ')
+      'f_message': _model.reserveCommentTextController.text.replaceAll('\n', ' '),
+      'f_fiscal': 0,
+      'f_prepaid': 0,
+      'f_prepaidcard': 0
     };
     BlocProvider.of<AppBloc>(prefs.context()).add(AppEventLoading(
         model.tr('Create reservation'), 'engine/shop/create-reserve.php', d,

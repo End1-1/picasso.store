@@ -8,7 +8,7 @@ class WMConfig extends WMApp {
   WMConfig({super.key, required super.model});
 
   @override
-  Widget body() {
+  Widget body(BuildContext context) {
     return SingleChildScrollView(child:  Column(children: [
       Styling.columnSpacingWidget(),
       Row(

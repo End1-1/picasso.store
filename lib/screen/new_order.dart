@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:picassostore/model/goods.dart';
 import 'package:picassostore/model/goods_group.dart';
@@ -18,10 +19,10 @@ import 'package:picassostore/utils/qty_dialog.dart';
 import 'package:picassostore/utils/styles.dart';
 
 class NewOrder extends WMApp {
-  final String orderId;
+  final NewOrderModel orderModel;
   final GlobalKey<_NewOrderState> _orderStateKey = GlobalKey();
 
-  NewOrder({super.key, required super.model, required this.orderId});
+  NewOrder({super.key, required super.model, required this.orderModel});
 
   @override
   String titleText() {
@@ -57,12 +58,15 @@ class NewOrder extends WMApp {
       Styling.menuButton2(() {
         _orderStateKey.currentState?._setPaymentType();
       }, 'payment', locale().paymentType),
+      Styling.menuButton2((){_orderStateKey.currentState?._clearOrder();},
+      'clear', locale().clearOrder)
     ];
   }
 
   @override
-  Widget body() {
-    return _NewOrderScreen(model: model, key: _orderStateKey, orderId: orderId);
+  Widget body(BuildContext context) {
+    return _NewOrderScreen(
+        model: model, key: _orderStateKey, orderModel: orderModel);
   }
 
   @override
@@ -71,15 +75,20 @@ class NewOrder extends WMApp {
       super.goBack(context);
     }, () {});
   }
+
+  @override
+  Future<bool> checkGoBack() async {
+    return false;
+  }
+
 }
+
 
 class _NewOrderScreen extends StatefulWidget {
   final WMModel model;
-  final _orderModel = NewOrderModel();
+  final NewOrderModel orderModel;
 
-  _NewOrderScreen({super.key, required this.model, required String orderId}) {
-    _orderModel.id = orderId;
-  }
+  _NewOrderScreen({super.key, required this.model, required this.orderModel});
 
   @override
   State<StatefulWidget> createState() => _NewOrderState();
@@ -87,6 +96,14 @@ class _NewOrderScreen extends StatefulWidget {
 
 class _NewOrderState extends State<_NewOrderScreen> {
   var _isEditable = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.orderModel.id.isNotEmpty) {
+      _openDraftOrder();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +119,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
   }
 
   Widget _partner() {
-    if (widget._orderModel.partner.id == 0) {
+    if (widget.orderModel.partner.id == 0) {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         OutlinedButton(
             onPressed: _selectPartner,
@@ -123,16 +140,16 @@ class _NewOrderState extends State<_NewOrderScreen> {
                     children: [
                       Row(children: [
                         Expanded(
-                            child: Text(widget._orderModel.partner.taxname,
+                            child: Text(widget.orderModel.partner.taxname,
                                 style: const TextStyle(color: Colors.white))),
-                        Text(widget._orderModel.partner.tin,
+                        Text(widget.orderModel.partner.tin,
                             style: const TextStyle(color: Colors.white)),
                       ]),
                       Row(children: [
                         Expanded(
-                            child: Text(widget._orderModel.partner.phone,
+                            child: Text(widget.orderModel.partner.phone,
                                 style: const TextStyle(color: Colors.white))),
-                        Text(widget._orderModel.partner.contact,
+                        Text(widget.orderModel.partner.contact,
                             style: const TextStyle(color: Colors.white)),
                       ]),
                     ],
@@ -149,7 +166,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
             Expanded(child: Text(locale().deliveryDate,
                 style: const TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold))),
-            Text(DateFormat('dd/MM/yyyy').format(widget._orderModel.dateFor),
+            Text(DateFormat('dd/MM/yyyy').format(widget.orderModel.dateFor),
                 style: const TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold))
           ],
@@ -157,7 +174,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
   }
 
   Widget _comment() {
-    if (widget._orderModel.comment.isEmpty) {
+    if (widget.orderModel.comment.isEmpty) {
       return Container();
     }
     return Container(
@@ -165,13 +182,16 @@ class _NewOrderState extends State<_NewOrderScreen> {
       decoration: const BoxDecoration(color: Colors.indigoAccent),
       child: Row(
         children: [
-          Expanded(child: Text(widget._orderModel.comment,
+          Expanded(child: Text(widget.orderModel.comment,
               style: const TextStyle(
                   color: Colors.white, fontWeight: FontWeight.bold))),
           IconButton(
               onPressed: () {
-                widget.model.question(locale().confirmRemoveComment, () {
-                  setState(() => widget._orderModel.comment = '');
+                widget.model.question(locale().confirmRemoveComment, () async {
+                  setState(() => widget.orderModel.comment = '');
+                  final box = await Hive.openBox<NewOrderModel>('box');
+                  box.put('tempmodel', widget.orderModel);
+                  box.close();
                 }, () {});
               },
               icon: Icon(Icons.close))
@@ -181,19 +201,19 @@ class _NewOrderState extends State<_NewOrderScreen> {
   }
 
   Widget _listOfGoods() {
-    if (widget._orderModel.goods.isEmpty) {
+    if (widget.orderModel.goods.isEmpty) {
       return InkWell(
           onTap: _selectGoods,
           child: Center(
               child: Text(locale().emptyOrder,
                   style:
-                      const TextStyle(fontSize: 30, color: Colors.black38))));
+                  const TextStyle(fontSize: 30, color: Colors.black38))));
     }
     return ListView.builder(
-        itemCount: widget._orderModel.goods.length,
+        itemCount: widget.orderModel.goods.length,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: Key(widget._orderModel.goods[index].toString()),
+            key: Key(widget.orderModel.goods[index].toString()),
             direction: DismissDirection.endToStart,
             confirmDismiss: (direction) async {
               return await showDialog(
@@ -202,7 +222,8 @@ class _NewOrderState extends State<_NewOrderScreen> {
                   return AlertDialog(
                     title: Text(locale().removeRow),
                     content: Text(
-                        '${locale().confirmRemoveGoods}\r\n${widget._orderModel.goods[index].name}'),
+                        '${locale().confirmRemoveGoods}\r\n${widget.orderModel
+                            .goods[index].name}'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
@@ -228,15 +249,15 @@ class _NewOrderState extends State<_NewOrderScreen> {
                 if (!_isEditable) {
                   return;
                 }
-                final uuid = widget._orderModel.goods[index].uuid ?? '';
+                final uuid = widget.orderModel.goods[index].uuid ?? '';
                 if (uuid.isEmpty) {
-                  widget._orderModel.goods.removeAt(index);
+                  widget.orderModel.goods.removeAt(index);
                 } else {
                   HttpQuery('engine/picasso.store/')
                       .request(
                       {'class': 'draft', 'method': 'removeOneRow', 'id': uuid})
                       .then((reply) {
-                    widget._orderModel.goods.removeAt(index);
+                    widget.orderModel.goods.removeAt(index);
                   });
                 }
               });
@@ -251,9 +272,9 @@ class _NewOrderState extends State<_NewOrderScreen> {
                         child: InkWell(
                             onTap: () {
                               GoodsCard.show(
-                                  widget._orderModel.goods[index], null);
+                                  widget.orderModel.goods[index], null);
                             },
-                            child: Text(widget._orderModel.goods[index].name,
+                            child: Text(widget.orderModel.goods[index].name,
                                 maxLines: 2, overflow: TextOverflow.ellipsis))),
                     InkWell(
                         onTap: () async {
@@ -262,8 +283,8 @@ class _NewOrderState extends State<_NewOrderScreen> {
                           }
                           final qty = await QtyDialog().getQty();
                           if ((qty ?? 0) > 0) {
-                            widget._orderModel.goods[index] = widget
-                                ._orderModel.goods[index]
+                            widget.orderModel.goods[index] = widget
+                                .orderModel.goods[index]
                                 .copyWith(qty: qty ?? 0);
                             setState(() {});
                           }
@@ -271,12 +292,12 @@ class _NewOrderState extends State<_NewOrderScreen> {
                         child: Container(
                             alignment: Alignment.center,
                             decoration:
-                                const BoxDecoration(color: Colors.amberAccent),
+                            const BoxDecoration(color: Colors.amberAccent),
                             height: 45,
                             width: 45,
                             child: Text(
                                 prefs.mdFormatDouble(
-                                    widget._orderModel.goods[index].qty),
+                                    widget.orderModel.goods[index].qty),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12))))
@@ -292,13 +313,14 @@ class _NewOrderState extends State<_NewOrderScreen> {
         decoration: const BoxDecoration(color: Colors.indigo),
         child: Row(
           children: [
-            Text('${locale().total} (${Payments[widget._orderModel.paymentType]})',
+            Text('${locale().total} (${Payments[widget.orderModel
+                .paymentType]})',
                 style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white)),
             Expanded(child: Container()),
-            Text(prefs.mdFormatDouble(widget._orderModel.total()),
+            Text(prefs.mdFormatDouble(widget.orderModel.total()),
                 style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -342,9 +364,10 @@ class _NewOrderState extends State<_NewOrderScreen> {
     );
 
     if (comment != null && comment.isNotEmpty) {
-      setState(() {
-        widget._orderModel.comment = comment; // Сохраняем комментарий
-      });
+      setState(() => widget.orderModel.comment = comment);
+      final box = await Hive.openBox<NewOrderModel>('box');
+      box.put('tempmodel', widget.orderModel);
+      box.close();
     }
   }
 
@@ -362,8 +385,11 @@ class _NewOrderState extends State<_NewOrderScreen> {
 
     if (pickedDate != null) {
       setState(() {
-        widget._orderModel.dateFor = pickedDate;
+        widget.orderModel.dateFor = pickedDate;
       });
+      final box = await Hive.openBox<NewOrderModel>('box');
+      box.put('tempmodel', widget.orderModel);
+      box.close();
     }
   }
 
@@ -372,9 +398,12 @@ class _NewOrderState extends State<_NewOrderScreen> {
     if (!_isEditable) {
       return;
     }
-    showPaymentDialog(prefs.context()).then((p) {
+    showPaymentDialog(prefs.context()).then((p) async {
       if (p != null) {
-        setState(() => widget._orderModel.paymentType = p);
+        setState(() => widget.orderModel.paymentType = p);
+        final box = await Hive.openBox<NewOrderModel>('box');
+        box.put('tempmodel', widget.orderModel);
+        box.close();
       }
     });
   }
@@ -390,7 +419,10 @@ class _NewOrderState extends State<_NewOrderScreen> {
     if (p == null) {
       return;
     }
-    setState(() => widget._orderModel.partner = p);
+    setState(() => widget.orderModel.partner = p);
+    final box = await Hive.openBox<NewOrderModel>('box');
+    box.put('tempmodel', widget.orderModel);
+    box.close();
   }
 
   void _selectGoods() async {
@@ -414,8 +446,9 @@ class _NewOrderState extends State<_NewOrderScreen> {
     final goods = await Navigator.push(
         prefs.context(),
         MaterialPageRoute(
-            builder: (_) => SearchGoods(
-                model: widget.model, orderModel: widget._orderModel)));
+            builder: (_) =>
+                SearchGoods(
+                    model: widget.model, orderModel: widget.orderModel)));
 
     setState(() {});
   }
@@ -424,63 +457,71 @@ class _NewOrderState extends State<_NewOrderScreen> {
     if (!_isEditable) {
       return;
     }
-    if (widget._orderModel.partner.id == 0) {
+    if (widget.orderModel.partner.id == 0) {
       widget.model.error(locale().selectPartner);
       return;
     }
-    if (widget._orderModel.goods.isEmpty) {
+    if (widget.orderModel.goods.isEmpty) {
       widget.model.error(locale().emptyOrder);
       return;
     }
-    final g = widget._orderModel.goods
-        .map((t) => {
-              'f_id': t.uuid ?? '',
-              'f_header': widget._orderModel.id,
-              'f_state': 1,
-              'f_store': widget._orderModel.storeid,
-              'f_goods': t.id,
-              'f_qty': t.qty,
-              'f_back': 0,
-              'f_price': widget._orderModel.priceOfGoods(t),
-              'f_discount': widget._orderModel.partner.discount,
-              'f_special_price': 0
-            })
+    final g = widget.orderModel.goods
+        .map((t) =>
+    {
+      'f_id': t.uuid ?? '',
+      'f_header': widget.orderModel.id,
+      'f_state': 1,
+      'f_store': widget.orderModel.storeid,
+      'f_goods': t.id,
+      'f_qty': t.qty,
+      'f_back': 0,
+      'f_price': widget.orderModel.priceOfGoods(t),
+      'f_discount': widget.orderModel.partner.discount,
+      'f_special_price': 0
+    })
         .toList();
     final d = {
-      'f_id': widget._orderModel.id,
+      'f_id': widget.orderModel.id,
       'f_state': 1,
       'f_saletype': 1,
       'f_staff': prefs.getInt('userid'),
-      'f_amount': widget._orderModel.total(),
-      'f_comment': widget._orderModel.comment,
-      'f_payment': widget._orderModel.paymentType,
-      'f_partner': widget._orderModel.partner.id,
+      'f_amount': widget.orderModel.total(),
+      'f_comment': widget.orderModel.comment,
+      'f_payment': widget.orderModel.paymentType,
+      'f_partner': widget.orderModel.partner.id,
       'f_debt': 0,
-      'f_datefor': DateFormat('yyyy-MM-dd').format(widget._orderModel.dateFor),
+      'f_datefor': DateFormat('yyyy-MM-dd').format(widget.orderModel.dateFor),
       'f_cashier': prefs.getInt('userid'),
       'f_flag': 0,
     };
-    HttpQuery('engine/picasso.store/').request({'header': d, 'body': g, 'class': 'draft', 'method':'save'}).then((reply) {
+    HttpQuery('engine/picasso.store/').request(
+        {'header': d, 'body': g, 'class': 'draft', 'method': 'save'}).then((
+        reply) async {
       if (reply['status'] == 1) {
+        final box = await Hive.openBox<NewOrderModel>('box');
+        await box.delete('tempmodel');
         Navigator.pop(prefs.context());
       } else {
         widget.model.error(reply['data']);
       }
     });
-
   }
 
   void _openDraftOrder() {
-    HttpQuery('engine/picasso.store/').request({'class':'draft', 'method':'openDraft', 'id':widget._orderModel.id}).then((reply) {
+    HttpQuery('engine/picasso.store/')
+        .request(
+        {'class': 'draft', 'method': 'openDraft', 'id': widget.orderModel.id})
+        .then((reply) {
       if (reply['status'] == 1) {
         setState(() {
-          widget._orderModel.partner = Partner.fromJson(reply['partner']);
-          widget._orderModel.comment = reply['order']['f_comment'];
-          widget._orderModel.dateFor = DateFormat('yyyy-MM-dd').parse(reply['order']['f_datefor'] ?? '2025-01-01');
+          widget.orderModel.partner = Partner.fromJson(reply['partner']);
+          widget.orderModel.comment = reply['order']['f_comment'];
+          widget.orderModel.dateFor = DateFormat('yyyy-MM-dd').parse(
+              reply['order']['f_datefor'] ?? '2025-01-01');
           _isEditable = reply['order']['f_state'] != 2;
           for (final e in reply['goods']) {
             final g = Goods.fromJson(e);
-            widget._orderModel.goods.add(g);
+            widget.orderModel.goods.add(g);
           }
         });
       } else {
@@ -489,11 +530,14 @@ class _NewOrderState extends State<_NewOrderScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget._orderModel.id.isNotEmpty) {
-      _openDraftOrder();
-    }
+  void _clearOrder() async {
+    widget.model.navigation.hideMenu();
+    final box = await Hive.openBox<NewOrderModel>('box');
+    await box.delete('tempmodel');
+    setState(() {
+      widget.orderModel.partner = Partner.empty();
+      widget.orderModel.goods.clear();
+    });
+
   }
 }

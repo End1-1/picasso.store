@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picassostore/bloc/app_bloc.dart';
 import 'package:picassostore/bloc/app_cubits.dart';
 import 'package:picassostore/bloc/question_bloc.dart';
@@ -6,9 +8,6 @@ import 'package:picassostore/model/navigation.dart';
 import 'package:picassostore/screen/menu.dart';
 import 'package:picassostore/utils/prefs.dart';
 import 'package:picassostore/utils/styles.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 abstract class WMApp extends StatelessWidget {
   late final Navigation nav;
@@ -20,48 +19,57 @@ abstract class WMApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(56),
-        child: BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
-          return AppBar(
-              backgroundColor: Styling.appBarBackgroundColor,
-              leading: leadingButton(context),
-              title: _title(),
-              centerTitle: true,
-              actions: actions());
-        }),
-      ),
-      body: SafeArea(
-        //minimum: const EdgeInsets.fromLTRB(5, 10, 5, 2),
-        child: Stack(children: [
-          Container(padding: const EdgeInsets.all(5), child: body()),
-          BlocBuilder<AppLoadingCubit, AppLoadingState>(builder: (context, state) {
-            return state == AppLoadingState.loading ? loading(locale().working) : Container();
-
-          }),
-          BlocBuilder<AppBloc, AppState>(builder: (context, state) {
-            if (state is AppStateError) {
-              return errorDialog(state.text);
-            }
-            return Container();
-          }),
-          WMAppMenu(model, menuWidgets()),
-          BlocBuilder<QuestionBloc, QuestionState>(builder: (builder, state) {
-            if (state is QuestionStateRaise) {
-              return questionDialog(state.question, state.ifYes, state.ifNo);
-            }
-            return Container();
-          }),
-          BlocBuilder<QuestionBloc, QuestionState>(builder: (builder, state) {
-            if (state is QuestionStateList) {
-              return listDialog(state.variants, state.callback);
-            }
-            return Container();
-          })
-        ]),
-      ),
-    );
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) =>
+            canPop(didPop, result, context),
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: BlocBuilder<AppBloc, AppState>(builder: (builder, state) {
+              return AppBar(
+                  backgroundColor: Styling.appBarBackgroundColor,
+                  leading: leadingButton(context),
+                  title: _title(),
+                  centerTitle: true,
+                  actions: actions());
+            }),
+          ),
+          body: SafeArea(
+            //minimum: const EdgeInsets.fromLTRB(5, 10, 5, 2),
+            child: Stack(children: [
+              Container(padding: const EdgeInsets.all(5), child: body(context)),
+              BlocBuilder<AppLoadingCubit, AppLoadingState>(
+                  builder: (context, state) {
+                return state == AppLoadingState.loading
+                    ? loading(locale().working)
+                    : Container();
+              }),
+              BlocBuilder<AppBloc, AppState>(builder: (context, state) {
+                if (state is AppStateError) {
+                  return errorDialog(state.text);
+                }
+                return Container();
+              }),
+              WMAppMenu(model, menuWidgets()),
+              BlocBuilder<QuestionBloc, QuestionState>(
+                  builder: (builder, state) {
+                if (state is QuestionStateRaise) {
+                  return questionDialog(
+                      state.question, state.ifYes, state.ifNo);
+                }
+                return Container();
+              }),
+              BlocBuilder<QuestionBloc, QuestionState>(
+                  builder: (builder, state) {
+                if (state is QuestionStateList) {
+                  return listDialog(state.variants, state.callback);
+                }
+                return Container();
+              })
+            ]),
+          ),
+        ));
   }
 
   Widget? leadingButton(BuildContext context) {
@@ -98,7 +106,7 @@ abstract class WMApp extends StatelessWidget {
     return [];
   }
 
-  Widget body();
+  Widget body(BuildContext context);
 
   Widget loading(String text) {
     return Container(
@@ -250,7 +258,22 @@ abstract class WMApp extends StatelessWidget {
             ])));
   }
 
+  Future<bool> checkGoBack() async {
+    return true;
+  }
+
   void goBack(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  void canPop(bool didPop, dynamic result, BuildContext context) async {
+    if (didPop) {
+      return;
+    }
+    final navigator = Navigator.of(context);
+    final go = await checkGoBack();
+    if (go) {
+      navigator.pop(result);
+    }
   }
 }
