@@ -1,10 +1,13 @@
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:picassostore/bloc/app_bloc.dart';
 import 'package:picassostore/bloc/app_cubits.dart';
 import 'package:picassostore/bloc/date_bloc.dart';
 import 'package:picassostore/bloc/http_bloc.dart';
 import 'package:picassostore/bloc/question_bloc.dart';
+import 'package:picassostore/model/new_order_model.dart';
 import 'package:picassostore/screen/login.dart';
-import 'package:picassostore/screen/orders.dart';
+import 'package:picassostore/screen/new_partner.dart';
 import 'package:picassostore/utils/prefs.dart';
 import 'package:picassostore/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +17,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'model/goods.dart';
 import 'model/model.dart';
 import 'model/navigation.dart';
+import 'model/partner.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +29,11 @@ void main() async {
   prefs.setString('appversion', '${pa.version}.${pa.buildNumber}');
   print('APPVERSION ${prefs.getString('appversion')}');
   prefs.init();
+  await Hive.initFlutter();
+  Hive.registerAdapter(NewOrderModelAdapter());
+  Hive.registerAdapter(PartnerAdapter());
+  Hive.registerAdapter(GoodsAdapter());
+  await Hive.openBox<NewOrderModel>('orderBox');
   runApp(MultiBlocProvider(providers: [
     BlocProvider<AppBloc>(create: (context) => AppBloc()),
     BlocProvider<InitAppBloc>(
@@ -33,7 +43,8 @@ void main() async {
     BlocProvider<QuestionBloc>(create: (context) => QuestionBloc()),
     BlocProvider<AppLoadingCubit>(create: (_) => AppLoadingCubit()),
     BlocProvider<AppCubits>(create: (_) => AppCubits()),
-    BlocProvider<HttpBloc>(create: (_) => HttpBloc())
+    BlocProvider<HttpBloc>(create: (_) => HttpBloc()),
+    BlocProvider<CheckCubit>(create:(_)=>CheckCubit())
   ], child: App()));
 }
 

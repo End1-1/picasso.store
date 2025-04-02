@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:picassostore/bloc/app_bloc.dart';
-import 'package:picassostore/bloc/http_bloc.dart';
 import 'package:picassostore/bloc/question_bloc.dart';
 import 'package:picassostore/main.dart';
 import 'package:picassostore/mobiles_scanner/barcode_reader.dart';
 import 'package:picassostore/model/model.dart';
+import 'package:picassostore/model/new_order_model.dart';
 import 'package:picassostore/screen/check_qty.dart';
 import 'package:picassostore/screen/check_store_input.dart';
 import 'package:picassostore/screen/completed_orders.dart';
@@ -16,6 +17,7 @@ import 'package:picassostore/screen/draft_sale.dart';
 import 'package:picassostore/screen/goods_info.dart';
 import 'package:picassostore/screen/goods_reserve.dart';
 import 'package:picassostore/screen/new_order.dart';
+import 'package:picassostore/screen/new_partner.dart';
 import 'package:picassostore/screen/order.dart';
 import 'package:picassostore/screen/orders.dart';
 import 'package:picassostore/utils/prefs.dart';
@@ -120,43 +122,55 @@ class Navigation {
             builder: (builder) => WMOrder(model: model, table: table)));
   }
 
-  Future<void> newOrder() {
+  Future<Object?> newOrder() async {
     hideMenu();
-    return Navigator.push(
+    late final NewOrderModel orderModel;
+    try {
+      final box = await Hive.openBox<NewOrderModel>('box');
+      orderModel = box.get('tempmodel') ?? NewOrderModel(openFromServer: false);
+    } catch (e) {
+      Hive.deleteBoxFromDisk('box');
+      orderModel = NewOrderModel(openFromServer: false);
+    }
+    return await Navigator.push(
         prefs.context(),
         MaterialPageRoute(
-            builder: (builder) => NewOrder(model: model, orderId: '')));
+            builder: (builder) =>
+                NewOrder(model: model, orderModel: orderModel)));
   }
 
   Future<void> openOrder(String id) {
     hideMenu();
+    final orderModel = NewOrderModel(openFromServer: true);
+    orderModel.id = id;
     return Navigator.push(
         prefs.context(),
         MaterialPageRoute(
-            builder: (builder) => NewOrder(model: model, orderId: id)));
+            builder: (builder) =>
+                NewOrder(model: model, orderModel: orderModel)));
   }
 
   Future<void> orders() {
     hideMenu();
-    return Navigator.push(
-        prefs.context(),
-        MaterialPageRoute(
-            builder: (builder) =>Orders(model: model)));
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => Orders(model: model)));
   }
 
   Future<void> completedOrders() {
     hideMenu();
-    return Navigator.push(
-        prefs.context(),
-        MaterialPageRoute(
-            builder: (builder) => CompletedOrders(model: model)));
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => CompletedOrders(model: model)));
   }
 
   Future<void> debts() {
     hideMenu();
-    return Navigator.push(
-        prefs.context(),
-        MaterialPageRoute(
-            builder: (builder) =>  Debts(model: model)));
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => Debts(model: model)));
+  }
+
+  Future<Object?> newPatner() {
+    hideMenu();
+    return Navigator.push(prefs.context(),
+        MaterialPageRoute(builder: (builder) => NewPartner(model: model)));
   }
 }

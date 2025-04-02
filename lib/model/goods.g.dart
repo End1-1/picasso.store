@@ -18,6 +18,7 @@ _Goods _$GoodsFromJson(Map<String, dynamic> json) => _Goods(
       p2: (json['p2'] as num).toDouble(),
       p2d: (json['p2d'] as num).toDouble(),
       qty: (json['qty'] as num).toDouble(),
+      sku: json['sku'] as String,
     );
 
 Map<String, dynamic> _$GoodsToJson(_Goods instance) => <String, dynamic>{
@@ -32,4 +33,5 @@ Map<String, dynamic> _$GoodsToJson(_Goods instance) => <String, dynamic>{
       'p2': instance.p2,
       'p2d': instance.p2d,
       'qty': instance.qty,
+      'sku': instance.sku,
     };

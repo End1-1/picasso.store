@@ -15,13 +15,21 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$Partner {
+  @HiveField(0)
   int get id;
+  @HiveField(1)
   String get taxname;
+  @HiveField(2)
   String get tin;
+  @HiveField(3)
   String get phone;
+  @HiveField(4)
   String get contact;
+  @HiveField(5)
   int get mode;
+  @HiveField(6)
   double get discount;
+  @HiveField(7)
   String get address;
 
   /// Create a copy of Partner
@@ -67,14 +75,14 @@ abstract mixin class $PartnerCopyWith<$Res> {
       _$PartnerCopyWithImpl;
   @useResult
   $Res call(
-      {int id,
-      String taxname,
-      String tin,
-      String phone,
-      String contact,
-      int mode,
-      double discount,
-      String address});
+      {@HiveField(0) int id,
+      @HiveField(1) String taxname,
+      @HiveField(2) String tin,
+      @HiveField(3) String phone,
+      @HiveField(4) String contact,
+      @HiveField(5) int mode,
+      @HiveField(6) double discount,
+      @HiveField(7) String address});
 }
 
 /// @nodoc
@@ -139,32 +147,40 @@ class _$PartnerCopyWithImpl<$Res> implements $PartnerCopyWith<$Res> {
 @JsonSerializable()
 class _Partner implements Partner {
   const _Partner(
-      {required this.id,
-      required this.taxname,
-      required this.tin,
-      required this.phone,
-      required this.contact,
-      required this.mode,
-      required this.discount,
-      required this.address});
+      {@HiveField(0) required this.id,
+      @HiveField(1) required this.taxname,
+      @HiveField(2) required this.tin,
+      @HiveField(3) required this.phone,
+      @HiveField(4) required this.contact,
+      @HiveField(5) required this.mode,
+      @HiveField(6) required this.discount,
+      @HiveField(7) required this.address});
   factory _Partner.fromJson(Map<String, dynamic> json) =>
       _$PartnerFromJson(json);
 
   @override
+  @HiveField(0)
   final int id;
   @override
+  @HiveField(1)
   final String taxname;
   @override
+  @HiveField(2)
   final String tin;
   @override
+  @HiveField(3)
   final String phone;
   @override
+  @HiveField(4)
   final String contact;
   @override
+  @HiveField(5)
   final int mode;
   @override
+  @HiveField(6)
   final double discount;
   @override
+  @HiveField(7)
   final String address;
 
   /// Create a copy of Partner
@@ -216,14 +232,14 @@ abstract mixin class _$PartnerCopyWith<$Res> implements $PartnerCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {int id,
-      String taxname,
-      String tin,
-      String phone,
-      String contact,
-      int mode,
-      double discount,
-      String address});
+      {@HiveField(0) int id,
+      @HiveField(1) String taxname,
+      @HiveField(2) String tin,
+      @HiveField(3) String phone,
+      @HiveField(4) String contact,
+      @HiveField(5) int mode,
+      @HiveField(6) double discount,
+      @HiveField(7) String address});
 }
 
 /// @nodoc

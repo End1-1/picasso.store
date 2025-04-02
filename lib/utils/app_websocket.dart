@@ -37,6 +37,15 @@ class AppWebSocket {
       });
       return;
     }
+    if (!(Prefs.config['use_websocket'] ?? false)) {
+      if (kDebugMode) {
+        print('Websocket not used');
+      }
+      Future.delayed(const Duration(seconds: 15)).then((_) {
+        _connect();
+      });
+      return;
+    }
     if (connectionState == ConnectionStateType.connected ||
         connectionState == ConnectionStateType.connecting) {
       return;

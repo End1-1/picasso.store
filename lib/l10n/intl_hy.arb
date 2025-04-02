@@ -46,7 +46,7 @@
   "remove": "Հեռացնել",
   "returnGoods": "Ապրանքի հետ վերադարձ",
   "retailPrice": "Մանրածախ գին",
-  "retailPriceDiscounted": "RՄանրածախ զեղչված գին",
+  "retailPriceDiscounted": "Մանրածախ զեղչված գին",
   "whosalePrice": "Մեծածախ գին",
   "whosalePriceDiscounted": "Մեծածախ զեղչված գին",
   "loadingError": "Loading error",
@@ -63,5 +63,13 @@
   "choosePayment": "Նշեք վճարման տեսակը",
   "paymentType": "Վճարման տեսակը",
   "order": "Պատվեր",
-  "partners": "Գործընկերներ"
+  "partners": "Գործընկերներ",
+  "tin": "ՀՎՀՀ",
+  "newPartner": "Նոր գործընկեր",
+  "taxpayerName": "Անվանում",
+  "address": "Հասցե",
+  "contact": "Կոնտակտ",
+  "phone": "Հեռախոսահամոր",
+  "wrongTin": "Սխալ ՀՎՀՀ",
+  "clearOrder": "Մաքրել պատրվերը"
 }

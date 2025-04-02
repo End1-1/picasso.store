@@ -1,19 +1,23 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 
 part 'partner.freezed.dart';
+
 part 'partner.g.dart';
 
+
+@HiveType(typeId: 1)
 @freezed
 sealed class Partner with _$Partner {
   const factory Partner(
-      {required int id,
-      required String taxname,
-      required String tin,
-      required String phone,
-      required String contact,
-      required int mode,
-      required double discount,
-      required String address}) = _Partner;
+      {@HiveField(0) required int id,
+      @HiveField(1) required String taxname,
+      @HiveField(2) required String tin,
+      @HiveField(3) required String phone,
+      @HiveField(4) required String contact,
+      @HiveField(5) required int mode,
+      @HiveField(6) required double discount,
+      @HiveField(7) required String address}) = _Partner;
 
   factory Partner.fromJson(Map<String, dynamic> json) =>
       _$PartnerFromJson(json);
@@ -27,4 +31,35 @@ sealed class Partner with _$Partner {
       mode: 0,
       discount: 0,
       address: '');
+}
+
+class PartnerAdapter extends TypeAdapter<Partner> {
+  @override
+  final int typeId = 1;
+
+  @override
+  Partner read(BinaryReader reader) {
+    return Partner(
+      id: reader.readInt(),
+      taxname: reader.readString(),
+      tin: reader.readString(),
+      phone: reader.readString(),
+      contact: reader.readString(),
+      mode: reader.readInt(),
+      discount: reader.readDouble(),
+      address: reader.readString(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Partner obj) {
+    writer.writeInt(obj.id);
+    writer.writeString(obj.taxname);
+    writer.writeString(obj.tin);
+    writer.writeString(obj.phone);
+    writer.writeString(obj.contact);
+    writer.writeInt(obj.mode);
+    writer.writeDouble(obj.discount);
+    writer.writeString(obj.address);
+  }
 }

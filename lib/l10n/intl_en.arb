@@ -65,5 +65,13 @@
   "choosePayment": "Choose payment",
   "paymentType": "Payment type",
   "order": "Order",
-  "partners": "Partners"
+  "partners": "Partners",
+  "tin": "Taxpayer number",
+  "newPartner": "New partner",
+  "taxpayerName": "Taxpayer name",
+  "address": "Address",
+  "contact": "Contact",
+  "phone": "Phone",
+  "wrongTin": "Wrong taxpayer number",
+  "clearOrder": "Clear order"
 }

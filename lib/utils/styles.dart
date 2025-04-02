@@ -12,6 +12,7 @@ class Styling {
       int maxLines = 1,
       bool autofocus = false,
       bool readOnly = false,
+      int? maxLength,
       GestureTapCallback? onTap,
       Function(String)? onChanged,
       FocusNode? focusNode}) {
@@ -21,11 +22,14 @@ class Styling {
       maxLines: maxLines,
       readOnly: readOnly,
       autofocus: autofocus,
+      maxLength: maxLength,
       onTap: onTap,
       onChanged: onChanged,
       focusNode: focusNode,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
+          counter: null,
+          counterText: '',
           contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
           border: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black26)),
@@ -68,7 +72,8 @@ class Styling {
       onFieldSubmitted: onFieldSubmitted,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
-        suffix: IconButton(onPressed: (){}, icon: Icon(Icons.remove_red_eye_outlined)),
+          suffix: IconButton(
+              onPressed: () {}, icon: Icon(Icons.remove_red_eye_outlined)),
           contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
           border: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black26)),
@@ -135,7 +140,8 @@ class Styling {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Styling.rowSpacingWidget(),
-              Image.asset('assets/$image.png', height: 25, width: 25, color: Colors.white),
+              Image.asset('assets/$image.png',
+                  height: 25, width: 25, color: Colors.white),
               Styling.rowSpacingWidget(),
               Expanded(
                   child: Text(text,
@@ -145,7 +151,8 @@ class Styling {
             ]));
   }
 
-  static Widget menuButton3(VoidCallback callback, String image, Color color, String text) {
+  static Widget menuButton3(
+      VoidCallback callback, String image, Color color, String text) {
     return InkWell(
         onTap: callback,
         child: Row(
@@ -153,12 +160,11 @@ class Styling {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Styling.rowSpacingWidget(),
-              Image.asset('assets/$image.png', height: 30, width: 30, color: color),
+              Image.asset('assets/$image.png',
+                  height: 30, width: 30, color: color),
               Styling.rowSpacingWidget(),
-             Text(text,
-                      maxLines: 2,
-                      style:
-                      TextStyle(color: color, fontSize: 16))
+              Text(text,
+                  maxLines: 2, style: TextStyle(color: color, fontSize: 16))
             ]));
   }
 

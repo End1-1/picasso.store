@@ -26,7 +26,7 @@ class HttpBloc extends Bloc<HttpEvent, HttpState> {
   }
 
   void load(HttpEvent e) async {
-    emit(HttpState(state: 0, data: null, mark: e.mark));
+    emit(HttpState(state: 3, data: null, mark: e.mark));
     HttpQuery('engine/picasso.store/')
         .request((e.params))
         .then((reply) {
