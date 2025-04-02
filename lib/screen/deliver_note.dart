@@ -69,7 +69,7 @@ class _DeliveryNoteState extends State<_DeliveryNote> {
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
                             color: Colors.black),
-                        child: Text(prefs.mdFormatDouble(g.qty), style: const TextStyle(color: Colors.white)))
+                        child: Text(prefs.mdFormatDouble(g.qty - (widget.docModel.goodsCheck[g.sku] ?? 0)), style: const TextStyle(color: Colors.white)))
                   ]),
                     Styling.columnSpacingWidget(),
                   ]);
