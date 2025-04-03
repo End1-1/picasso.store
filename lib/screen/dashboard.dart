@@ -50,44 +50,43 @@ class WMDashboard extends WMApp {
   @override
   Widget body(BuildContext context) {
     return Column(children: [
-      Row(children: [
-        Expanded(
-            child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                runAlignment: WrapAlignment.center,
-                alignment: WrapAlignment.center,
-                runSpacing: 10,
-                children: [
-              if (Prefs.config['chm_neworder'] ?? false)
-                _bodyButton(model.navigation.newOrder, 'assets/drafts.png',
-                    locale().newOrder),
-              if (Prefs.config['chm_orders'] ?? false)
-                _bodyButton(model.navigation.orders, 'assets/storage.png',
-                    locale().orders),
-              if (Prefs.config['chm_completedorders'] ?? false)
-                _bodyButton(model.navigation.completedOrders,
-                    'assets/completedorders.png', locale().completedOrders),
-              if (Prefs.config['chm_debts'] ?? false)
-                _bodyButton(
-                    model.navigation.debts, 'assets/debts.png', locale().debts),
-              if (Prefs.config['chm_checkqty'] ?? false)
-                _bodyButton(model.navigation.checkQuantity,
-                    'assets/storage.png', locale().checkQty),
-              if (Prefs.config['chm_draftsale'] ?? false)
-                _bodyButton(model.navigation.createDraftSale,
-                    'assets/drafts.png', locale().createDraftSale),
-              if (Prefs.config['chm_storeinputcheck'] ?? false)
-                _bodyButton(() {
-                  model.navigation.checkStoreInput();
-                }, 'assets/storeinput.png', locale().checkStoreInput),
-              if (Prefs.config['chm_saleoutconfirmation'] ?? false)
-                _bodyButton(model.navigation.deliveryNote, 'assets/storage.png',
-                    locale().deliveryNote),
-              if (Prefs.config['chm_returngoods'] ?? false)
-                _bodyButton(model.navigation.returnGoods, 'assets/drafts.png',
-                    locale().returnGoods),
-            ]))
-      ])
+      Expanded(
+          child: SingleChildScrollView(
+              child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  alignment: WrapAlignment.center,
+                  runSpacing: 10,
+                  children: [
+            if (Prefs.config['chm_neworder'] ?? false)
+              _bodyButton(model.navigation.newOrder, 'assets/drafts.png',
+                  locale().newOrder),
+            if (Prefs.config['chm_orders'] ?? false)
+              _bodyButton(model.navigation.orders, 'assets/storage.png',
+                  locale().orders),
+            if (Prefs.config['chm_completedorders'] ?? false)
+              _bodyButton(model.navigation.completedOrders,
+                  'assets/completedorders.png', locale().completedOrders),
+            if (Prefs.config['chm_debts'] ?? false)
+              _bodyButton(
+                  model.navigation.debts, 'assets/debts.png', locale().debts),
+            if (Prefs.config['chm_checkqty'] ?? false)
+              _bodyButton(model.navigation.checkQuantity, 'assets/storage.png',
+                  locale().checkQty),
+            if (Prefs.config['chm_draftsale'] ?? false)
+              _bodyButton(model.navigation.createDraftSale, 'assets/drafts.png',
+                  locale().createDraftSale),
+            if (Prefs.config['chm_storeinputcheck'] ?? false)
+              _bodyButton(() {
+                model.navigation.checkStoreInput();
+              }, 'assets/storeinput.png', locale().checkStoreInput),
+            if (Prefs.config['chm_saleoutconfirmation'] ?? false)
+              _bodyButton(model.navigation.deliveryNote, 'assets/storage.png',
+                  locale().deliveryNote),
+            if (Prefs.config['chm_returngoods'] ?? false)
+              _bodyButton(model.navigation.returnGoods, 'assets/drafts.png',
+                  locale().returnGoods),
+          ])))
     ]);
     //    return bodyStore();
   }

@@ -1,66 +1,48 @@
-part of 'deliver_note.dart';
+import 'package:flutter/material.dart';
+import 'package:picassostore/model/goods.dart';
+import 'package:picassostore/utils/prefs.dart';
 
-class _DocModel {
+
+class DocModel {
+  var id = '';
   final List<Goods> goods = [];
   final goodsCheck = <String, double>{};
   final List<String> codes = [];
   final List<String> qrCode = [];
 
   void count() {
-    goodsCheck.clear();
     for (final q in goodsCheck.keys) {
       goodsCheck[q] = 0;
     }
     for (var e in codes) {
-      goodsCheck[e] = goodsCheck[e] ?? 0 + 1;
+      goodsCheck[e] = (goodsCheck[e] ?? 0) + 1;
     }
   }
-}
 
-class GoodsCubit extends Cubit<List<Goods>> {
-  GoodsCubit() : super([]);
+  void setOk(String barcode) {
+    final g = goods.where((e) => e.sku == barcode).toList().first;
+    goodsCheck[barcode] = g.qty;
+    Navigator.pop(prefs.context());
+  }
 
-  void data(List<Goods> goods) => emit(goods);
-}
+  void setNotOk(String barcode) {
+    goodsCheck[barcode] = 0;
+    Navigator.pop(prefs.context());
+  }
 
-extension _DeliveryNoteExt on _DeliveryNoteState {
-  void _openDoc() async {
-    widget.model.navigation.readBarcode().then((barcode) {
-      if (barcode != null) {
-        HttpQuery('engine/picasso.store/').request({
-          'class': 'checksaleoutput',
-          'method': 'open',
-          'docparams': barcode
-        }).then((reply) {
-          if (reply['status'] == 1) {
-            widget.docModel.goods.clear();
-            for (final e in reply['goods']) {
-              final Goods g = Goods.fromJson(e);
-              widget.docModel.goods.add(g);
-              widget.docModel.goodsCheck[g.sku] = 0;
-            }
-            setState(() => true);
-          } else {
-            widget.model.error(reply['data']);
-          }
-        });
+  String barcodeFromQr(String qr) {
+    String barcode ;
+    if (qr.substring(0, 6) == "000000") {
+      barcode = qr.substring(6, 14);
+    } else if (qr.substring(0, 3) == "010") {
+      if (qr.substring(0, 8) == "01000000") {
+        barcode = qr.substring(8, 16);
+      } else {
+        barcode = qr.substring(3, 16);
       }
-    });
-  }
-
-  void _addQr() async {
-    if (widget.docModel.goods.isEmpty) {
-      widget.model.error(locale().emptyOrder);
-      return;
+    } else {
+      barcode = qr.substring(1, 9);
     }
-    final barcode = await widget.model.navigation.readBarcode();
-    if (barcode != null) {
-      setState(() {
-        if (barcode.length == 13 || barcode.length == 8) {
-          widget.docModel.codes.add(barcode);
-        }
-        widget.docModel.count();
-      });
-    }
+    return barcode;
   }
 }
