@@ -77,5 +77,6 @@
   "barcodeNotExistsInOrder": "Barcode not exists in the order",
   "setOk": "Set ok",
   "setNotOk": "Set not ok",
-  "debug": "Debug"
+  "debug": "Debug",
+  "name": "Name"
 }

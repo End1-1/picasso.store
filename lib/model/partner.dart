@@ -17,7 +17,8 @@ sealed class Partner with _$Partner {
       @HiveField(4) required String contact,
       @HiveField(5) required int mode,
       @HiveField(6) required double discount,
-      @HiveField(7) required String address}) = _Partner;
+      @HiveField(7) required String address,
+      @HiveField(8) required String name}) = _Partner;
 
   factory Partner.fromJson(Map<String, dynamic> json) =>
       _$PartnerFromJson(json);
@@ -30,7 +31,8 @@ sealed class Partner with _$Partner {
       contact: '',
       mode: 0,
       discount: 0,
-      address: '');
+      address: '',
+  name:'');
 }
 
 class PartnerAdapter extends TypeAdapter<Partner> {
@@ -48,6 +50,7 @@ class PartnerAdapter extends TypeAdapter<Partner> {
       mode: reader.readInt(),
       discount: reader.readDouble(),
       address: reader.readString(),
+      name: reader.readString()
     );
   }
 
@@ -61,5 +64,6 @@ class PartnerAdapter extends TypeAdapter<Partner> {
     writer.writeInt(obj.mode);
     writer.writeDouble(obj.discount);
     writer.writeString(obj.address);
+    writer.writeString(obj.name);
   }
 }

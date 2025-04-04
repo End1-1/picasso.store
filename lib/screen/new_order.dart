@@ -58,8 +58,9 @@ class NewOrder extends WMApp {
       Styling.menuButton2(() {
         _orderStateKey.currentState?._setPaymentType();
       }, 'payment', locale().paymentType),
-      Styling.menuButton2((){_orderStateKey.currentState?._clearOrder();},
-      'clear', locale().clearOrder)
+      Styling.menuButton2(() {
+        _orderStateKey.currentState?._clearOrder();
+      }, 'clear', locale().clearOrder)
     ];
   }
 
@@ -80,15 +81,14 @@ class NewOrder extends WMApp {
   Future<bool> checkGoBack() async {
     return false;
   }
-
 }
-
 
 class _NewOrderScreen extends StatefulWidget {
   final WMModel model;
   final NewOrderModel orderModel;
 
-  _NewOrderScreen({super.key, required this.model, required this.orderModel});
+  const _NewOrderScreen(
+      {super.key, required this.model, required this.orderModel});
 
   @override
   State<StatefulWidget> createState() => _NewOrderState();
@@ -140,18 +140,29 @@ class _NewOrderState extends State<_NewOrderScreen> {
                     children: [
                       Row(children: [
                         Expanded(
+                            child: Text(
+                                '${widget.orderModel.partner.name} ${widget.orderModel.partner.discount > 0 ? '[${prefs.mdFormatDouble( widget.orderModel.partner.discount)}%]' : ''}',
+                                style: const TextStyle(color: Colors.white))),
+                        Text(widget.orderModel.partner.address,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.white)),
+                      ]),
+                      Row(children: [
+                        Expanded(
                             child: Text(widget.orderModel.partner.taxname,
                                 style: const TextStyle(color: Colors.white))),
                         Text(widget.orderModel.partner.tin,
                             style: const TextStyle(color: Colors.white)),
                       ]),
-                      Row(children: [
-                        Expanded(
-                            child: Text(widget.orderModel.partner.phone,
-                                style: const TextStyle(color: Colors.white))),
-                        Text(widget.orderModel.partner.contact,
-                            style: const TextStyle(color: Colors.white)),
-                      ]),
+                      if (widget.orderModel.partner.phone.isNotEmpty ||
+                          widget.orderModel.partner.contact.isNotEmpty)
+                        Row(children: [
+                          Expanded(
+                              child: Text(widget.orderModel.partner.phone,
+                                  style: const TextStyle(color: Colors.white))),
+                          Text(widget.orderModel.partner.contact,
+                              style: const TextStyle(color: Colors.white)),
+                        ]),
                     ],
                   ))))
     ]);
@@ -163,9 +174,10 @@ class _NewOrderState extends State<_NewOrderScreen> {
         decoration: const BoxDecoration(color: Colors.indigoAccent),
         child: Row(
           children: [
-            Expanded(child: Text(locale().deliveryDate,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold))),
+            Expanded(
+                child: Text(locale().deliveryDate,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold))),
             Text(DateFormat('dd/MM/yyyy').format(widget.orderModel.dateFor),
                 style: const TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold))
@@ -182,9 +194,10 @@ class _NewOrderState extends State<_NewOrderScreen> {
       decoration: const BoxDecoration(color: Colors.indigoAccent),
       child: Row(
         children: [
-          Expanded(child: Text(widget.orderModel.comment,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold))),
+          Expanded(
+              child: Text(widget.orderModel.comment,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold))),
           IconButton(
               onPressed: () {
                 widget.model.question(locale().confirmRemoveComment, () async {
@@ -207,7 +220,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
           child: Center(
               child: Text(locale().emptyOrder,
                   style:
-                  const TextStyle(fontSize: 30, color: Colors.black38))));
+                      const TextStyle(fontSize: 30, color: Colors.black38))));
     }
     return ListView.builder(
         itemCount: widget.orderModel.goods.length,
@@ -222,8 +235,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
                   return AlertDialog(
                     title: Text(locale().removeRow),
                     content: Text(
-                        '${locale().confirmRemoveGoods}\r\n${widget.orderModel
-                            .goods[index].name}'),
+                        '${locale().confirmRemoveGoods}\r\n${widget.orderModel.goods[index].name}'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
@@ -253,10 +265,11 @@ class _NewOrderState extends State<_NewOrderScreen> {
                 if (uuid.isEmpty) {
                   widget.orderModel.goods.removeAt(index);
                 } else {
-                  HttpQuery('engine/picasso.store/')
-                      .request(
-                      {'class': 'draft', 'method': 'removeOneRow', 'id': uuid})
-                      .then((reply) {
+                  HttpQuery('engine/picasso.store/').request({
+                    'class': 'draft',
+                    'method': 'removeOneRow',
+                    'id': uuid
+                  }).then((reply) {
                     widget.orderModel.goods.removeAt(index);
                   });
                 }
@@ -292,7 +305,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
                         child: Container(
                             alignment: Alignment.center,
                             decoration:
-                            const BoxDecoration(color: Colors.amberAccent),
+                                const BoxDecoration(color: Colors.amberAccent),
                             height: 45,
                             width: 45,
                             child: Text(
@@ -313,8 +326,8 @@ class _NewOrderState extends State<_NewOrderScreen> {
         decoration: const BoxDecoration(color: Colors.indigo),
         child: Row(
           children: [
-            Text('${locale().total} (${Payments[widget.orderModel
-                .paymentType]})',
+            Text(
+                '${locale().total} (${Payments[widget.orderModel.paymentType]})',
                 style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -446,9 +459,8 @@ class _NewOrderState extends State<_NewOrderScreen> {
     final goods = await Navigator.push(
         prefs.context(),
         MaterialPageRoute(
-            builder: (_) =>
-                SearchGoods(
-                    model: widget.model, orderModel: widget.orderModel)));
+            builder: (_) => SearchGoods(
+                model: widget.model, orderModel: widget.orderModel)));
 
     setState(() {});
   }
@@ -466,19 +478,18 @@ class _NewOrderState extends State<_NewOrderScreen> {
       return;
     }
     final g = widget.orderModel.goods
-        .map((t) =>
-    {
-      'f_id': t.uuid ?? '',
-      'f_header': widget.orderModel.id,
-      'f_state': 1,
-      'f_store': widget.orderModel.storeid,
-      'f_goods': t.id,
-      'f_qty': t.qty,
-      'f_back': 0,
-      'f_price': widget.orderModel.priceOfGoods(t),
-      'f_discount': widget.orderModel.partner.discount,
-      'f_special_price': 0
-    })
+        .map((t) => {
+              'f_id': t.uuid ?? '',
+              'f_header': widget.orderModel.id,
+              'f_state': 1,
+              'f_store': widget.orderModel.storeid,
+              'f_goods': t.id,
+              'f_qty': t.qty,
+              'f_back': 0,
+              'f_price': widget.orderModel.priceOfGoods(t),
+              'f_discount': widget.orderModel.partner.discount,
+              'f_special_price': 0
+            })
         .toList();
     final d = {
       'f_id': widget.orderModel.id,
@@ -494,9 +505,12 @@ class _NewOrderState extends State<_NewOrderScreen> {
       'f_cashier': prefs.getInt('userid'),
       'f_flag': 0,
     };
-    HttpQuery('engine/picasso.store/').request(
-        {'header': d, 'body': g, 'class': 'draft', 'method': 'save'}).then((
-        reply) async {
+    HttpQuery('engine/picasso.store/').request({
+      'header': d,
+      'body': g,
+      'class': 'draft',
+      'method': 'save'
+    }).then((reply) async {
       if (reply['status'] == 1) {
         final box = await Hive.openBox<NewOrderModel>('box');
         await box.delete('tempmodel');
@@ -508,16 +522,17 @@ class _NewOrderState extends State<_NewOrderScreen> {
   }
 
   void _openDraftOrder() {
-    HttpQuery('engine/picasso.store/')
-        .request(
-        {'class': 'draft', 'method': 'openDraft', 'id': widget.orderModel.id})
-        .then((reply) {
+    HttpQuery('engine/picasso.store/').request({
+      'class': 'draft',
+      'method': 'openDraft',
+      'id': widget.orderModel.id
+    }).then((reply) {
       if (reply['status'] == 1) {
         setState(() {
           widget.orderModel.partner = Partner.fromJson(reply['partner']);
           widget.orderModel.comment = reply['order']['f_comment'];
-          widget.orderModel.dateFor = DateFormat('yyyy-MM-dd').parse(
-              reply['order']['f_datefor'] ?? '2025-01-01');
+          widget.orderModel.dateFor = DateFormat('yyyy-MM-dd')
+              .parse(reply['order']['f_datefor'] ?? '2025-01-01');
           _isEditable = reply['order']['f_state'] != 2;
           for (final e in reply['goods']) {
             final g = Goods.fromJson(e);
@@ -538,6 +553,5 @@ class _NewOrderState extends State<_NewOrderScreen> {
       widget.orderModel.partner = Partner.empty();
       widget.orderModel.goods.clear();
     });
-
   }
 }

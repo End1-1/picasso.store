@@ -31,6 +31,8 @@ mixin _$Partner {
   double get discount;
   @HiveField(7)
   String get address;
+  @HiveField(8)
+  String get name;
 
   /// Create a copy of Partner
   /// with the given fields replaced by the non-null parameter values.
@@ -55,17 +57,18 @@ mixin _$Partner {
             (identical(other.mode, mode) || other.mode == mode) &&
             (identical(other.discount, discount) ||
                 other.discount == discount) &&
-            (identical(other.address, address) || other.address == address));
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, taxname, tin, phone, contact, mode, discount, address);
+  int get hashCode => Object.hash(runtimeType, id, taxname, tin, phone, contact,
+      mode, discount, address, name);
 
   @override
   String toString() {
-    return 'Partner(id: $id, taxname: $taxname, tin: $tin, phone: $phone, contact: $contact, mode: $mode, discount: $discount, address: $address)';
+    return 'Partner(id: $id, taxname: $taxname, tin: $tin, phone: $phone, contact: $contact, mode: $mode, discount: $discount, address: $address, name: $name)';
   }
 }
 
@@ -82,7 +85,8 @@ abstract mixin class $PartnerCopyWith<$Res> {
       @HiveField(4) String contact,
       @HiveField(5) int mode,
       @HiveField(6) double discount,
-      @HiveField(7) String address});
+      @HiveField(7) String address,
+      @HiveField(8) String name});
 }
 
 /// @nodoc
@@ -105,6 +109,7 @@ class _$PartnerCopyWithImpl<$Res> implements $PartnerCopyWith<$Res> {
     Object? mode = null,
     Object? discount = null,
     Object? address = null,
+    Object? name = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -139,6 +144,10 @@ class _$PartnerCopyWithImpl<$Res> implements $PartnerCopyWith<$Res> {
           ? _self.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -154,7 +163,8 @@ class _Partner implements Partner {
       @HiveField(4) required this.contact,
       @HiveField(5) required this.mode,
       @HiveField(6) required this.discount,
-      @HiveField(7) required this.address});
+      @HiveField(7) required this.address,
+      @HiveField(8) required this.name});
   factory _Partner.fromJson(Map<String, dynamic> json) =>
       _$PartnerFromJson(json);
 
@@ -182,6 +192,9 @@ class _Partner implements Partner {
   @override
   @HiveField(7)
   final String address;
+  @override
+  @HiveField(8)
+  final String name;
 
   /// Create a copy of Partner
   /// with the given fields replaced by the non-null parameter values.
@@ -211,17 +224,18 @@ class _Partner implements Partner {
             (identical(other.mode, mode) || other.mode == mode) &&
             (identical(other.discount, discount) ||
                 other.discount == discount) &&
-            (identical(other.address, address) || other.address == address));
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, taxname, tin, phone, contact, mode, discount, address);
+  int get hashCode => Object.hash(runtimeType, id, taxname, tin, phone, contact,
+      mode, discount, address, name);
 
   @override
   String toString() {
-    return 'Partner(id: $id, taxname: $taxname, tin: $tin, phone: $phone, contact: $contact, mode: $mode, discount: $discount, address: $address)';
+    return 'Partner(id: $id, taxname: $taxname, tin: $tin, phone: $phone, contact: $contact, mode: $mode, discount: $discount, address: $address, name: $name)';
   }
 }
 
@@ -239,7 +253,8 @@ abstract mixin class _$PartnerCopyWith<$Res> implements $PartnerCopyWith<$Res> {
       @HiveField(4) String contact,
       @HiveField(5) int mode,
       @HiveField(6) double discount,
-      @HiveField(7) String address});
+      @HiveField(7) String address,
+      @HiveField(8) String name});
 }
 
 /// @nodoc
@@ -262,6 +277,7 @@ class __$PartnerCopyWithImpl<$Res> implements _$PartnerCopyWith<$Res> {
     Object? mode = null,
     Object? discount = null,
     Object? address = null,
+    Object? name = null,
   }) {
     return _then(_Partner(
       id: null == id
@@ -295,6 +311,10 @@ class __$PartnerCopyWithImpl<$Res> implements _$PartnerCopyWith<$Res> {
       address: null == address
           ? _self.address
           : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

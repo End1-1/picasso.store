@@ -16,6 +16,7 @@ class CheckCubit extends Cubit<Check> {
 
 class NewPartner extends WMApp {
   final _tinController = TextEditingController();
+  final _nameController = TextEditingController();
   final _taxnameController = TextEditingController();
   final _addressController = TextEditingController();
   final _contactController = TextEditingController();
@@ -61,6 +62,8 @@ class NewPartner extends WMApp {
               Icon(Icons.done_all, color: Colors.lightGreen)
           ]),
           Styling.columnSpacingWidget(),
+          Styling.textFormField(_nameController, locale().name),
+          Styling.columnSpacingWidget(),
           Styling.textFormField(_taxnameController, locale().taxpayerName),
           Styling.columnSpacingWidget(),
           Styling.textFormField(_addressController, locale().address),
@@ -95,6 +98,7 @@ class NewPartner extends WMApp {
             break;
           case 2:
             final p = reply['partner'];
+            _nameController.text = p['f_name'];
             _taxnameController.text= p['f_taxname'];
             _addressController.text = p['f_address'];
             _contactController.text = p['f_contact'];
@@ -121,6 +125,7 @@ class NewPartner extends WMApp {
       'class': 'partners',
       'method': 'newPartner',
       'tin': _tinController.text,
+      'name': _nameController.text,
       'taxpayername': _taxnameController.text,
       'address': _addressController.text,
       'contact': _contactController.text,
@@ -135,7 +140,8 @@ class NewPartner extends WMApp {
             contact: _contactController.text,
             mode: 1,
             discount: 0,
-            address: _addressController.text);
+            address: _addressController.text,
+        name: _nameController.text);
         Navigator.pop(prefs.context(), p);
       } else {
         prefs.context().read<CheckCubit>().setState(Check.fail);
@@ -146,6 +152,7 @@ class NewPartner extends WMApp {
 
   void _clearFields() {
     _tinController.clear();
+    _nameController.clear();
     _taxnameController.clear();
     _addressController.clear();
     _contactController.clear();

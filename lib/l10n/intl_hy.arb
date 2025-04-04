@@ -71,5 +71,10 @@
   "contact": "Կոնտակտ",
   "phone": "Հեռախոսահամոր",
   "wrongTin": "Սխալ ՀՎՀՀ",
-  "clearOrder": "Մաքրել պատրվերը"
+  "clearOrder": "Մաքրել պատրվերը",
+  "barcodeNotExistsInOrder": "Այդպիսի ապրանք պատվերում չկա",
+  "setOk": "Ստուգված է",
+  "setNotOk": "Ստուգված չէ",
+  "debug": "Debug",
+  "name": "Անվանում"
 }

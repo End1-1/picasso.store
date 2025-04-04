@@ -82,7 +82,7 @@ class _SearchState extends State<_SearchScreen> {
           child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
+                  width: 1200,
                   child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -101,12 +101,19 @@ class _SearchState extends State<_SearchScreen> {
                             onTap: () {
                               Navigator.pop(prefs.context(), _partners[index]);
                             },
-                            child: SizedBox(
+                            child: Container(
+                                color: index % 2 == 0 ? Colors.black12 : Colors.black26,
                                 height: 40,
-                                child: Row(children: [
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                   SizedBox(
                                       width: 100,
                                       child: Text(_partners[index].tin)),
+                                  const SizedBox(width: 10),
+                                  SizedBox(
+                                      width: 150,
+                                      child: Text(_partners[index].name)),
                                   const SizedBox(width: 10),
                                   SizedBox(
                                       width: 200,
@@ -119,6 +126,9 @@ class _SearchState extends State<_SearchScreen> {
                                   SizedBox(
                                       width: 150,
                                       child: Text(_partners[index].phone)),
+                                  SizedBox(
+                                      width: 350,
+                                      child: Text(_partners[index].address)),
                                 ])));
                       }))))
     ]);
