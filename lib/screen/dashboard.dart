@@ -43,6 +43,8 @@ class WMDashboard extends WMApp {
     return [
       Styling.menuButton(
           model.navigation.settings, 'config', model.tr('Configuration')),
+      if (Prefs.config['debug_mode'] ?? false)
+        Styling.menuButton2(model.navigation.debugInfo, 'serch', locale().debug),
       Styling.menuButton(model.navigation.logout, 'logout', model.tr('Logout')),
     ];
   }

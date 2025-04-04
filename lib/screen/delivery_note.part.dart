@@ -85,6 +85,7 @@ extension _DeliveryNoteExt on _DeliveryNoteState {
           'f_header': widget.docModel.id,
           'f_qr': base64.encode(code.codeUnits)
         });
+
         if (reply['status'] == 1) {
           widget.docModel.codes.add(barcode);
           widget.docModel.qrCode.add(code);
@@ -106,13 +107,11 @@ extension _DeliveryNoteExt on _DeliveryNoteState {
     var code = _controller.text;
     _debounceTimer = Timer(Duration(milliseconds: 500), () {
       if (code.isNotEmpty) {
-        if (kDebugMode) {
-          print('Now where process the "$code"');
-          if (code.toLowerCase().startsWith('doc;')) {
-            _processDoc(code);
-          } else {
-            _processBarcode(code);
-          }
+        debugInfo('Now where process the "$code"');
+        if (code.toLowerCase().startsWith('doc;')) {
+          _processDoc(code);
+        } else {
+          _processBarcode(code);
         }
         code = '';
         _controller.clear();

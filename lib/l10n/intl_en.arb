@@ -76,5 +76,6 @@
   "clearOrder": "Clear order",
   "barcodeNotExistsInOrder": "Barcode not exists in the order",
   "setOk": "Set ok",
-  "setNotOk": "Set not ok"
+  "setNotOk": "Set not ok",
+  "debug": "Debug"
 }

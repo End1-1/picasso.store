@@ -12,6 +12,7 @@ import 'package:picassostore/screen/check_store_input.dart';
 import 'package:picassostore/screen/completed_orders.dart';
 import 'package:picassostore/screen/config.dart';
 import 'package:picassostore/screen/debts.dart';
+import 'package:picassostore/screen/debug_info.dart';
 import 'package:picassostore/screen/deliver_note.dart';
 import 'package:picassostore/screen/draft_sale.dart';
 import 'package:picassostore/screen/goods_info.dart';
@@ -73,6 +74,11 @@ class Navigation {
     hideMenu();
     return Navigator.push(prefs.context(),
         MaterialPageRoute(builder: (builder) => DeliveryNote(model: model)));
+  }
+
+  Future<Object?> debugInfo() async {
+    hideMenu();
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (_)=> DebugInfo(model: model)));
   }
 
   void logout() {
