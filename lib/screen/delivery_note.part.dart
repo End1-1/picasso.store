@@ -104,7 +104,7 @@ extension _DeliveryNoteExt on _DeliveryNoteState {
     }
 
     var code = _controller.text;
-    _debounceTimer = Timer(Duration(milliseconds: 300), () {
+    _debounceTimer = Timer(Duration(milliseconds: 500), () {
       if (code.isNotEmpty) {
         if (kDebugMode) {
           print('Now where process the "$code"');
