@@ -10,6 +10,7 @@ import 'package:picassostore/utils/styles.dart';
 
 class SearchPartnerScreen extends WMApp {
   final GlobalKey<_SearchState> _searchStateKey = GlobalKey();
+
   SearchPartnerScreen({super.key, required super.model});
 
   @override
@@ -20,7 +21,9 @@ class SearchPartnerScreen extends WMApp {
   @override
   List<Widget> actions() {
     return [
-      IconButton(onPressed: ()=>_searchStateKey.currentState?._newPartner(), icon: const Icon(Icons.add))
+      IconButton(
+          onPressed: () => _searchStateKey.currentState?._newPartner(),
+          icon: const Icon(Icons.add))
     ];
   }
 
@@ -68,7 +71,7 @@ class _SearchState extends State<_SearchScreen> {
       Row(children: [
         Expanded(
             child: TextFormField(
-              autofocus: true,
+          autofocus: true,
           controller: _controller,
           onChanged: _onSearchChanged,
         )),
@@ -79,58 +82,49 @@ class _SearchState extends State<_SearchScreen> {
             }, 'search', Colors.black, ''))
       ]),
       Expanded(
-          child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SizedBox(
-                  width: 1200,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      controller: _scrollController,
-                      itemCount: _partners.length + (_isLoading ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (_isLoading && index == _partners.length) {
-                          return Center(
-                              child: Container(
-                                  margin: const EdgeInsets.only(bottom: 20),
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator()));
-                        }
-                        return InkWell(
-                            onTap: () {
-                              Navigator.pop(prefs.context(), _partners[index]);
-                            },
-                            child: Container(
-                                color: index % 2 == 0 ? Colors.black12 : Colors.black26,
-                                height: 40,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                  SizedBox(
-                                      width: 100,
-                                      child: Text(_partners[index].tin)),
-                                  const SizedBox(width: 10),
-                                  SizedBox(
-                                      width: 150,
-                                      child: Text(_partners[index].name)),
-                                  const SizedBox(width: 10),
-                                  SizedBox(
-                                      width: 200,
-                                      child: Text(_partners[index].taxname)),
-                                  const SizedBox(width: 10),
-                                  SizedBox(
-                                      width: 150,
-                                      child: Text(_partners[index].contact)),
-                                  const SizedBox(width: 10),
-                                  SizedBox(
-                                      width: 150,
-                                      child: Text(_partners[index].phone)),
-                                  SizedBox(
-                                      width: 350,
-                                      child: Text(_partners[index].address)),
-                                ])));
-                      }))))
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              controller: _scrollController,
+              itemCount: _partners.length + (_isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (_isLoading && index == _partners.length) {
+                  return Center(
+                      child: Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator()));
+                }
+                final tin = _partners[index].tin.isNotEmpty ? '${locale().tin} ${_partners[index].tin},' : '';
+                var name = _partners[index].name.isEmpty ? '' : '"${_partners[index].name}",';
+                name += '${_partners[index].phone}, ${_partners[index].contact}';
+                return InkWell(
+                    onTap: () {
+                      Navigator.pop(prefs.context(), _partners[index]);
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        color: index % 2 == 0 ? Colors.black12 : Colors.black26,
+                        child: Column(children: [
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                        '$tin ${_partners[index].taxname}')),
+                              ]),
+                          Row(children: [
+                            Expanded(
+                                child: Text(
+                                    '$name')),
+
+                          ]),
+                          Row(children: [
+                            Expanded(child: Text(_partners[index].address))
+                          ])
+                        ])));
+              }))
     ]);
   }
 
