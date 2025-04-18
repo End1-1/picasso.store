@@ -54,13 +54,13 @@ extension Prefs on SharedPreferences {
     return nf.format(v);
   }
 
-  String mdFormatDouble(double? value) {
+  String mdFormatDouble(num? value) {
     return value == null
         ? '0'
         : mdDoubleFormatter
         .format(value)
-        .replaceAll(RegExp('r(?!\d[\.\,][1-9]+)0+\$'), '')
-        .replaceAll('[\.\,]\$', '');
+        .replaceAll(RegExp(r'([.,]0+)$'), '')
+        .replaceAll(RegExp(r'[.,]$'), '');
   }
 
   void init() {

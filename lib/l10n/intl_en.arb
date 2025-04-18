@@ -78,5 +78,7 @@
   "setOk": "Set ok",
   "setNotOk": "Set not ok",
   "debug": "Debug",
-  "name": "Name"
+  "name": "Name",
+  "debtAsOf": "Debt as of",
+  "currentDebt": "Current debt"
 }
