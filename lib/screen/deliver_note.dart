@@ -31,8 +31,11 @@ class DeliveryNote extends WMApp {
   List<Widget> actions() {
     return [
       IconButton(
+          onPressed: _deliveryNoteState.currentState?._confirm,
+          icon: Image.asset('assets/confirm.png', height: 20,)),
+      IconButton(
           onPressed: _deliveryNoteState.currentState?._openDoc,
-          icon: Icon(Icons.file_open_outlined))
+          icon: Icon(Icons.file_open_outlined, color: Colors.black,))
     ];
   }
 

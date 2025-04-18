@@ -15,6 +15,20 @@ extension _DeliveryNoteExt on _DeliveryNoteState {
     });
   }
 
+  void _confirm() {
+    HttpQuery('engine/picasso.store/').request({
+      'class': 'checksaleoutput',
+      'method': 'confirm',
+      'doc': widget.docModel.id
+    }).then((reply) {
+      if (reply['status'] == 1) {
+        Navigator.pop(prefs.context());
+      } else {
+        widget.model.error(reply['data']);
+      }
+    });
+  }
+
   void _processDoc(String docnum) async {
     _isLoading = true;
     refresh();
