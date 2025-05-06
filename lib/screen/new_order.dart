@@ -142,7 +142,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
                         Expanded(
                             child: Text(
                                 '${widget.orderModel.partner.name} ${widget.orderModel.partner.discount > 0 ? '[${prefs.mdFormatDouble( widget.orderModel.partner.discount)}%]' : ''}',
-                                style: const TextStyle(color: Colors.white))),
+                                style: const TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis)),
                         Text(widget.orderModel.partner.address,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(color: Colors.white)),

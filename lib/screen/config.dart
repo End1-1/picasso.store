@@ -19,6 +19,10 @@ class WMConfig extends WMApp {
         ],
       ),
       Styling.columnSpacingWidget(),
+      WMCheckbox(locale().doNotUseSSL, (value){
+        prefs.setBool('donotusessl', value ?? false);
+      }, prefs.getBool('donotusessl') ?? false),
+      Styling.columnSpacingWidget(),
       Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

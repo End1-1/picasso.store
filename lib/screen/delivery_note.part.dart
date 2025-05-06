@@ -16,6 +16,12 @@ extension _DeliveryNoteExt on _DeliveryNoteState {
   }
 
   void _confirm() {
+    for (final e in widget.docModel.goods) {
+      if (e.qty != widget.docModel.goodsCheck[e.sku]) {
+        widget.model.error(locale().checkAllQty);
+        return;
+      }
+    }
     HttpQuery('engine/picasso.store/').request({
       'class': 'checksaleoutput',
       'method': 'confirm',

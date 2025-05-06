@@ -31,17 +31,19 @@ class DocModel {
   }
 
   String barcodeFromQr(String qr) {
-    String barcode ;
-    if (qr.substring(0, 6) == "000000") {
-      barcode = qr.substring(6, 14);
-    } else if (qr.substring(0, 3) == "010") {
-      if (qr.substring(0, 8) == "01000000") {
-        barcode = qr.substring(8, 16);
+    String barcode = qr;
+    if (qr.length > 7) {
+      if (qr.substring(0, 6) == "000000") {
+        barcode = qr.substring(6, 14);
+      } else if (qr.substring(0, 3) == "010") {
+        if (qr.substring(0, 8) == "01000000") {
+          barcode = qr.substring(8, 16);
+        } else {
+          barcode = qr.substring(3, 16);
+        }
       } else {
-        barcode = qr.substring(3, 16);
+        barcode = qr.substring(1, 9);
       }
-    } else {
-      barcode = qr.substring(1, 9);
     }
     return barcode;
   }

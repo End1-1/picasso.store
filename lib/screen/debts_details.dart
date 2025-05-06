@@ -34,7 +34,6 @@ class DebtsDetails extends WMApp {
         builder: (context, state) {
           if (state.state == 0 || state.mark != httpMark) {
             Future.microtask(() => _refresh());
-
             return Center(child: CircularProgressIndicator());
           }
           if (state.state == 3) {

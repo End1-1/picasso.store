@@ -96,11 +96,21 @@ class _SearchState extends State<_SearchScreen> {
                           width: 20,
                           child: CircularProgressIndicator()));
                 }
-                final tin = _partners[index].tin.isNotEmpty ? '${locale().tin} ${_partners[index].tin},' : '';
-                var name = _partners[index].name.isEmpty ? '' : '"${_partners[index].name}",';
-                name += '${_partners[index].phone}, ${_partners[index].contact}';
+                final tin = _partners[index].tin.isNotEmpty
+                    ? '${locale().tin} ${_partners[index].tin},'
+                    : '';
+                var name = _partners[index].name.isEmpty
+                    ? ''
+                    : '"${_partners[index].name}",';
+                name +=
+                    '${_partners[index].phone}, ${_partners[index].contact}';
                 return InkWell(
                     onTap: () {
+                      if (_partners[index].mode == 0) {
+                        widget.model
+                            .error(locale().partnerPaymentModeUndefined);
+                        return;
+                      }
                       Navigator.pop(prefs.context(), _partners[index]);
                     },
                     child: Container(
@@ -115,10 +125,7 @@ class _SearchState extends State<_SearchScreen> {
                                         '$tin ${_partners[index].taxname}')),
                               ]),
                           Row(children: [
-                            Expanded(
-                                child: Text(
-                                    '$name')),
-
+                            Expanded(child: Text(name)),
                           ]),
                           Row(children: [
                             Expanded(child: Text(_partners[index].address))

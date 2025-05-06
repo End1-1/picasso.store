@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picassostore/bloc/app_bloc.dart';
 import 'package:picassostore/bloc/app_cubits.dart';
 import 'package:picassostore/model/model.dart';
 import 'package:picassostore/utils/prefs.dart';
 import 'package:picassostore/utils/styles.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WMLogin extends StatelessWidget {
   static const int username_password = 1;
@@ -37,20 +37,25 @@ class WMLogin extends StatelessWidget {
                 ]),
                 Styling.columnSpacingWidget(),
                 Row(children: [
-                  Expanded(
-                      child:  BlocBuilder<AppCubits, int>(builder: (builder, state) {return TextFormField(
-                controller: model.serverPasswordTextController,
-                obscureText: state &cubIsPasswordShow != 0,
-                  onFieldSubmitted: model.passwordSubmitted,
-                  style: const TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                      suffix: IconButton(onPressed: (){builder.read<AppCubits>().toggleShowPassword();}, icon: Icon(Icons.remove_red_eye_outlined)),
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black26)),
-                      labelText: model.tr('Password')),
-                );}))
-
+                  Expanded(child:
+                      BlocBuilder<AppCubits, int>(builder: (builder, state) {
+                    return TextFormField(
+                      controller: model.serverPasswordTextController,
+                      obscureText: state & cubIsPasswordShow != 0,
+                      onFieldSubmitted: model.passwordSubmitted,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                          suffix: IconButton(
+                              onPressed: () {
+                                builder.read<AppCubits>().toggleShowPassword();
+                              },
+                              icon: Icon(Icons.remove_red_eye_outlined)),
+                          contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black26)),
+                          labelText: model.tr('Password')),
+                    );
+                  }))
                 ]),
                 Styling.columnSpacingWidget(),
                 Row(children: [
@@ -84,7 +89,7 @@ class WMLogin extends StatelessWidget {
               ],
             )));
       } else {
-        return Container(child: Text('Not implemented'));
+        return Text('Not implemented');
       }
     });
   }

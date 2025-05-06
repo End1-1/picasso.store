@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picassostore/model/goods.dart';
 import 'package:picassostore/model/model.dart';
@@ -32,10 +30,16 @@ class DeliveryNote extends WMApp {
     return [
       IconButton(
           onPressed: _deliveryNoteState.currentState?._confirm,
-          icon: Image.asset('assets/confirm.png', height: 20,)),
+          icon: Image.asset(
+            'assets/confirm.png',
+            height: 20,
+          )),
       IconButton(
           onPressed: _deliveryNoteState.currentState?._openDoc,
-          icon: Icon(Icons.file_open_outlined, color: Colors.black,))
+          icon: Icon(
+            Icons.file_open_outlined,
+            color: Colors.black,
+          ))
     ];
   }
 
@@ -90,63 +94,73 @@ class _DeliveryNoteState extends State<_DeliveryNote> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Stack(children: [  Column(
-      children: [
-        Row(children: [
-          Expanded(child: TextField(
-            focusNode: _focusNode,
-            autofocus: true,
-            controller: _controller,
-            enableInteractiveSelection: false,
-            keyboardType: TextInputType.none,
-          ))
-        ]),
-        Expanded(
-            child: ListView.builder(
-                itemCount: widget.docModel.goods.length,
-                itemBuilder: (context, index) {
-                  final g = widget.docModel.goods[index];
-                  return Column(children: [
-                    Row(children: [
-                      Expanded(child: Text('${g.name}\r\n${g.sku}')),
-                      Container(
-                          alignment: Alignment.center,
-                          width: 70,
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              color: g.qty == widget.docModel.goodsCheck[g.sku]
-                                  ? Colors.green
-                                  : g.qty < (widget.docModel.goodsCheck[g.sku]??0) ? Colors.red : Colors.black12),
-                          child: Text(prefs.mdFormatDouble(g.qty))),
-                      Styling.rowSpacingWidget(),
-                      InkWell(
-                  onTap:() => _setQtyOf(g.sku),
-                  child:  Container(
-                        alignment: Alignment.center,
-                          width: 70,
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(color: Colors.black),
-                          child: Text(
-                              prefs.mdFormatDouble(g.qty -
-                                  (widget.docModel.goodsCheck[g.sku] ?? 0)),
-                              style: const TextStyle(color: Colors.white))))
-                    ]),
-                    Styling.columnSpacingWidget(),
-                  ]);
-                })),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          IconButton(onPressed: _addQr, icon: Icon(Icons.qr_code, size: 40))
+    return Stack(children: [
+      Column(
+        children: [
+          Row(children: [
+            Expanded(
+                child: TextField(
+              focusNode: _focusNode,
+              autofocus: true,
+              controller: _controller,
+              enableInteractiveSelection: false,
+              keyboardType: TextInputType.none,
+            ))
+          ]),
+          Expanded(
+              child: ListView.builder(
+                  itemCount: widget.docModel.goods.length,
+                  itemBuilder: (context, index) {
+                    final g = widget.docModel.goods[index];
+                    return Column(children: [
+                      Row(children: [
+                        Expanded(child: Text('${g.name}\r\n${g.sku}')),
+                        Container(
+                            alignment: Alignment.center,
+                            width: 70,
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                                color:
+                                    g.qty == widget.docModel.goodsCheck[g.sku]
+                                        ? Colors.green
+                                        : g.qty <
+                                                (widget.docModel
+                                                        .goodsCheck[g.sku] ??
+                                                    0)
+                                            ? Colors.red
+                                            : Colors.black12),
+                            child: Text(prefs.mdFormatDouble(g.qty))),
+                        Styling.rowSpacingWidget(),
+                        InkWell(
+                            onTap: () => _setQtyOf(g.sku),
+                            child: Container(
+                                alignment: Alignment.center,
+                                width: 70,
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(color: Colors.black),
+                                child: Text(
+                                    prefs.mdFormatDouble(g.qty -
+                                        (widget.docModel.goodsCheck[g.sku] ??
+                                            0)),
+                                    style:
+                                        const TextStyle(color: Colors.white))))
+                      ]),
+                      Styling.columnSpacingWidget(),
+                    ]);
+                  })),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            IconButton(onPressed: _addQr, icon: Icon(Icons.qr_code, size: 40))
+          ])
+        ],
+      ),
+      if (_isLoading)
+        Column(children: [
+          Expanded(
+              child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white24,
+                  child: CircularProgressIndicator()))
         ])
-      ],
-    ),
-    if (_isLoading)
-Column(children: [
-  Expanded(child: Container(
-    alignment: Alignment.center,
-    color: Colors.white24,
-    child: CircularProgressIndicator()))
-])
-      ]);
+    ]);
   }
 }
