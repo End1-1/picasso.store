@@ -55,12 +55,22 @@ extension Prefs on SharedPreferences {
   }
 
   String mdFormatDouble(num? value) {
-    return value == null
-        ? '0'
-        : mdDoubleFormatter
-        .format(value)
-        .replaceAll(RegExp(r'([.,]0+)$'), '')
-        .replaceAll(RegExp(r'[.,]$'), '');
+    if (value == null) return '0';
+    final str = mdDoubleFormatter.format(value);
+
+
+    final parts = str.split('.');
+
+    if (parts.length == 2) {
+      if (RegExp(r'^0+$').hasMatch(parts[1])) {
+        return parts[0];
+      } else {
+        final fractional = parts[1].replaceFirst(RegExp(r'0+$'), '');
+        return '${parts[0]}.$fractional';
+      }
+    }
+
+    return str;
   }
 
   void init() {

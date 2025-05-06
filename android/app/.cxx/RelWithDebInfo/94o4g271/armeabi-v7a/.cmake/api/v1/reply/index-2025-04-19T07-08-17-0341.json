@@ -8,10 +8,10 @@
 		},
 		"paths" : 
 		{
-			"cmake" : "C:/Users/vasili/AppData/Local/Android/Sdk/cmake/3.22.1/bin/cmake.exe",
-			"cpack" : "C:/Users/vasili/AppData/Local/Android/Sdk/cmake/3.22.1/bin/cpack.exe",
-			"ctest" : "C:/Users/vasili/AppData/Local/Android/Sdk/cmake/3.22.1/bin/ctest.exe",
-			"root" : "C:/Users/vasili/AppData/Local/Android/Sdk/cmake/3.22.1/share/cmake-3.22"
+			"cmake" : "E:/androidsdk/cmake/3.22.1/bin/cmake.exe",
+			"cpack" : "E:/androidsdk/cmake/3.22.1/bin/cpack.exe",
+			"ctest" : "E:/androidsdk/cmake/3.22.1/bin/ctest.exe",
+			"root" : "E:/androidsdk/cmake/3.22.1/share/cmake-3.22"
 		},
 		"version" : 
 		{
@@ -35,7 +35,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cache-v2-2d2a2b08902c2a42dc5f.json",
+			"jsonFile" : "cache-v2-22e262921ba90bf2259c.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -44,7 +44,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cmakeFiles-v1-c0ed265c942b2f866ace.json",
+			"jsonFile" : "cmakeFiles-v1-1ee1407641833b49e8f1.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -59,7 +59,7 @@
 		{
 			"cache-v2" : 
 			{
-				"jsonFile" : "cache-v2-2d2a2b08902c2a42dc5f.json",
+				"jsonFile" : "cache-v2-22e262921ba90bf2259c.json",
 				"kind" : "cache",
 				"version" : 
 				{
@@ -69,7 +69,7 @@
 			},
 			"cmakeFiles-v1" : 
 			{
-				"jsonFile" : "cmakeFiles-v1-c0ed265c942b2f866ace.json",
+				"jsonFile" : "cmakeFiles-v1-1ee1407641833b49e8f1.json",
 				"kind" : "cmakeFiles",
 				"version" : 
 				{

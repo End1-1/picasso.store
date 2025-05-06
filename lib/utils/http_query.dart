@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 class HttpQuery {
 
   bool needlonglog = false;
@@ -21,6 +20,10 @@ class HttpQuery {
     inData['workingday'] = prefs.dateMySqlText(prefs.workingDay());
     inData['language'] = 'am';
     inData['debug'] = false && kDebugMode;
+    if (kDebugMode) {
+      //inData['appversion'] = prefs.string('appversion');
+      //inData['appversion'] = '1.0.3.49';
+    }
 
     Map<String, Object?> outData = {};
     String strBody = jsonEncode(inData);
@@ -32,16 +35,31 @@ class HttpQuery {
       }
     }
     try {
-      var response = await http
-          .post(
-              Uri.https(prefs.string("serveraddress"), route),
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: utf8.encode(strBody))
-          .timeout(Duration(seconds: timeout), onTimeout: () {
-        return http.Response('Timeout', 408);
-      });
+      late final http.Response response;
+      if (prefs.getBool('donotusessl') ?? false ){
+        response = await http
+            .post(
+            Uri.http(prefs.string("serveraddress"), route),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: utf8.encode(strBody))
+            .timeout(Duration(seconds: timeout), onTimeout: () {
+          return http.Response('Timeout', 408);
+        });
+      } else {
+        response = await http
+            .post(
+            Uri.https(prefs.string("serveraddress"), route),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: utf8.encode(strBody))
+            .timeout(Duration(seconds: timeout), onTimeout: () {
+          return http.Response('Timeout', 408);
+        });
+      }
+
       String strResponse = utf8.decode(response.bodyBytes);
       if (kDebugMode) {
         if (needlonglog) {
@@ -77,7 +95,7 @@ class HttpQuery {
       outData['status'] = 0;
       outData['data'] = e.toString();
     }
-    if (kDebugMode) {
+    if (kDebugMode) {/
       if (needlonglog) {
         debugPrint('Output $outData');
       } else {

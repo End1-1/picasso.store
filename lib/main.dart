@@ -27,13 +27,13 @@ void main() async {
   prefs = await SharedPreferences.getInstance();
   PackageInfo pa = await PackageInfo.fromPlatform();
   prefs.setString('appversion', '${pa.version}.${pa.buildNumber}');
-  print('APPVERSION ${prefs.getString('appversion')}');
   prefs.init();
   await Hive.initFlutter();
   Hive.registerAdapter(NewOrderModelAdapter());
   Hive.registerAdapter(PartnerAdapter());
   Hive.registerAdapter(GoodsAdapter());
   await Hive.openBox<NewOrderModel>('orderBox');
+
   runApp(MultiBlocProvider(providers: [
     BlocProvider<AppBloc>(create: (context) => AppBloc()),
     BlocProvider<InitAppBloc>(

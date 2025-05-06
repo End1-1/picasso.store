@@ -52,11 +52,7 @@ class AppWebSocket {
     }
 
     _host = prefs.string('serveraddress');
-    if (_host.contains('https')) {
-      _host = _host.substring(8);
-      _host = 'wss://$_host/ws';
-    } else if (_host.contains('http')) {
-      _host = _host.substring(7);
+    if (prefs.getBool('donotusessl') ?? false) {
       _host = 'ws://$_host/ws';
     } else {
       _host = 'wss://$_host/ws';

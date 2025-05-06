@@ -76,5 +76,10 @@
   "setOk": "Ստուգված է",
   "setNotOk": "Ստուգված չէ",
   "debug": "Debug",
-  "name": "Անվանում"
+  "name": "Անվանում",
+  "debtAsOf": "Պարտքը",
+  "currentDebt": "Ընդացիկ պարտք",
+  "doNotUseSSL": "Do not use SSL",
+  "checkAllQty": "Ստուգեք բոլոր քանակները",
+  "partnerPaymentModeUndefined": "Վաճառքի տեսակը նշված չէ գործընկերոջ համար"
 }

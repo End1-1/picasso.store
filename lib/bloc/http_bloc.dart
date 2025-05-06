@@ -22,20 +22,14 @@ class HttpEvent extends AppEvent {
 
 class HttpBloc extends Bloc<HttpEvent, HttpState> {
   HttpBloc() : super(HttpState(state: 0, data: null, mark: '')) {
-    on<HttpEvent>((event, emit) => load(event));
+    on<HttpEvent>(_load);
   }
 
-  void load(HttpEvent e) async {
+  Future<void> _load(HttpEvent e, Emitter<HttpState> emit) async {
     emit(HttpState(state: 3, data: null, mark: e.mark));
-    HttpQuery('engine/picasso.store/')
-        .request((e.params))
-        .then((reply) {
-      final newState = HttpState(
-          state: reply['status'] == 1 ? 2 : 1,
-          data: reply['data'],
-          mark: e.mark
-      );
-      emit(newState);
-    });
+    final reply = await HttpQuery('engine/picasso.store/').request((e.params));
+    final newState = HttpState(
+        state: reply['status'] == 1 ? 2 : 1, data: reply['data'], mark: e.mark);
+    emit(newState);
   }
 }

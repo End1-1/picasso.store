@@ -80,5 +80,8 @@
   "debug": "Debug",
   "name": "Name",
   "debtAsOf": "Debt as of",
-  "currentDebt": "Current debt"
+  "currentDebt": "Current debt",
+  "doNotUseSSL": "Do not use SSL",
+  "checkAllQty": "Check all qty",
+  "partnerPaymentModeUndefined": "The payment mode of partner undefined"
 }
