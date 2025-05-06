@@ -95,7 +95,7 @@ class HttpQuery {
       outData['status'] = 0;
       outData['data'] = e.toString();
     }
-    if (kDebugMode) {/
+    if (kDebugMode) {
       if (needlonglog) {
         debugPrint('Output $outData');
       } else {
