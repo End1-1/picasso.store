@@ -13,7 +13,7 @@ class WMLogin extends StatelessWidget {
   final WMModel model;
   final int mode;
 
-  WMLogin(this.model, this.mode);
+  const WMLogin(this.model, this.mode, {super.key});
 
   @override
   Widget build(BuildContext context) {

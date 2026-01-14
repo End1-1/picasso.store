@@ -12,6 +12,7 @@ import 'app.dart';
 import 'draft_sale.dart';
 
 part 'dashboard.model.dart';
+
 part 'dashboard.store.dart';
 
 class WMDashboard extends WMApp {
@@ -44,7 +45,8 @@ class WMDashboard extends WMApp {
       Styling.menuButton(
           model.navigation.settings, 'config', model.tr('Configuration')),
       if (Prefs.config['debug_mode'] ?? false)
-        Styling.menuButton2(model.navigation.debugInfo, 'serch', locale().debug),
+        Styling.menuButton2(
+            model.navigation.debugInfo, 'search', locale().debug),
       Styling.menuButton(model.navigation.logout, 'logout', model.tr('Logout')),
     ];
   }
@@ -88,6 +90,9 @@ class WMDashboard extends WMApp {
             if (Prefs.config['chm_returngoods'] ?? false)
               _bodyButton(model.navigation.returnGoods, 'assets/drafts.png',
                   locale().returnGoods),
+            if (Prefs.config['chm_loaindggoods'] ?? false)
+              _bodyButton(model.navigation.loadingGoods,
+                  'assets/loading_goods.png', locale().loadingGoods),
           ])))
     ]);
     //    return bodyStore();

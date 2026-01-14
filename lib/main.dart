@@ -5,6 +5,7 @@ import 'package:picassostore/bloc/app_cubits.dart';
 import 'package:picassostore/bloc/date_bloc.dart';
 import 'package:picassostore/bloc/http_bloc.dart';
 import 'package:picassostore/bloc/question_bloc.dart';
+import 'package:picassostore/l10n/app_localizations.dart';
 import 'package:picassostore/model/new_order_model.dart';
 import 'package:picassostore/screen/login.dart';
 import 'package:picassostore/screen/new_partner.dart';
@@ -15,7 +16,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'model/goods.dart';
 import 'model/model.dart';

@@ -8,7 +8,7 @@ import 'package:picassostore/utils/prefs.dart';
 class Orders extends WMApp {
   static const httpMark = '39ebda17-0ad5-11f0-9523-02c88e00dcd1';
 
-  Orders({required super.model});
+  Orders({super.key, required super.model});
 
   @override
   List<Widget> actions() {

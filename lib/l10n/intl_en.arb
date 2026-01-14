@@ -83,5 +83,13 @@
   "currentDebt": "Current debt",
   "doNotUseSSL": "Do not use SSL",
   "checkAllQty": "Check all qty",
-  "partnerPaymentModeUndefined": "The payment mode of partner undefined"
+  "partnerPaymentModeUndefined": "The payment mode of partner undefined",
+  "loadingGoods": "Loading goods",
+  "goodsName": "Goods name",
+  "loading": "Loading",
+  "loaded": "Loaded",
+  "error": "Error",
+  "ok": "OK",
+  "deleting": "Deleting",
+  "removalConfirmation": "Confirm to remove record"
 }

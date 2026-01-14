@@ -83,6 +83,9 @@ class AppWebSocket {
             'command': 'register_socket',
             'socket_type': 4,
             'userid': 0,
+            'key': prefs.getString('serverkey'),
+            'username':prefs.getString('username'),
+            'password':prefs.getString('password'),
             'database': database
           }));
     } catch (e) {

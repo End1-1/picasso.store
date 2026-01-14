@@ -17,6 +17,7 @@ import 'package:picassostore/screen/deliver_note.dart';
 import 'package:picassostore/screen/draft_sale.dart';
 import 'package:picassostore/screen/goods_info.dart';
 import 'package:picassostore/screen/goods_reserve.dart';
+import 'package:picassostore/screen/loading_goods.dart';
 import 'package:picassostore/screen/new_order.dart';
 import 'package:picassostore/screen/new_partner.dart';
 import 'package:picassostore/screen/order.dart';
@@ -58,6 +59,7 @@ class Navigation {
   Future<void> settings() {
     hideMenu();
     model.serverTextController.text = prefs.string('serveraddress');
+    model.serverKeyController.text = prefs.string('serverkey');
     model.serverUserTextController.clear();
     model.serverPasswordTextController.clear();
     return Navigator.push(prefs.context(),
@@ -79,6 +81,11 @@ class Navigation {
   Future<Object?> debugInfo() async {
     hideMenu();
     return Navigator.push(prefs.context(), MaterialPageRoute(builder: (_)=> DebugInfo(model: model)));
+  }
+
+  Future<Object?> loadingGoods() async {
+    hideMenu();
+    return Navigator.push(prefs.context(), MaterialPageRoute(builder: (_)=> LoadingGoods(model: model)));
   }
 
   void logout() {

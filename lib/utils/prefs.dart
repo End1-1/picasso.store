@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:picassostore/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension Prefs on SharedPreferences {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -24,8 +24,13 @@ extension Prefs on SharedPreferences {
   }
 
   String df(String v) {
-    return v.replaceAll(RegExp('r(?!\d[\.\,][1-9]+)0+\$'), '').replaceAll('[\.\,]\$', '');
+    return v.contains('.') || v.contains(',')
+        ? v
+        .replaceAll(RegExp(r'(?!\d[\.,][1-9]+)0+$'), '')
+        .replaceAll(RegExp(r'[\.,]$'), '')
+        : v;
   }
+
 
   String currentDateText() {
     DateTime dt = DateTime.now();
@@ -104,4 +109,8 @@ void debugInfo(dynamic m) {
   if (Prefs.debugMode) {
     Prefs.debugInfo.add(m.toString());
   }
+}
+
+bool isSameDate(DateTime a, DateTime b) {
+  return a.year == b.year && a.month == b.month && a.day == b.day;
 }

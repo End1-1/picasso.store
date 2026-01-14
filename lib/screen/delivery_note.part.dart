@@ -8,6 +8,11 @@ class GoodsCubit extends Cubit<List<Goods>> {
 
 extension _DeliveryNoteExt on _DeliveryNoteState {
   void _openDoc() async {
+    if (kDebugMode) {
+      final barcode = 'doc;2e1ee920-e5d3-45e5-9a54-ed9fc18cbabf;N222;2025-06-24 14:24:30';
+      _processDoc(barcode);
+      return;
+    }
     widget.model.navigation.readBarcode().then((barcode) {
       if (barcode != null) {
         _processDoc(barcode);

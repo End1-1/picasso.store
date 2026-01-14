@@ -19,6 +19,14 @@ class WMConfig extends WMApp {
         ],
       ),
       Styling.columnSpacingWidget(),
+      Row(
+        children: [
+          Expanded(
+              child: Styling.textFormField(
+                  model.serverKeyController, model.tr('Server key'))),
+        ],
+      ),
+      Styling.columnSpacingWidget(),
       WMCheckbox(locale().doNotUseSSL, (value){
         prefs.setBool('donotusessl', value ?? false);
       }, prefs.getBool('donotusessl') ?? false),

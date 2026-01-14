@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picassostore/bloc/app_bloc.dart';
@@ -24,6 +25,7 @@ class AppEventAppBar extends AppEvent {}
 
 class WMModel {
   final serverTextController = TextEditingController();
+  final serverKeyController = TextEditingController();
   final serverUserTextController = TextEditingController();
   final serverPasswordTextController = TextEditingController();
   final configPinTextController = TextEditingController();
@@ -42,11 +44,13 @@ class WMModel {
 
   void registerDemoServer() {
     prefs.setString('serveraddress', 'home.picasso.am');
+    prefs.setString('serverkey', '6b5f0be3-d8f8-11f0-a533-8a884be02f31');
     Navigator.pop(prefs.context(), true);
   }
 
   void registerOnServer() {
     prefs.setString('serveraddress', serverTextController.text);
+    prefs.setString('serverkey', serverKeyController.text);
     Navigator.pop(prefs.context(), true);
   }
 
@@ -67,9 +71,13 @@ class WMModel {
           }
           prefs.setInt('userid', d['user']['f_id']);
           prefs.setString('database', d['database']);
+          prefs.setString('username', serverUserTextController.text);
+          prefs.setString('password', serverPasswordTextController.text);
           prefs.init();
         } catch (e) {
-          print(e.toString());
+          if (kDebugMode) {
+            print(e.toString());
+          }
         }
         Navigator.pushAndRemoveUntil(
             prefs.context(),
