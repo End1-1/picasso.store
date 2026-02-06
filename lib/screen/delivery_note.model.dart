@@ -20,8 +20,8 @@ class DocModel {
   }
 
   void setOk(String barcode) {
-    final g = goods.where((e) => e.sku == barcode).toList().first;
-    goodsCheck[barcode] = g.qty;
+    final g = goods.where((e) => e.f_barcode == barcode).toList().first;
+    goodsCheck[barcode] = g.f_qty;
     Navigator.pop(prefs.context());
   }
 

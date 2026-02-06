@@ -22,7 +22,7 @@ extension _DeliveryNoteExt on _DeliveryNoteState {
 
   void _confirm() {
     for (final e in widget.docModel.goods) {
-      if (e.qty != widget.docModel.goodsCheck[e.sku]) {
+      if (e.f_qty != widget.docModel.goodsCheck[e.f_barcode]) {
         widget.model.error(locale().checkAllQty);
         return;
       }
@@ -57,7 +57,7 @@ extension _DeliveryNoteExt on _DeliveryNoteState {
         for (final e in reply['goods']) {
           final Goods g = Goods.fromJson(e);
           widget.docModel.goods.add(g);
-          widget.docModel.goodsCheck[g.sku] = 0;
+          widget.docModel.goodsCheck[g.f_barcode] = 0;
         }
         for (final e in reply['qrlist']) {
           final qr = String.fromCharCodes(base64Decode(e['f_qr']));

@@ -13,9 +13,6 @@ class HttpQuery {
   HttpQuery(this.route, {this.timeout = 20});
 
   Future<Map<String, dynamic>> request(Map<String, dynamic> inData) async {
-    inData['sessionkey'] = prefs.string('sessionkey');
-    inData['appversion'] = prefs.string('appversion');
-    inData['app'] = 'picasso.store';
     inData['config'] = prefs.string('config');
     inData['workingday'] = prefs.dateMySqlText(prefs.workingDay());
     inData['language'] = 'am';
@@ -42,6 +39,9 @@ class HttpQuery {
             Uri.http(prefs.string("serveraddress"), route),
             headers: {
               'Content-Type': 'application/json',
+              'X-APPLICATION-VERSION': prefs.string('appversion'),
+              'X-APPLICATION-NAME':  'picasso.store',
+              'Authorization': 'Bearer ${prefs.string("sessionkey")}',
             },
             body: utf8.encode(strBody))
             .timeout(Duration(seconds: timeout), onTimeout: () {

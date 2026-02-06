@@ -45,7 +45,7 @@ class _GoodsCardState extends State<GoodsCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.network(
-                    'https://${prefs.string("serveraddress")}/engine/media/goods/b${widget.goods.id}.jpg',
+                    'https://${prefs.string("serveraddress")}/engine/media/goods/b${widget.goods.f_id}.jpg',
                     width: double.infinity,
                     height: MediaQuery.sizeOf(context).width * .8,
                     fit: BoxFit.contain,
@@ -68,7 +68,7 @@ class _GoodsCardState extends State<GoodsCard> {
                     },
                   ),
                   Styling.columnSpacingWidget(),
-                  Text(widget.goods.name,
+                  Text(widget.goods.f_name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -76,7 +76,7 @@ class _GoodsCardState extends State<GoodsCard> {
                   Row(children: [
                     SizedBox(width: 200, child: Text(locale().retailPrice)),
                     Styling.rowSpacingWidget(),
-                    Text(prefs.mdFormatDouble(widget.goods.p1),
+                    Text(prefs.mdFormatDouble(widget.goods.f_price1),
                         style: const TextStyle(
                             color: Colors.indigo,
                             fontSize: 12,
@@ -87,7 +87,7 @@ class _GoodsCardState extends State<GoodsCard> {
                         width: 200,
                         child: Text(locale().retailPriceDiscounted)),
                     Styling.rowSpacingWidget(),
-                    Text(prefs.mdFormatDouble(widget.goods.p1d),
+                    Text(prefs.mdFormatDouble(widget.goods.f_price1disc),
                         style: const TextStyle(
                             color: Colors.indigo,
                             fontSize: 12,
@@ -96,7 +96,7 @@ class _GoodsCardState extends State<GoodsCard> {
                   Row(children: [
                     SizedBox(width: 200, child: Text(locale().whosalePrice)),
                     Styling.rowSpacingWidget(),
-                    Text(prefs.mdFormatDouble(widget.goods.p2),
+                    Text(prefs.mdFormatDouble(widget.goods.f_price2),
                         style: const TextStyle(
                             color: Colors.indigo,
                             fontSize: 12,
@@ -107,7 +107,7 @@ class _GoodsCardState extends State<GoodsCard> {
                         width: 200,
                         child: Text(locale().whosalePriceDiscounted)),
                     Styling.rowSpacingWidget(),
-                    Text(prefs.mdFormatDouble(widget.goods.p2d),
+                    Text(prefs.mdFormatDouble(widget.goods.f_price2disc),
                         style: const TextStyle(
                             color: Colors.indigo,
                             fontSize: 12,
@@ -152,7 +152,7 @@ class _GoodsCardState extends State<GoodsCard> {
                                   return;
                                 }
                                 Goods newGoods =
-                                    widget.goods.copyWith(qty: qty!);
+                                    widget.goods.copyWith(f_qty: qty!);
                                 widget.orderModel?.goods.add(newGoods);
                                 Navigator.pop(prefs.context());
                               });
@@ -177,7 +177,7 @@ class _GoodsCardState extends State<GoodsCard> {
 
   Future<double> _fetchStockQty() async {
     final reply = await HttpQuery('engine/worker/check-qty.php')
-        .request({'goodsid': widget.goods.id, 'method': 'checkStore'});
+        .request({'goodsid': widget.goods.f_id, 'method': 'checkStore'});
     if (reply['status'] == 1) {
       return (reply['remain'] as num).toDouble();
     }

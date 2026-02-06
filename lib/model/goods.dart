@@ -9,18 +9,18 @@ part 'goods.g.dart';
 sealed class Goods with _$Goods {
 
   const factory Goods({
-    @HiveField(0)required int id,
+    @HiveField(0)required int f_id,
     @HiveField(1)required String? uuid,
-    @HiveField(2)required int groupid,
-    @HiveField(3)required String groupname,
-    @HiveField(4)required String name,
-    @HiveField(5)required String unit,
-    @HiveField(6)required double p1,
-    @HiveField(7)required double p1d,
-    @HiveField(8)required double p2,
-    @HiveField(9)required double p2d,
-    @HiveField(10)required double qty,
-    @HiveField(11) required String sku
+    @HiveField(2)required int f_group_id,
+    @HiveField(3)required String f_group_name,
+    @HiveField(4)required String f_name,
+    @HiveField(5)required String f_unit_name,
+    @HiveField(6)required double f_price1,
+    @HiveField(7)required double f_price1disc,
+    @HiveField(8)required double f_price2,
+    @HiveField(9)required double f_price2disc,
+    @HiveField(10)required double f_qty,
+    @HiveField(11) required String f_barcode
 }) = _Goods;
 
   factory Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
@@ -34,34 +34,34 @@ class GoodsAdapter extends TypeAdapter<Goods> {
   @override
   Goods read(BinaryReader reader) {
     return Goods(
-      id: reader.readInt(),
+      f_id: reader.readInt(),
       uuid: reader.readString(),
-      groupid: reader.readInt(),
-      groupname: reader.readString(),
-      name: reader.readString(),
-      unit: reader.readString(),
-      p1: reader.readDouble(),
-      p1d: reader.readDouble(),
-      p2: reader.readDouble(),
-      p2d: reader.readDouble(),
-      qty: reader.readDouble(),
-      sku: reader.readString()
+      f_group_id: reader.readInt(),
+      f_group_name: reader.readString(),
+      f_name: reader.readString(),
+      f_unit_name: reader.readString(),
+      f_price1: reader.readDouble(),
+      f_price1disc: reader.readDouble(),
+      f_price2: reader.readDouble(),
+      f_price2disc: reader.readDouble(),
+      f_qty: reader.readDouble(),
+      f_barcode: reader.readString()
     );
   }
 
   @override
   void write(BinaryWriter writer, Goods obj) {
-    writer.writeInt(obj.id);
+    writer.writeInt(obj.f_id);
     writer.writeString(obj.uuid ?? '');
-    writer.writeInt(obj.groupid);
-    writer.writeString(obj.groupname);
-    writer.writeString(obj.name);
-    writer.writeString(obj.unit);
-    writer.writeDouble(obj.p1);
-    writer.writeDouble(obj.p1d);
-    writer.writeDouble(obj.p2);
-    writer.writeDouble(obj.p2d);
-    writer.writeDouble(obj.qty);
-    writer.writeString(obj.sku);
+    writer.writeInt(obj.f_group_id);
+    writer.writeString(obj.f_group_name);
+    writer.writeString(obj.f_name);
+    writer.writeString(obj.f_unit_name);
+    writer.writeDouble(obj.f_price1);
+    writer.writeDouble(obj.f_price1disc);
+    writer.writeDouble(obj.f_price2);
+    writer.writeDouble(obj.f_price2disc);
+    writer.writeDouble(obj.f_qty);
+    writer.writeString(obj.f_barcode);
   }
 }

@@ -51,7 +51,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       emit(AppStateError(result['data']));
       return;
     }
-      emit(event.state!..id = event.id ..data = result['data'] ?? result);
+      emit(event.state..id = event.id ..data = result['data'] ?? result);
   }
 }
 

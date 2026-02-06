@@ -16,29 +16,29 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Goods {
   @HiveField(0)
-  int get id;
+  int get f_id;
   @HiveField(1)
   String? get uuid;
   @HiveField(2)
-  int get groupid;
+  int get f_group_id;
   @HiveField(3)
-  String get groupname;
+  String get f_group_name;
   @HiveField(4)
-  String get name;
+  String get f_name;
   @HiveField(5)
-  String get unit;
+  String get f_unit_name;
   @HiveField(6)
-  double get p1;
+  double get f_price1;
   @HiveField(7)
-  double get p1d;
+  double get f_price1disc;
   @HiveField(8)
-  double get p2;
+  double get f_price2;
   @HiveField(9)
-  double get p2d;
+  double get f_price2disc;
   @HiveField(10)
-  double get qty;
+  double get f_qty;
   @HiveField(11)
-  String get sku;
+  String get f_barcode;
 
   /// Create a copy of Goods
   /// with the given fields replaced by the non-null parameter values.
@@ -55,29 +55,48 @@ mixin _$Goods {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is Goods &&
-            (identical(other.id, id) || other.id == id) &&
+            (identical(other.f_id, f_id) || other.f_id == f_id) &&
             (identical(other.uuid, uuid) || other.uuid == uuid) &&
-            (identical(other.groupid, groupid) || other.groupid == groupid) &&
-            (identical(other.groupname, groupname) ||
-                other.groupname == groupname) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.p1, p1) || other.p1 == p1) &&
-            (identical(other.p1d, p1d) || other.p1d == p1d) &&
-            (identical(other.p2, p2) || other.p2 == p2) &&
-            (identical(other.p2d, p2d) || other.p2d == p2d) &&
-            (identical(other.qty, qty) || other.qty == qty) &&
-            (identical(other.sku, sku) || other.sku == sku));
+            (identical(other.f_group_id, f_group_id) ||
+                other.f_group_id == f_group_id) &&
+            (identical(other.f_group_name, f_group_name) ||
+                other.f_group_name == f_group_name) &&
+            (identical(other.f_name, f_name) || other.f_name == f_name) &&
+            (identical(other.f_unit_name, f_unit_name) ||
+                other.f_unit_name == f_unit_name) &&
+            (identical(other.f_price1, f_price1) ||
+                other.f_price1 == f_price1) &&
+            (identical(other.f_price1disc, f_price1disc) ||
+                other.f_price1disc == f_price1disc) &&
+            (identical(other.f_price2, f_price2) ||
+                other.f_price2 == f_price2) &&
+            (identical(other.f_price2disc, f_price2disc) ||
+                other.f_price2disc == f_price2disc) &&
+            (identical(other.f_qty, f_qty) || other.f_qty == f_qty) &&
+            (identical(other.f_barcode, f_barcode) ||
+                other.f_barcode == f_barcode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, uuid, groupid, groupname,
-      name, unit, p1, p1d, p2, p2d, qty, sku);
+  int get hashCode => Object.hash(
+      runtimeType,
+      f_id,
+      uuid,
+      f_group_id,
+      f_group_name,
+      f_name,
+      f_unit_name,
+      f_price1,
+      f_price1disc,
+      f_price2,
+      f_price2disc,
+      f_qty,
+      f_barcode);
 
   @override
   String toString() {
-    return 'Goods(id: $id, uuid: $uuid, groupid: $groupid, groupname: $groupname, name: $name, unit: $unit, p1: $p1, p1d: $p1d, p2: $p2, p2d: $p2d, qty: $qty, sku: $sku)';
+    return 'Goods(f_id: $f_id, uuid: $uuid, f_group_id: $f_group_id, f_group_name: $f_group_name, f_name: $f_name, f_unit_name: $f_unit_name, f_price1: $f_price1, f_price1disc: $f_price1disc, f_price2: $f_price2, f_price2disc: $f_price2disc, f_qty: $f_qty, f_barcode: $f_barcode)';
   }
 }
 
@@ -87,18 +106,18 @@ abstract mixin class $GoodsCopyWith<$Res> {
       _$GoodsCopyWithImpl;
   @useResult
   $Res call(
-      {@HiveField(0) int id,
+      {@HiveField(0) int f_id,
       @HiveField(1) String? uuid,
-      @HiveField(2) int groupid,
-      @HiveField(3) String groupname,
-      @HiveField(4) String name,
-      @HiveField(5) String unit,
-      @HiveField(6) double p1,
-      @HiveField(7) double p1d,
-      @HiveField(8) double p2,
-      @HiveField(9) double p2d,
-      @HiveField(10) double qty,
-      @HiveField(11) String sku});
+      @HiveField(2) int f_group_id,
+      @HiveField(3) String f_group_name,
+      @HiveField(4) String f_name,
+      @HiveField(5) String f_unit_name,
+      @HiveField(6) double f_price1,
+      @HiveField(7) double f_price1disc,
+      @HiveField(8) double f_price2,
+      @HiveField(9) double f_price2disc,
+      @HiveField(10) double f_qty,
+      @HiveField(11) String f_barcode});
 }
 
 /// @nodoc
@@ -113,67 +132,67 @@ class _$GoodsCopyWithImpl<$Res> implements $GoodsCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? f_id = null,
     Object? uuid = freezed,
-    Object? groupid = null,
-    Object? groupname = null,
-    Object? name = null,
-    Object? unit = null,
-    Object? p1 = null,
-    Object? p1d = null,
-    Object? p2 = null,
-    Object? p2d = null,
-    Object? qty = null,
-    Object? sku = null,
+    Object? f_group_id = null,
+    Object? f_group_name = null,
+    Object? f_name = null,
+    Object? f_unit_name = null,
+    Object? f_price1 = null,
+    Object? f_price1disc = null,
+    Object? f_price2 = null,
+    Object? f_price2disc = null,
+    Object? f_qty = null,
+    Object? f_barcode = null,
   }) {
     return _then(_self.copyWith(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
+      f_id: null == f_id
+          ? _self.f_id
+          : f_id // ignore: cast_nullable_to_non_nullable
               as int,
       uuid: freezed == uuid
           ? _self.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
               as String?,
-      groupid: null == groupid
-          ? _self.groupid
-          : groupid // ignore: cast_nullable_to_non_nullable
+      f_group_id: null == f_group_id
+          ? _self.f_group_id
+          : f_group_id // ignore: cast_nullable_to_non_nullable
               as int,
-      groupname: null == groupname
-          ? _self.groupname
-          : groupname // ignore: cast_nullable_to_non_nullable
+      f_group_name: null == f_group_name
+          ? _self.f_group_name
+          : f_group_name // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
+      f_name: null == f_name
+          ? _self.f_name
+          : f_name // ignore: cast_nullable_to_non_nullable
               as String,
-      unit: null == unit
-          ? _self.unit
-          : unit // ignore: cast_nullable_to_non_nullable
+      f_unit_name: null == f_unit_name
+          ? _self.f_unit_name
+          : f_unit_name // ignore: cast_nullable_to_non_nullable
               as String,
-      p1: null == p1
-          ? _self.p1
-          : p1 // ignore: cast_nullable_to_non_nullable
+      f_price1: null == f_price1
+          ? _self.f_price1
+          : f_price1 // ignore: cast_nullable_to_non_nullable
               as double,
-      p1d: null == p1d
-          ? _self.p1d
-          : p1d // ignore: cast_nullable_to_non_nullable
+      f_price1disc: null == f_price1disc
+          ? _self.f_price1disc
+          : f_price1disc // ignore: cast_nullable_to_non_nullable
               as double,
-      p2: null == p2
-          ? _self.p2
-          : p2 // ignore: cast_nullable_to_non_nullable
+      f_price2: null == f_price2
+          ? _self.f_price2
+          : f_price2 // ignore: cast_nullable_to_non_nullable
               as double,
-      p2d: null == p2d
-          ? _self.p2d
-          : p2d // ignore: cast_nullable_to_non_nullable
+      f_price2disc: null == f_price2disc
+          ? _self.f_price2disc
+          : f_price2disc // ignore: cast_nullable_to_non_nullable
               as double,
-      qty: null == qty
-          ? _self.qty
-          : qty // ignore: cast_nullable_to_non_nullable
+      f_qty: null == f_qty
+          ? _self.f_qty
+          : f_qty // ignore: cast_nullable_to_non_nullable
               as double,
-      sku: null == sku
-          ? _self.sku
-          : sku // ignore: cast_nullable_to_non_nullable
+      f_barcode: null == f_barcode
+          ? _self.f_barcode
+          : f_barcode // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -183,56 +202,56 @@ class _$GoodsCopyWithImpl<$Res> implements $GoodsCopyWith<$Res> {
 @JsonSerializable()
 class _Goods implements Goods {
   const _Goods(
-      {@HiveField(0) required this.id,
+      {@HiveField(0) required this.f_id,
       @HiveField(1) required this.uuid,
-      @HiveField(2) required this.groupid,
-      @HiveField(3) required this.groupname,
-      @HiveField(4) required this.name,
-      @HiveField(5) required this.unit,
-      @HiveField(6) required this.p1,
-      @HiveField(7) required this.p1d,
-      @HiveField(8) required this.p2,
-      @HiveField(9) required this.p2d,
-      @HiveField(10) required this.qty,
-      @HiveField(11) required this.sku});
+      @HiveField(2) required this.f_group_id,
+      @HiveField(3) required this.f_group_name,
+      @HiveField(4) required this.f_name,
+      @HiveField(5) required this.f_unit_name,
+      @HiveField(6) required this.f_price1,
+      @HiveField(7) required this.f_price1disc,
+      @HiveField(8) required this.f_price2,
+      @HiveField(9) required this.f_price2disc,
+      @HiveField(10) required this.f_qty,
+      @HiveField(11) required this.f_barcode});
   factory _Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
 
   @override
   @HiveField(0)
-  final int id;
+  final int f_id;
   @override
   @HiveField(1)
   final String? uuid;
   @override
   @HiveField(2)
-  final int groupid;
+  final int f_group_id;
   @override
   @HiveField(3)
-  final String groupname;
+  final String f_group_name;
   @override
   @HiveField(4)
-  final String name;
+  final String f_name;
   @override
   @HiveField(5)
-  final String unit;
+  final String f_unit_name;
   @override
   @HiveField(6)
-  final double p1;
+  final double f_price1;
   @override
   @HiveField(7)
-  final double p1d;
+  final double f_price1disc;
   @override
   @HiveField(8)
-  final double p2;
+  final double f_price2;
   @override
   @HiveField(9)
-  final double p2d;
+  final double f_price2disc;
   @override
   @HiveField(10)
-  final double qty;
+  final double f_qty;
   @override
   @HiveField(11)
-  final String sku;
+  final String f_barcode;
 
   /// Create a copy of Goods
   /// with the given fields replaced by the non-null parameter values.
@@ -254,29 +273,48 @@ class _Goods implements Goods {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Goods &&
-            (identical(other.id, id) || other.id == id) &&
+            (identical(other.f_id, f_id) || other.f_id == f_id) &&
             (identical(other.uuid, uuid) || other.uuid == uuid) &&
-            (identical(other.groupid, groupid) || other.groupid == groupid) &&
-            (identical(other.groupname, groupname) ||
-                other.groupname == groupname) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.p1, p1) || other.p1 == p1) &&
-            (identical(other.p1d, p1d) || other.p1d == p1d) &&
-            (identical(other.p2, p2) || other.p2 == p2) &&
-            (identical(other.p2d, p2d) || other.p2d == p2d) &&
-            (identical(other.qty, qty) || other.qty == qty) &&
-            (identical(other.sku, sku) || other.sku == sku));
+            (identical(other.f_group_id, f_group_id) ||
+                other.f_group_id == f_group_id) &&
+            (identical(other.f_group_name, f_group_name) ||
+                other.f_group_name == f_group_name) &&
+            (identical(other.f_name, f_name) || other.f_name == f_name) &&
+            (identical(other.f_unit_name, f_unit_name) ||
+                other.f_unit_name == f_unit_name) &&
+            (identical(other.f_price1, f_price1) ||
+                other.f_price1 == f_price1) &&
+            (identical(other.f_price1disc, f_price1disc) ||
+                other.f_price1disc == f_price1disc) &&
+            (identical(other.f_price2, f_price2) ||
+                other.f_price2 == f_price2) &&
+            (identical(other.f_price2disc, f_price2disc) ||
+                other.f_price2disc == f_price2disc) &&
+            (identical(other.f_qty, f_qty) || other.f_qty == f_qty) &&
+            (identical(other.f_barcode, f_barcode) ||
+                other.f_barcode == f_barcode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, uuid, groupid, groupname,
-      name, unit, p1, p1d, p2, p2d, qty, sku);
+  int get hashCode => Object.hash(
+      runtimeType,
+      f_id,
+      uuid,
+      f_group_id,
+      f_group_name,
+      f_name,
+      f_unit_name,
+      f_price1,
+      f_price1disc,
+      f_price2,
+      f_price2disc,
+      f_qty,
+      f_barcode);
 
   @override
   String toString() {
-    return 'Goods(id: $id, uuid: $uuid, groupid: $groupid, groupname: $groupname, name: $name, unit: $unit, p1: $p1, p1d: $p1d, p2: $p2, p2d: $p2d, qty: $qty, sku: $sku)';
+    return 'Goods(f_id: $f_id, uuid: $uuid, f_group_id: $f_group_id, f_group_name: $f_group_name, f_name: $f_name, f_unit_name: $f_unit_name, f_price1: $f_price1, f_price1disc: $f_price1disc, f_price2: $f_price2, f_price2disc: $f_price2disc, f_qty: $f_qty, f_barcode: $f_barcode)';
   }
 }
 
@@ -287,18 +325,18 @@ abstract mixin class _$GoodsCopyWith<$Res> implements $GoodsCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@HiveField(0) int id,
+      {@HiveField(0) int f_id,
       @HiveField(1) String? uuid,
-      @HiveField(2) int groupid,
-      @HiveField(3) String groupname,
-      @HiveField(4) String name,
-      @HiveField(5) String unit,
-      @HiveField(6) double p1,
-      @HiveField(7) double p1d,
-      @HiveField(8) double p2,
-      @HiveField(9) double p2d,
-      @HiveField(10) double qty,
-      @HiveField(11) String sku});
+      @HiveField(2) int f_group_id,
+      @HiveField(3) String f_group_name,
+      @HiveField(4) String f_name,
+      @HiveField(5) String f_unit_name,
+      @HiveField(6) double f_price1,
+      @HiveField(7) double f_price1disc,
+      @HiveField(8) double f_price2,
+      @HiveField(9) double f_price2disc,
+      @HiveField(10) double f_qty,
+      @HiveField(11) String f_barcode});
 }
 
 /// @nodoc
@@ -313,67 +351,67 @@ class __$GoodsCopyWithImpl<$Res> implements _$GoodsCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? id = null,
+    Object? f_id = null,
     Object? uuid = freezed,
-    Object? groupid = null,
-    Object? groupname = null,
-    Object? name = null,
-    Object? unit = null,
-    Object? p1 = null,
-    Object? p1d = null,
-    Object? p2 = null,
-    Object? p2d = null,
-    Object? qty = null,
-    Object? sku = null,
+    Object? f_group_id = null,
+    Object? f_group_name = null,
+    Object? f_name = null,
+    Object? f_unit_name = null,
+    Object? f_price1 = null,
+    Object? f_price1disc = null,
+    Object? f_price2 = null,
+    Object? f_price2disc = null,
+    Object? f_qty = null,
+    Object? f_barcode = null,
   }) {
     return _then(_Goods(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
+      f_id: null == f_id
+          ? _self.f_id
+          : f_id // ignore: cast_nullable_to_non_nullable
               as int,
       uuid: freezed == uuid
           ? _self.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
               as String?,
-      groupid: null == groupid
-          ? _self.groupid
-          : groupid // ignore: cast_nullable_to_non_nullable
+      f_group_id: null == f_group_id
+          ? _self.f_group_id
+          : f_group_id // ignore: cast_nullable_to_non_nullable
               as int,
-      groupname: null == groupname
-          ? _self.groupname
-          : groupname // ignore: cast_nullable_to_non_nullable
+      f_group_name: null == f_group_name
+          ? _self.f_group_name
+          : f_group_name // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
+      f_name: null == f_name
+          ? _self.f_name
+          : f_name // ignore: cast_nullable_to_non_nullable
               as String,
-      unit: null == unit
-          ? _self.unit
-          : unit // ignore: cast_nullable_to_non_nullable
+      f_unit_name: null == f_unit_name
+          ? _self.f_unit_name
+          : f_unit_name // ignore: cast_nullable_to_non_nullable
               as String,
-      p1: null == p1
-          ? _self.p1
-          : p1 // ignore: cast_nullable_to_non_nullable
+      f_price1: null == f_price1
+          ? _self.f_price1
+          : f_price1 // ignore: cast_nullable_to_non_nullable
               as double,
-      p1d: null == p1d
-          ? _self.p1d
-          : p1d // ignore: cast_nullable_to_non_nullable
+      f_price1disc: null == f_price1disc
+          ? _self.f_price1disc
+          : f_price1disc // ignore: cast_nullable_to_non_nullable
               as double,
-      p2: null == p2
-          ? _self.p2
-          : p2 // ignore: cast_nullable_to_non_nullable
+      f_price2: null == f_price2
+          ? _self.f_price2
+          : f_price2 // ignore: cast_nullable_to_non_nullable
               as double,
-      p2d: null == p2d
-          ? _self.p2d
-          : p2d // ignore: cast_nullable_to_non_nullable
+      f_price2disc: null == f_price2disc
+          ? _self.f_price2disc
+          : f_price2disc // ignore: cast_nullable_to_non_nullable
               as double,
-      qty: null == qty
-          ? _self.qty
-          : qty // ignore: cast_nullable_to_non_nullable
+      f_qty: null == f_qty
+          ? _self.f_qty
+          : f_qty // ignore: cast_nullable_to_non_nullable
               as double,
-      sku: null == sku
-          ? _self.sku
-          : sku // ignore: cast_nullable_to_non_nullable
+      f_barcode: null == f_barcode
+          ? _self.f_barcode
+          : f_barcode // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

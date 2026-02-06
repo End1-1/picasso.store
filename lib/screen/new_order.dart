@@ -235,7 +235,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
                   return AlertDialog(
                     title: Text(locale().removeRow),
                     content: Text(
-                        '${locale().confirmRemoveGoods}\r\n${widget.orderModel.goods[index].name}'),
+                        '${locale().confirmRemoveGoods}\r\n${widget.orderModel.goods[index].f_name}'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
@@ -287,7 +287,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
                               GoodsCard.show(
                                   widget.orderModel.goods[index], null);
                             },
-                            child: Text(widget.orderModel.goods[index].name,
+                            child: Text(widget.orderModel.goods[index].f_name,
                                 maxLines: 2, overflow: TextOverflow.ellipsis))),
                     InkWell(
                         onTap: () async {
@@ -298,7 +298,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
                           if ((qty ?? 0) > 0) {
                             widget.orderModel.goods[index] = widget
                                 .orderModel.goods[index]
-                                .copyWith(qty: qty ?? 0);
+                                .copyWith(f_qty: qty ?? 0);
                             setState(() {});
                           }
                         },
@@ -310,7 +310,7 @@ class _NewOrderState extends State<_NewOrderScreen> {
                             width: 45,
                             child: Text(
                                 prefs.mdFormatDouble(
-                                    widget.orderModel.goods[index].qty),
+                                    widget.orderModel.goods[index].f_qty),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12))))
@@ -483,8 +483,8 @@ class _NewOrderState extends State<_NewOrderScreen> {
               'f_header': widget.orderModel.id,
               'f_state': 1,
               'f_store': widget.orderModel.storeid,
-              'f_goods': t.id,
-              'f_qty': t.qty,
+              'f_goods': t.f_id,
+              'f_qty': t.f_qty,
               'f_back': 0,
               'f_price': widget.orderModel.priceOfGoods(t),
               'f_discount': widget.orderModel.partner.discount,

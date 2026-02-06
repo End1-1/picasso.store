@@ -164,12 +164,12 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       Map<String, dynamic> json = {
-        'command': 'search_goods',
+        'command': 'search_goods_item',
         'database': prefs.string('database'),
-        'template': query,
+        'lower_name': query.toLowerCase(),
         'page': _page,
         'limit': _limit,
-        'groupid': _groupid
+        'group_id': _groupid
       };
       setState(() => _isLoading = true);
       final r = await widget.model.appWebsocket.sendMessage(jsonEncode(json));
@@ -203,7 +203,7 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
             InkWell(onTap:(){
               GoodsCard.show(g, widget.orderModel);
             }, child: Image.network(
-              'https://${prefs.string("serveraddress")}/engine/media/goods/s${g.id}.jpg',
+              '${prefs.getBool('donotusessl') ?? false ? 'http' :  'https'}://${prefs.string("serveraddress")}/engine/media/goods/s${g.f_id}.jpg',
               width: double.infinity,
               height: 100,
               fit: BoxFit.contain,
@@ -226,7 +226,7 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
               },
             )),
             Styling.columnSpacingWidget(),
-           Row(children: [ Expanded(child: Text(g.name,
+           Row(children: [ Expanded(child: Text(g.f_name,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style:
@@ -247,7 +247,7 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
                       if ((qty ?? 0) == 0) {
                         return;
                       }
-                      Goods newGoods = g.copyWith(qty: qty!);
+                      Goods newGoods = g.copyWith(f_qty: qty!);
                       widget.orderModel.goods.add(newGoods);
                       Hive.openBox<NewOrderModel>('box').then((box) {
                         box.put('tempmodel', widget.orderModel);
@@ -263,7 +263,7 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
                     color: Colors.indigo,
                     fontSize: 12,
                     fontWeight: FontWeight.bold)),
-              Text(prefs.mdFormatDouble(g.p1d > 0 ? g.p1d : g.p1),
+              Text(prefs.mdFormatDouble(g.f_price1disc > 0 ? g.f_price1disc : g.f_price1),
                   style: const TextStyle(
                       color: Colors.indigo,
                       fontSize: 12,
@@ -272,7 +272,7 @@ class _SearchGoodsState extends State<_SearchGoodsScreen> {
 
             ]),
             Row(children: [
-             Text('SKU: ${g.sku}', style: const TextStyle(fontSize: 10, color: Colors.black))
+             Text('f_barcode: ${g.f_barcode}', style: const TextStyle(fontSize: 10, color: Colors.black))
             ])
           ],
         ),

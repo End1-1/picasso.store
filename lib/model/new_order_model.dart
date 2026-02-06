@@ -30,20 +30,20 @@ class NewOrderModel {
     for (final e in goods) {
       double price = priceOfGoods(e);
       price -= (price * (partner.discount / 100));
-      t += price * e.qty;
+      t += price * e.f_qty;
     }
     return t;
   }
 
   double priceOfGoods(Goods g) {
     if (partner.id == 0) {
-      return g.p1;
+      return g.f_price1;
     }
     switch (partner.mode) {
       case 1:
-        return g.p1d > 0 ? g.p1d : g.p1;
+        return g.f_price1disc > 0 ? g.f_price1disc : g.f_price1;
       case 2:
-        return g.p2d > 0 ? g.p2d : g.p2;
+        return g.f_price2disc > 0 ? g.f_price2disc : g.f_price2;
     }
     return -1;
   }

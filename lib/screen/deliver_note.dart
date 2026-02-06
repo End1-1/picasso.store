@@ -115,33 +115,33 @@ class _DeliveryNoteState extends State<_DeliveryNote> {
                     final g = widget.docModel.goods[index];
                     return Column(children: [
                       Row(children: [
-                        Expanded(child: Text('${g.name}\r\n${g.sku}')),
+                        Expanded(child: Text('${g.f_name}\r\n${g.f_barcode}')),
                         Container(
                             alignment: Alignment.center,
                             width: 70,
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
                                 color:
-                                    g.qty == widget.docModel.goodsCheck[g.sku]
+                                    g.f_qty == widget.docModel.goodsCheck[g.f_barcode]
                                         ? Colors.green
-                                        : g.qty <
+                                        : g.f_qty <
                                                 (widget.docModel
-                                                        .goodsCheck[g.sku] ??
+                                                        .goodsCheck[g.f_barcode] ??
                                                     0)
                                             ? Colors.red
                                             : Colors.black12),
-                            child: Text(prefs.mdFormatDouble(g.qty))),
+                            child: Text(prefs.mdFormatDouble(g.f_qty))),
                         Styling.rowSpacingWidget(),
                         InkWell(
-                            onTap: () => _setQtyOf(g.sku),
+                            onTap: () => _setQtyOf(g.f_barcode),
                             child: Container(
                                 alignment: Alignment.center,
                                 width: 70,
                                 padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(color: Colors.black),
                                 child: Text(
-                                    prefs.mdFormatDouble(g.qty -
-                                        (widget.docModel.goodsCheck[g.sku] ??
+                                    prefs.mdFormatDouble(g.f_qty -
+                                        (widget.docModel.goodsCheck[g.f_barcode] ??
                                             0)),
                                     style:
                                         const TextStyle(color: Colors.white))))
